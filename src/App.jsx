@@ -1,14 +1,8 @@
-import React from "react";
-import NavStyle from "./layout/navbar/NavStyle";
-import HomeView from "./pages/public/home/HomeView";
+import { RouterProvider } from "react-router";
+import { AppRoutes } from "./router/router";
 
 const App = () => {
-  return (
-    <div>
-      <NavStyle />
-      <HomeView />
-    </div>
-  );
+  return <RouterProvider router={AppRoutes} />;
 };
 
 export default App;
