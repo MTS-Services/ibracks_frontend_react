@@ -6,6 +6,7 @@ import NotFoundView from "../pages/error/NotFoundView";
 
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
+import AdminPannel from "../pages/dashboard/AdminPannel";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/about",
         element: <AboutView />,
+      },
+      {
+        path: "/admin",
+        element: <AdminPannel />,
       },
     ],
   },
