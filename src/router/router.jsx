@@ -13,6 +13,7 @@ import LoginView from "../pages/auth/login/LoginView";
 import ShoppingCart from "../pages/ShoppingCart/ShoppingCart";
 import VideosView from "../pages/public/videos/VideosView";
 import CheckOut from "../pages/Checkout/CheckOut";
+import TracksView from "../pages/public/tracks/TracksView";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -53,6 +54,11 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/check-out",
         element: <CheckOut />,
+      },
+
+      {
+        path: "/tracks-view",
+        element: <TracksView />,
       },
 
       {

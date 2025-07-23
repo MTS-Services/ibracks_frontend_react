@@ -48,10 +48,9 @@ const NavStyle = () => {
             <Link to="/video" className="cursor-pointer hover:text-white">
               Video
             </Link>
-            <li className="cursor-pointer hover:text-white">Tracks</li>
-            <li className="cursor-pointer hover:text-white">Videos</li>
-            <li className="cursor-pointer hover:text-white">Services</li>
-            <li className="cursor-pointer hover:text-white">Contact</li>
+            <Link to="/tracks-view" className="cursor-pointer hover:text-white">
+              TracksView
+            </Link>
           </ul>
 
           {/* Icons + Login */}

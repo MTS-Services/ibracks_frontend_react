@@ -35,7 +35,6 @@ function ShoppingCart() {
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const shipping = 4.0;
-  // Figma-তে দেওয়া "Total (Tax incl.) $86.00" হুবহু ব্যবহার করা হয়েছে, কারণ এটি একটি নির্দিষ্ট মান।
   const total = 86.0;
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
