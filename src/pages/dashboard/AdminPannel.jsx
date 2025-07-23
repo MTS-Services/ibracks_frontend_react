@@ -252,7 +252,7 @@ const Sidebar = () => {
 
 const TopBar = ({ searchTerm, setSearchTerm }) => (
   <header className="sticky top-0 z-10 flex flex-shrink-0 items-center justify-between gap-4 bg-black/30 p-2">
-    <div className="ml-2 flex items-center gap-2">
+    <div className="ml-9 flex items-center gap-2">
       <button className="rounded-lg bg-neutral-800 p-4 text-white hover:bg-neutral-700">
         <FaChevronLeft />
       </button>
@@ -273,7 +273,7 @@ const TopBar = ({ searchTerm, setSearchTerm }) => (
         />
       </div>
     </div>
-    <button className="mr-2 rounded-lg bg-neutral-800 p-4 text-xl text-white hover:bg-neutral-700">
+    <button className="mr-9 rounded-lg bg-neutral-800 p-4 text-xl text-white hover:bg-neutral-700">
       <IoNotifications />
     </button>
   </header>
@@ -287,11 +287,11 @@ const SongList = ({
   onLikeToggle,
 }) => (
   <div className="space-y-2 p-4">
-    <h1 className="mb-4 text-2xl font-bold text-white">Total Songs</h1>
+    <h1 className="mb-4 ml-8 text-xl font-bold text-white">Total Songs</h1>
     {songs.map((song, index) => (
       <div
         key={song.id}
-        className="group grid grid-cols-[30px_minmax(200px,_3fr)_2fr_2fr_auto] items-center gap-4 rounded-lg p-2 hover:bg-white/10"
+        className="group mr-6 ml-5 grid grid-cols-[30px_minmax(200px,_3fr)_2fr_2fr_auto] items-center gap-4 rounded-lg p-2 hover:bg-white/10"
       >
         <div className="relative flex h-full items-center justify-center text-center text-neutral-200">
           {currentSong?.id === song.id && isPlaying ? (
