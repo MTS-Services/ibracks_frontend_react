@@ -328,7 +328,7 @@ const SongList = ({
           <span>{song.plays}</span>
         </div>
         <div className="flex items-center gap-2 text-neutral-200">
-          <IoMdTime className="rounded-full bg-neutral-700 text-xl" />
+          <IoMdTime className="rounded-full text-xl" />
           <span>{song.duration}</span>
         </div>
 
@@ -337,7 +337,7 @@ const SongList = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => onLikeToggle(song.id)}
-              className={`${song.isLiked ? "text-red-500" : "text-neutral-400"} text-xl hover:text-red-500`}
+              className={`${song.isLiked ? "text-red-500" : "text-white"} text-xl hover:text-red-500`}
             >
               {song.isLiked ? <FaHeart /> : <FaRegHeart />}
             </button>
@@ -443,7 +443,7 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
   if (!currentSong) return <div className="h-24 bg-neutral-900"></div>;
   return (
     <div className="grid h-full grid-cols-3 items-center bg-neutral-900/80 px-4 py-2 text-white backdrop-blur-md">
-      <div className="flex items-center gap-4">
+      <div className="ml-10 flex items-center gap-4">
         <img
           src={currentSong.albumArt}
           alt={currentSong.title}
@@ -455,7 +455,7 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
         </div>
         <button
           onClick={() => onLikeToggle(currentSong.id)}
-          className={`${currentSong.isLiked ? "text-red-500" : "text-neutral-400"} transition-colors hover:text-red-500`}
+          className={`${currentSong.isLiked ? "text-red-500" : "text-white"} transition-colors hover:text-red-500`}
         >
           {currentSong.isLiked ? <FaHeart /> : <FaRegHeart />}
         </button>
@@ -491,14 +491,14 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
           <span className="text-neutral-400">{currentSong.duration}</span>
         </div>
       </div>
-      <div className="flex items-center justify-end gap-4">
-        <IoVolumeMedium className="text-xl text-neutral-400" />
+      <div className="mr-10 flex items-center justify-end gap-4">
+        <IoVolumeMedium className="text-xl text-white" />
         <input
           type="range"
           defaultValue="80"
           className="h-1 w-24 cursor-pointer appearance-none rounded-lg bg-neutral-600 accent-white"
         />
-        <RiPlayListFill className="text-xl text-neutral-400" />
+        <RiPlayListFill className="text-xl text-white" />
       </div>
     </div>
   );
