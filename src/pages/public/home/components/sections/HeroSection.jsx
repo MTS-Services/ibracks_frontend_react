@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 
 const HeroSection = () => {
   return (
-    <section className="relative bg-[url('/image/hero-bg.jpg')] bg-cover bg-center py-20">
+    <section className="bg-[url('/image/home/hero-bg.jpg')] bg-cover bg-center py-20">
       <div className="absolute inset-0 bg-black opacity-40" />
 
       <div className="mx-auto max-w-7xl">
@@ -11,7 +11,7 @@ const HeroSection = () => {
         <main className="flex flex-col justify-between md:flex-row">
           {/* Left side - Text content */}
           <article className="relative space-y-10 md:w-1/2">
-            <h1 className="bg-gradient-to-r from-yellow-500 via-yellow-500 to-yellow-200 bg-clip-text text-4xl font-bold text-transparent md:text-6xl">
+            <h1 className="bg-gradient-to-t from-yellow-400 via-yellow-400 to-yellow-100 bg-clip-text text-4xl font-bold text-transparent md:text-6xl">
               Feel the Sound. Own the Vibe.
             </h1>
 

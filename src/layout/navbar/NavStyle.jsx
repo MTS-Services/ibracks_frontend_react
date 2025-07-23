@@ -4,7 +4,7 @@ import { FiMenu, FiSearch, FiUser } from "react-icons/fi";
 const NavStyle = () => {
   return (
     <header className="bg-black">
-      <nav className="mx-auto flex w-full max-w-[1440px] items-center justify-between py-4 lg:px-32">
+      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between py-4">
         {/* Logo */}
         <img
           className="h-[63px] w-[90px]"
