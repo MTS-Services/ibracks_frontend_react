@@ -1,5 +1,6 @@
 import React from "react";
 import { FiMenu, FiSearch, FiUser } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const NavStyle = () => {
   return (
@@ -17,6 +18,33 @@ const NavStyle = () => {
           {/* Menu Items */}
           <ul className="flex items-center gap-6 text-base text-zinc-300 capitalize">
             <li className="cursor-pointer hover:text-white">About</li>
+            <Link
+              to="/contact-view"
+              className="cursor-pointer hover:text-white"
+            >
+              contact{" "}
+            </Link>
+            <Link to="/services" className="cursor-pointer hover:text-white">
+              Services
+            </Link>
+            <Link to="/about" className="cursor-pointer hover:text-white">
+              About
+            </Link>
+            <Link to="/login" className="cursor-pointer hover:text-white">
+              Login
+            </Link>
+            <Link to="/signup" className="cursor-pointer hover:text-white">
+              Signup
+            </Link>
+            <Link
+              to="/shopping-cart"
+              className="cursor-pointer hover:text-white"
+            >
+              Shopping Cart
+            </Link>
+            <Link to="/video" className="cursor-pointer hover:text-white">
+              Video
+            </Link>
             <li className="cursor-pointer hover:text-white">Tracks</li>
             <li className="cursor-pointer hover:text-white">Videos</li>
             <li className="cursor-pointer hover:text-white">Services</li>
