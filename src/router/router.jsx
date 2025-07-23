@@ -12,6 +12,7 @@ import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
 import ShoppingCart from "../pages/ShoppingCart/ShoppingCart";
 import VideosView from "../pages/public/videos/VideosView";
+import CheckOut from "../pages/Checkout/CheckOut";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -47,6 +48,11 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/shopping-cart",
         element: <ShoppingCart />,
+      },
+
+      {
+        path: "/check-out",
+        element: <CheckOut />,
       },
 
       {

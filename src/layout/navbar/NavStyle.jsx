@@ -42,6 +42,9 @@ const NavStyle = () => {
             >
               Shopping Cart
             </Link>
+            <Link to="/check-out" className="cursor-pointer hover:text-white">
+              CheckOut
+            </Link>
             <Link to="/video" className="cursor-pointer hover:text-white">
               Video
             </Link>
