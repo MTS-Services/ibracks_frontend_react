@@ -13,8 +13,9 @@ import {
   IoRepeat,
   IoNotifications,
   IoHeadsetSharp,
+  IoCalendarOutline,
 } from "react-icons/io5";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiFilter } from "react-icons/fi";
 import {
   FaHeart,
   FaRegHeart,
@@ -22,16 +23,43 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaCrown,
+  FaDollarSign,
+  FaShoppingCart,
 } from "react-icons/fa";
 import { RiPlayListFill } from "react-icons/ri";
 import { MdFileUpload } from "react-icons/md";
 import { SlPlaylist } from "react-icons/sl";
-import { BsPersonBoundingBox } from "react-icons/bs";
+import { BsPersonBoundingBox, BsArrowDownUp } from "react-icons/bs";
 import { TfiBarChart } from "react-icons/tfi";
 import { IoMdTime } from "react-icons/io";
 import { PiDotsThreeOutline } from "react-icons/pi";
 
-// --- MOCK DATA ---
+// --- CHART.JS IMPORTS ---
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+// Registering Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
+
+// =================================================================================
+//  MOCK DATA & HELPERS
+// =================================================================================
+
 const navLinksData = [
   { name: "Total Songs Uploaded", icon: <SlPlaylist /> },
   { name: "Total Sales (Amount)", icon: <TfiBarChart /> },
@@ -51,7 +79,7 @@ const songsData = [
     duration: "3:27",
     isLiked: false,
     likes: "8.9K",
-    albumArt: "https://placehold.co/54x54/3498DB/FFFFFF?text=P",
+    albumArt: "https://placehold.co/54x54/FFC107/000000?text=S",
   },
   {
     id: 2,
@@ -113,28 +141,7 @@ const songsData = [
     likes: "18.5K",
     albumArt: "https://placehold.co/54x54/E91E63/FFFFFF?text=BL",
   },
-  {
-    id: 8,
-    title: "Stay",
-    artist: "The Kid LAROI, Justin Bieber",
-    plays: "2,100,000,000",
-    duration: "2:21",
-    isLiked: true,
-    likes: "14.2K",
-    albumArt: "https://placehold.co/54x54/00BCD4/FFFFFF?text=S",
-  },
-  {
-    id: 9,
-    title: "Levitating",
-    artist: "Dua Lipa",
-    plays: "1,700,000,000",
-    duration: "3:23",
-    isLiked: false,
-    likes: "11.9K",
-    albumArt: "https://placehold.co/54x54/FF9800/FFFFFF?text=L",
-  },
 ];
-
 const recentUploadsData = [
   {
     title: "Perfect",
@@ -166,29 +173,110 @@ const recentUploadsData = [
     time: "11hr ago",
     albumArt: "https://placehold.co/44x44/795548/FFFFFF?text=FS",
   },
-  {
-    title: "Shape of You",
-    artist: "Ed Sheeran",
-    time: "14hr ago",
-    albumArt: "https://placehold.co/44x44/2ECC71/FFFFFF?text=SOY",
-  },
-  {
-    title: "Bad Habits",
-    artist: "Ed Sheeran",
-    time: "20hr ago",
-    albumArt: "https://placehold.co/44x44/F1C40F/000000?text=BH",
-  },
 ];
+const generateSalesData = (filter) => {
+  const randomValue = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+  let revenue = 0,
+    purchases = 0,
+    revenueChange = 0,
+    purchaseChange = 0,
+    periodLabel = "";
+  const chartData = [];
 
-// AdminPannel.jsx
+  // Generate summary card data (this logic remains similar)
+  if (filter.type === "predefined") {
+    revenue = randomValue(1000, 50000);
+    purchases = randomValue(20, 500);
+    revenueChange = randomValue(-15, 25);
+    purchaseChange = randomValue(-10, 30);
+    periodLabel = `previous ${filter.value}`;
+  } else if (filter.type === "month") {
+    revenue = randomValue(10000, 80000);
+    purchases = randomValue(100, 800);
+    revenueChange = randomValue(-15, 25);
+    purchaseChange = randomValue(-10, 30);
+    periodLabel = `previous month`;
+  }
+
+  // Generate chart data based on the selected filter
+  switch (filter.value) {
+    case "24 hours":
+      const hours = ["12am", "3am", "6am", "9am", "12pm", "3pm", "6pm", "9pm"];
+      for (const hour of hours) {
+        chartData.push({
+          label: hour,
+          revenue: randomValue(10, 100),
+          purchase: randomValue(10, 100),
+        });
+      }
+      break;
+    case "30 days":
+      const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
+      for (const week of weeks) {
+        chartData.push({
+          label: week,
+          revenue: randomValue(50, 200),
+          purchase: randomValue(50, 200),
+        });
+      }
+      break;
+    case "12 months":
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      for (const month of months) {
+        chartData.push({
+          label: month,
+          revenue: randomValue(100, 250),
+          purchase: randomValue(100, 250),
+        });
+      }
+      break;
+    case "7 days":
+    default: // Default to 7 days view
+      const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
+      for (const day of days) {
+        chartData.push({
+          label: day,
+          revenue: randomValue(20, 220),
+          purchase: randomValue(20, 220),
+        });
+      }
+      break;
+  }
+
+  return {
+    summary: { revenue, purchases, revenueChange, purchaseChange, periodLabel },
+    chartData,
+  };
+};
 
 // =================================================================================
-//  COMPONENT DEFINITIONS
+//  UI COMPONENTS
 // =================================================================================
 
-const Sidebar = () => {
-  const [activeLink, setActiveLink] = useState("Total Songs Uploaded");
-  return (
+const Sidebar = ({ activeLink, setActiveLink }) => {
+  /* ... Unchanged ... */ return (
     <aside className="hidden w-72 flex-shrink-0 flex-col space-y-4 bg-neutral-800 p-4 text-white md:flex">
       <div className="mt-4 flex h-32 w-32 items-start">
         <img src="/public/image/ibracks_logo.png" alt="Logo" />
@@ -199,26 +287,16 @@ const Sidebar = () => {
             key={link.name}
             href="#"
             onClick={() => setActiveLink(link.name)}
-            // The parent link now only controls the text label's color
             className={`relative flex items-center gap-4 rounded-lg px-4 py-3 text-base font-normal capitalize transition-colors duration-200 ${activeLink === link.name ? "text-white" : "text-neutral-400 hover:text-white"}`}
           >
-            {/* The active bar on the right remains the same */}
             {activeLink === link.name && (
               <div className="absolute top-0 -right-4 h-full w-1 rounded-tl-sm rounded-bl-sm bg-white"></div>
             )}
-
-            {/* This span for the icon has its own conditional styling */}
             <span
-              className={`rounded-lg p-2 transition-colors duration-200 ${
-                activeLink === link.name
-                  ? "bg-gradient-to-b from-orange-200 to-yellow-500 text-black" // Active State
-                  : "bg-neutral-700 text-white" // Inactive State
-              }`}
+              className={`rounded-lg p-2 transition-colors duration-200 ${activeLink === link.name ? "bg-gradient-to-b from-orange-200 to-yellow-500 text-black" : "bg-neutral-700 text-white"}`}
             >
               {link.icon}
             </span>
-
-            {/* The whitespace-nowrap class is added here to keep the text on one line */}
             <span className="whitespace-nowrap">{link.name}</span>
           </a>
         ))}
@@ -241,7 +319,8 @@ const Sidebar = () => {
               onClick={() => alert(`Editing ${user.role}`)}
               className="text-amber-400 hover:text-amber-300"
             >
-              <FiEdit />
+              {" "}
+              <FiEdit />{" "}
             </button>
           </div>
         ))}
@@ -249,113 +328,121 @@ const Sidebar = () => {
     </aside>
   );
 };
-
-const TopBar = ({ searchTerm, setSearchTerm }) => (
-  <header className="sticky top-0 z-10 flex flex-shrink-0 items-center justify-between gap-4 bg-black/30 p-2">
-    <div className="ml-9 flex items-center gap-2">
-      <button className="rounded-lg bg-neutral-800 p-4 text-white hover:bg-neutral-700">
-        <FaChevronLeft />
-      </button>
-      <span className="text-neutral-400">Home</span>
-      <FaChevronRight className="text-neutral-500" />
-    </div>
-    <div className="flex flex-1 justify-center px-4">
-      <div className="relative w-full max-w-lg">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-400">
-          <FaSearch />
-        </span>
-        <input
-          type="search"
-          placeholder="Search music, artist, albums..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full rounded-xl bg-neutral-800 py-4 pr-4 pl-10 text-white focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
-        />
+const TopBar = ({ searchTerm, setSearchTerm }) => {
+  /* ... Unchanged ... */ return (
+    <header className="sticky top-0 z-10 flex flex-shrink-0 items-center justify-between gap-4 bg-black/30 p-2">
+      <div className="ml-9 flex items-center gap-2">
+        <button className="rounded-lg bg-neutral-800 p-4 text-white hover:bg-neutral-700">
+          {" "}
+          <FaChevronLeft />{" "}
+        </button>
+        <span className="text-neutral-400">Home</span>
+        <FaChevronRight className="text-neutral-500" />
       </div>
-    </div>
-    <button className="mr-9 rounded-lg bg-neutral-800 p-4 text-xl text-white hover:bg-neutral-700">
-      <IoNotifications />
-    </button>
-  </header>
-);
-
+      <div className="flex flex-1 justify-center px-4">
+        <div className="relative w-full max-w-lg">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-400">
+            {" "}
+            <FaSearch />{" "}
+          </span>
+          <input
+            type="search"
+            placeholder="Search music, artist, albums..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full rounded-xl bg-neutral-800 py-4 pr-4 pl-10 text-white focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
+          />
+        </div>
+      </div>
+      <button className="mr-9 rounded-lg bg-neutral-800 p-4 text-xl text-white hover:bg-neutral-700">
+        {" "}
+        <IoNotifications />{" "}
+      </button>
+    </header>
+  );
+};
 const SongList = ({
   songs,
   currentSong,
   isPlaying,
   onPlayPause,
   onLikeToggle,
-}) => (
-  <div className="space-y-2 p-4">
-    <h1 className="mb-4 ml-8 text-xl font-bold text-white">Total Songs</h1>
-    {songs.map((song, index) => (
-      <div
-        key={song.id}
-        className="group mr-6 ml-5 grid grid-cols-[30px_minmax(200px,_3fr)_2fr_2fr_auto] items-center gap-4 rounded-lg p-2 hover:bg-white/10"
-      >
-        <div className="relative flex h-full items-center justify-center text-center text-neutral-200">
-          {currentSong?.id === song.id && isPlaying ? (
-            <button
-              onClick={() => onPlayPause(song)}
-              className="text-xl text-white"
+}) => {
+  /* ... Unchanged ... */ return (
+    <div className="space-y-2 p-4">
+      <h1 className="mb-4 ml-8 text-xl font-bold text-white">Total Songs</h1>
+      {songs.map((song, index) => (
+        <div
+          key={song.id}
+          className="group mr-6 ml-5 grid grid-cols-[30px_minmax(200px,_3fr)_2fr_2fr_auto] items-center gap-4 rounded-lg p-2 hover:bg-white/10"
+        >
+          <div className="relative flex h-full items-center justify-center text-center text-neutral-200">
+            {currentSong?.id === song.id && isPlaying ? (
+              <button
+                onClick={() => onPlayPause(song)}
+                className="text-xl text-white"
+              >
+                {" "}
+                <IoPause />{" "}
+              </button>
+            ) : (
+              <button
+                onClick={() => onPlayPause(song)}
+                className="absolute inset-0 flex items-center justify-center text-xl text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                {" "}
+                <IoPlay />{" "}
+              </button>
+            )}
+            <span
+              className={`transition-opacity ${currentSong?.id === song.id || "group-hover:opacity-0"}`}
             >
-              <IoPause />
-            </button>
-          ) : (
-            <button
-              onClick={() => onPlayPause(song)}
-              className="absolute inset-0 flex items-center justify-center text-xl text-white opacity-0 transition-opacity group-hover:opacity-100"
-            >
-              <IoPlay />
-            </button>
-          )}
-          <span
-            className={`transition-opacity ${currentSong?.id === song.id || "group-hover:opacity-0"}`}
-          >
-            {index + 1}
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <img
-            src={song.albumArt}
-            alt={song.title}
-            className="h-14 w-14 rounded-lg"
-          />
-          <p className="truncate font-bold text-white">{song.title}</p>
-        </div>
-        <div className="flex items-center gap-3 text-neutral-200">
-          <IoHeadsetSharp className="text-xl" />
-          <span>{song.plays}</span>
-        </div>
-        <div className="flex items-center gap-2 text-neutral-200">
-          <IoMdTime className="rounded-full text-xl" />
-          <span>{song.duration}</span>
-        </div>
-
-        <div className="flex items-center justify-end gap-6 text-neutral-200">
-          {/* Container for the heart button and likes text */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => onLikeToggle(song.id)}
-              className={`${song.isLiked ? "text-red-500" : "text-white"} text-xl hover:text-red-500`}
-            >
-              {song.isLiked ? <FaHeart /> : <FaRegHeart />}
-            </button>
-            <span className="w-20 text-sm">{song.likes} Likes</span>
+              {" "}
+              {index + 1}{" "}
+            </span>
           </div>
-
-          {/* More options button */}
-          <button className="hover:text-white">
-            <PiDotsThreeOutline className="text-2xl" />
-          </button>
+          <div className="flex items-center gap-4">
+            <img
+              src={song.albumArt}
+              alt={song.title}
+              className="h-14 w-14 rounded-lg"
+            />
+            <p className="truncate font-bold text-white">{song.title}</p>
+          </div>
+          <div className="flex items-center gap-3 text-neutral-200">
+            {" "}
+            <IoHeadsetSharp className="text-xl" />{" "}
+            <span>{song.plays}</span>{" "}
+          </div>
+          <div className="flex items-center gap-2 text-neutral-200">
+            {" "}
+            <IoMdTime className="rounded-full text-xl" />{" "}
+            <span>{song.duration}</span>{" "}
+          </div>
+          <div className="flex items-center justify-end gap-6 text-neutral-200">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onLikeToggle(song.id)}
+                className={`${song.isLiked ? "text-red-500" : "text-white"} text-xl hover:text-red-500`}
+              >
+                {" "}
+                {song.isLiked ? <FaHeart /> : <FaRegHeart />}{" "}
+              </button>
+              <span className="w-20 text-sm">{song.likes} Likes</span>
+            </div>
+            <button className="hover:text-white">
+              {" "}
+              <PiDotsThreeOutline className="text-2xl" />{" "}
+            </button>
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-);
-
+      ))}
+    </div>
+  );
+};
 const RightSidebar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  /* ... Unchanged ... */ const [isDropdownOpen, setIsDropdownOpen] =
+    useState(false);
   const dropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -365,7 +452,6 @@ const RightSidebar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownRef]);
-
   return (
     <aside className="hidden w-72 flex-shrink-0 flex-col space-y-8 bg-neutral-800 p-4 text-white lg:flex">
       <div className="relative" ref={dropdownRef}>
@@ -382,8 +468,8 @@ const RightSidebar = () => {
             <div>
               <p className="font-semibold text-white">James Rodriguez</p>
               <div className="flex items-center gap-1 text-xs text-neutral-400">
-                <span>Admin</span>
-                <FaCrown className="text-amber-400" />
+                {" "}
+                <span>Admin</span> <FaCrown className="text-amber-400" />{" "}
               </div>
             </div>
           </div>
@@ -393,28 +479,34 @@ const RightSidebar = () => {
         </div>
         {isDropdownOpen && (
           <div className="absolute top-full right-0 z-20 mt-2 w-48 rounded-lg bg-neutral-700 shadow-lg">
+            {" "}
             <button
               onClick={() => alert("Logging out...")}
               className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
             >
-              Log Out
-            </button>
+              {" "}
+              Log Out{" "}
+            </button>{" "}
           </div>
         )}
       </div>
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
         <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90">
-          <MdFileUpload className="text-5xl" />
-          <p className="font-bold">Upload Here</p>
+          {" "}
+          <MdFileUpload className="text-5xl" />{" "}
+          <p className="font-bold">Upload Here</p>{" "}
         </div>
       </div>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-white">Recent Uploads</h2>
+          {" "}
+          <h2 className="text-base font-semibold text-white">
+            Recent Uploads
+          </h2>{" "}
           <a href="#" className="text-sm text-green-500 hover:underline">
             See All
-          </a>
+          </a>{" "}
         </div>
         <div className="space-y-3">
           {recentUploadsData.map((song) => (
@@ -426,8 +518,11 @@ const RightSidebar = () => {
                   className="h-11 w-11 rounded-lg"
                 />
                 <div>
-                  <p className="text-sm font-bold text-white">{song.title}</p>
-                  <p className="text-xs text-neutral-400">{song.artist}</p>
+                  {" "}
+                  <p className="text-sm font-bold text-white">
+                    {song.title}
+                  </p>{" "}
+                  <p className="text-xs text-neutral-400">{song.artist}</p>{" "}
                 </div>
               </div>
               <p className="text-xs text-neutral-400">{song.time}</p>
@@ -438,9 +533,9 @@ const RightSidebar = () => {
     </aside>
   );
 };
-
 const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
-  if (!currentSong) return <div className="h-24 bg-neutral-900"></div>;
+  /* ... Unchanged ... */ if (!currentSong)
+    return <div className="h-24 bg-neutral-900"></div>;
   return (
     <div className="grid h-full grid-cols-3 items-center bg-neutral-900/80 px-4 py-2 text-white backdrop-blur-md">
       <div className="ml-10 flex items-center gap-4">
@@ -450,35 +545,46 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
           className="h-16 w-16 rounded-lg"
         />
         <div>
-          <p className="font-semibold text-white">{currentSong.title}</p>
-          <p className="text-sm text-neutral-400">{currentSong.artist}</p>
+          {" "}
+          <p className="font-semibold text-white">{currentSong.title}</p>{" "}
+          <p className="text-sm text-neutral-400">{currentSong.artist}</p>{" "}
         </div>
         <button
           onClick={() => onLikeToggle(currentSong.id)}
           className={`${currentSong.isLiked ? "text-red-500" : "text-white"} transition-colors hover:text-red-500`}
         >
-          {currentSong.isLiked ? <FaHeart /> : <FaRegHeart />}
+          {" "}
+          {currentSong.isLiked ? (
+            <FaHeart />
+          ) : (
+            <FaRegHeart className="text-xl" />
+          )}{" "}
         </button>
       </div>
       <div className="flex flex-col items-center justify-center">
         <div className="flex items-center gap-6">
           <button className="text-neutral-400 hover:text-white">
-            <IoShuffle className="text-xl" />
+            {" "}
+            <IoShuffle className="text-xl" />{" "}
           </button>
           <button className="text-neutral-400 hover:text-white">
-            <IoPlaySkipBack className="text-2xl" />
+            {" "}
+            <IoPlaySkipBack className="text-2xl" />{" "}
           </button>
           <button
             onClick={() => onPlayPause(currentSong)}
             className="rounded-full bg-white p-3 text-2xl text-black transition-transform hover:scale-105"
           >
-            {isPlaying ? <IoPause /> : <IoPlay />}
+            {" "}
+            {isPlaying ? <IoPause /> : <IoPlay />}{" "}
           </button>
           <button className="text-neutral-400 hover:text-white">
-            <IoPlaySkipForward className="text-2xl" />
+            {" "}
+            <IoPlaySkipForward className="text-2xl" />{" "}
           </button>
           <button className="text-neutral-400 hover:text-white">
-            <IoRepeat className="text-xl" />
+            {" "}
+            <IoRepeat className="text-xl" />{" "}
           </button>
         </div>
         <div className="mt-2 flex w-full items-center gap-2 text-xs">
@@ -503,6 +609,219 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
     </div>
   );
 };
+const SalesFilterBar = ({ activeFilter, setFilter }) => {
+  /* ... Unchanged ... */ const predefinedFilters = [
+    "24 hours",
+    "7 days",
+    "30 days",
+    "12 months",
+  ];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-8">
+        {predefinedFilters.map((filter) => (
+          <button
+            key={filter}
+            onClick={() => setFilter({ type: "predefined", value: filter })}
+            className={`text-xs capitalize transition-colors ${activeFilter.value === filter ? "border-b border-white font-semibold text-white" : "font-normal text-neutral-300 hover:text-white"}`}
+          >
+            {" "}
+            {filter}{" "}
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center gap-4">
+        <button className="flex items-center gap-2 rounded border border-neutral-400 px-2 py-1.5 text-xs text-white hover:bg-white/10">
+          {" "}
+          <IoCalendarOutline /> <span>Select Dates</span>{" "}
+        </button>
+        <div className="relative">
+          <button
+            onClick={() => setShowMonthDropdown(!showMonthDropdown)}
+            className="flex items-center gap-2 rounded border border-neutral-400 px-2 py-1.5 text-xs text-white hover:bg-white/10"
+          >
+            {" "}
+            <FiFilter />{" "}
+            <span>
+              {activeFilter.type === "month" ? activeFilter.value : "Filters"}
+            </span>{" "}
+          </button>
+          {showMonthDropdown && (
+            <div className="absolute top-full right-0 z-20 mt-2 w-40 rounded-lg bg-neutral-700 shadow-lg">
+              {" "}
+              {months.map((month) => (
+                <button
+                  key={month}
+                  onClick={() => {
+                    setFilter({ type: "month", value: month });
+                    setShowMonthDropdown(false);
+                  }}
+                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
+                >
+                  {" "}
+                  {month}{" "}
+                </button>
+              ))}{" "}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+const SummaryCard = ({
+  icon,
+  value,
+  title,
+  change,
+  bgColor,
+  textColor,
+  periodLabel,
+}) => {
+  /* ... Unchanged ... */ const isPositive = change >= 0;
+  return (
+    <div
+      className={`flex h-44 w-44 flex-col justify-between rounded-2xl p-5 ${bgColor} ${textColor}`}
+    >
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/20">
+        {icon}
+      </div>
+      <div>
+        <p className="text-2xl font-semibold">{value}</p>
+        <p className="text-base font-medium">{title}</p>
+        <p className="text-xs font-medium">
+          {" "}
+          <span className={isPositive ? "text-green-800" : "text-red-800"}>
+            {isPositive ? "+" : ""}
+            {change}%
+          </span>{" "}
+          from {periodLabel}{" "}
+        </p>
+      </div>
+    </div>
+  );
+};
+const SalesChart = ({ data }) => {
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: "#d1d5db",
+          font: { size: 12 },
+          usePointStyle: true,
+          boxWidth: 8,
+        },
+      },
+      title: { display: false },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 250,
+        ticks: {
+          color: "#d1d5db",
+          stepSize: 50,
+          callback: function (value) {
+            return value / 10 + "k";
+          },
+        },
+        grid: { color: "rgba(255, 255, 255, 0.2)" },
+      },
+      x: { ticks: { color: "#d1d5db" }, grid: { display: false } },
+    },
+  };
+  const chartData = {
+    labels: data.map((d) => d.label), // Changed from d.day to d.label to support all filter types
+    datasets: [
+      {
+        label: "Total revenue",
+        data: data.map((d) => d.revenue),
+        backgroundColor: "#f59e0b",
+        borderRadius: 0,
+        borderSkipped: false,
+        barThickness: 10,
+      },
+      {
+        label: "Total purchase",
+        data: data.map((d) => d.purchase),
+        backgroundColor: "#8b5cf6",
+        borderRadius: 0,
+        borderSkipped: false,
+        barThickness: 10,
+      },
+    ],
+  };
+  return (
+    <div className="rounded-lg bg-white/10 p-6">
+      <div className="mb-6 flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-white capitalize">
+          Sales Statistic
+        </h3>
+        <div className="flex cursor-pointer items-center gap-2 rounded-md p-2 text-white hover:bg-white/10">
+          <BsArrowDownUp />
+        </div>
+      </div>
+      <div className="h-64">
+        <Bar options={options} data={chartData} />
+      </div>
+    </div>
+  );
+};
+const SalesDashboard = ({ salesData, activeFilter, setFilter }) => {
+  /* ... Unchanged ... */ if (!salesData)
+    return (
+      <div className="flex h-full items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  return (
+    <div className="space-y-6 p-8">
+      <h2 className="text-lg font-semibold text-white capitalize">
+        Sales Analysis
+      </h2>
+      <SalesFilterBar activeFilter={activeFilter} setFilter={setFilter} />
+      <div className="flex gap-6">
+        <SummaryCard
+          icon={<FaDollarSign />}
+          value={`$${salesData.summary.revenue.toLocaleString()}`}
+          title="Revenue"
+          change={salesData.summary.revenueChange}
+          periodLabel={salesData.summary.periodLabel}
+          bgColor="bg-amber-400"
+          textColor="text-neutral-700"
+        />
+        <SummaryCard
+          icon={<FaShoppingCart />}
+          value={salesData.summary.purchases.toLocaleString()}
+          title="Purchases"
+          change={salesData.summary.purchaseChange}
+          periodLabel={salesData.summary.periodLabel}
+          bgColor="bg-violet-500"
+          textColor="text-white"
+        />
+      </div>
+      <SalesChart data={salesData.chartData} />
+    </div>
+  );
+};
 
 // =================================================================================
 //  MAIN ADMIN PANNEL COMPONENT
@@ -513,12 +832,21 @@ const AdminPannel = () => {
   const [currentSong, setCurrentSong] = useState(songsData[2]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeLink, setActiveLink] = useState("Total Songs Uploaded");
+  const [salesFilter, setSalesFilter] = useState({
+    type: "predefined",
+    value: "7 days",
+  });
+  const [salesData, setSalesData] = useState(null);
 
-  const filteredSongs = songs.filter(
-    (song) =>
-      song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      song.artist.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  useEffect(() => {
+    setSalesData(null);
+    const timer = setTimeout(() => {
+      setSalesData(generateSalesData(salesFilter));
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [salesFilter]);
+
   const handlePlayPause = (song) => {
     if (currentSong?.id === song.id) setIsPlaying(!isPlaying);
     else {
@@ -533,6 +861,12 @@ const AdminPannel = () => {
       ),
     );
   };
+
+  const filteredSongs = songs.filter(
+    (song) =>
+      song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      song.artist.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
   useEffect(() => {
     if (currentSong) {
       const updatedCurrentSong = songs.find((s) => s.id === currentSong.id);
@@ -542,32 +876,47 @@ const AdminPannel = () => {
 
   return (
     <div className="mx-auto h-screen max-w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900 font-sans text-white">
-      <div className="flex h-[calc(100%-6rem)]">
-        {" "}
-        {/* Main content area height = 100% - player height (h-24) */}
-        <Sidebar />
-        <main className="flex-1">
+      {/* THIS IS THE FIRST CHANGE: The height of this container is now dynamic */}
+      <div
+        className={`flex ${activeLink !== "Total Sales (Amount)" ? "h-[calc(100%-6rem)]" : "h-full"}`}
+      >
+        <Sidebar activeLink={activeLink} setActiveLink={setActiveLink} />
+        <main className="flex-1 overflow-y-auto">
           <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <SongList
-            songs={filteredSongs}
+          {activeLink === "Total Songs Uploaded" && (
+            <SongList
+              songs={filteredSongs}
+              currentSong={currentSong}
+              isPlaying={isPlaying}
+              onPlayPause={handlePlayPause}
+              onLikeToggle={handleLikeToggle}
+            />
+          )}
+          {activeLink === "Total Sales (Amount)" && (
+            <SalesDashboard
+              salesData={salesData}
+              activeFilter={salesFilter}
+              setFilter={setSalesFilter}
+            />
+          )}
+          {activeLink === "User Admin" && (
+            <div className="p-8 text-white">User Admin Page Coming Soon</div>
+          )}
+        </main>
+        <RightSidebar />
+      </div>
+
+      {/* THIS IS THE SECOND CHANGE: The Player is now only rendered if the active link is NOT Total Sales */}
+      {activeLink !== "Total Sales (Amount)" && (
+        <div className="h-24">
+          <Player
             currentSong={currentSong}
             isPlaying={isPlaying}
             onPlayPause={handlePlayPause}
             onLikeToggle={handleLikeToggle}
           />
-        </main>
-        <RightSidebar />
-      </div>
-      <div className="h-24">
-        {" "}
-        {/* Player takes up the remaining 6rem (h-24 in Tailwind) */}
-        <Player
-          currentSong={currentSong}
-          isPlaying={isPlaying}
-          onPlayPause={handlePlayPause}
-          onLikeToggle={handleLikeToggle}
-        />
-      </div>
+        </div>
+      )}
     </div>
   );
 };
