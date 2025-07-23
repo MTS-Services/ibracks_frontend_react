@@ -51,6 +51,9 @@ const NavStyle = () => {
             <Link to="/tracks-view" className="cursor-pointer hover:text-white">
               TracksView
             </Link>
+            <Link to="/products" className="cursor-pointer hover:text-white">
+              Products
+            </Link>
           </ul>
 
           {/* Icons + Login */}

@@ -14,6 +14,7 @@ import ShoppingCart from "../pages/ShoppingCart/ShoppingCart";
 import VideosView from "../pages/public/videos/VideosView";
 import CheckOut from "../pages/Checkout/CheckOut";
 import TracksView from "../pages/public/tracks/TracksView";
+import ProductsPage from "../pages/ProductsPage/ProductsPage";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/tracks-view",
         element: <TracksView />,
+      },
+      {
+        path: "/products",
+        element: <ProductsPage />,
       },
 
       {
