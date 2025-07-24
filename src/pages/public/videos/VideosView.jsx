@@ -111,7 +111,7 @@ const VideosView = () => {
 
   return (
     <div
-      className="min-h-screen bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
+      className="min-h-screen bg-neutral-900 px-4 py-10 sm:px-6 md:py-14 lg:px-8"
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
@@ -161,7 +161,7 @@ const VideosView = () => {
         ))}
       </div>
 
-      <div className="mx-auto flex items-center justify-center pt-10">
+      <div className="mx-auto flex items-center justify-center py-0 pt-10 lg:py-8">
         {hasMore && (
           <div
             // This is the outer container for the border effect

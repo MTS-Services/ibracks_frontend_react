@@ -58,7 +58,7 @@ const AppRoutes = createBrowserRouter([
       },
 
       {
-        path: "/tracks-view",
+        path: "/tracks",
         element: <TracksView />,
       },
       {

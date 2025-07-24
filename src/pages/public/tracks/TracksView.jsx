@@ -119,16 +119,14 @@ const TracksPage = () => {
       <div className="">
         <TracksPageHeroSection></TracksPageHeroSection>
       </div>
-      <div className="py-10">
-        <div className="flex justify-center pb-6 text-4xl font-[600] text-white capitalize">
+
+      <div class="py-4 lg:py-10">
+        <div class="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:text-4xl">
           Tracks
         </div>
-        <div className="mx-auto max-w-[900px] rounded-md bg-white/5 p-6">
-          {/* Dropdown Filters */}
-
-          <div className="mx-auto mb-6 flex justify-center space-x-10">
-            {/* Custom Category Dropdown */}
-            <div className="relative">
+        <div class="mx-auto max-w-[950px] rounded-md bg-white/5 p-4 md:p-6">
+          <div class="mx-auto mb-6 flex flex-wrap justify-center gap-4 md:gap-10">
+            <div class="relative">
               <select
                 value={selectedCategory}
                 onChange={(e) =>
@@ -138,58 +136,63 @@ const TracksPage = () => {
                     setIsCategoryDropdownOpen,
                   )
                 }
-                // Hide the default arrow (browser specific, might need more robust CSS)
-                className="appearance-none rounded-md bg-white px-2 py-2 pr-8 text-black"
-                onClick={() => toggleDropdown(setIsCategoryDropdownOpen)} // To visualize the arrow change with click
+                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                onClick={() => toggleDropdown(setIsCategoryDropdownOpen)}
               >
-                <option className="px-1 text-[16px] font-[400]">
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   All Category
                 </option>
-                <option className="px-1 text-[16px] font-[400]">
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Category 1
                 </option>
-                <option className="px-1 text-[16px] font-[400]">
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Category 2
                 </option>
-                <option className="px-1 text-[16px] font-[400]">
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Category 3
                 </option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
                 {isCategoryDropdownOpen ? (
-                  <FiChevronUp className="text-xl text-black" />
+                  <FiChevronUp class="text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown className="text-xl text-black" />
+                  <FiChevronDown class="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
 
-            {/* Custom BPM Dropdown */}
-            <div className="relative">
+            <div class="relative">
               <select
                 value={selectedBpm}
                 onChange={(e) =>
                   handleDropdownChange(e, setSelectedBpm, setIsBpmDropdownOpen)
                 }
-                className="appearance-none rounded-md bg-white px-2 py-2 pr-8 pl-2 text-black"
+                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsBpmDropdownOpen)}
               >
-                <option className="px-1 text-[16px] font-[400]">All Bpm</option>
-                <option className="px-1 text-[16px] font-[400]">120 BPM</option>
-                <option className="px-1 text-[16px] font-[400]">130 BPM</option>
-                <option className="px-1 text-[16px] font-[400]">140 BPM</option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  All Bpm
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  120 BPM
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  130 BPM
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  140 BPM
+                </option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
                 {isBpmDropdownOpen ? (
-                  <FiChevronUp className="text-xl text-black" />
+                  <FiChevronUp class="text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown className="text-xl text-black" />
+                  <FiChevronDown class="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
 
-            {/* Custom Moods Dropdown */}
-            <div className="relative">
+            <div class="relative">
               <select
                 value={selectedMoods}
                 onChange={(e) =>
@@ -199,29 +202,32 @@ const TracksPage = () => {
                     setIsMoodsDropdownOpen,
                   )
                 }
-                className="appearance-none rounded-md bg-white px-2 py-2 pr-8 pl-2 text-black"
+                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsMoodsDropdownOpen)}
               >
-                <option className="px-1 text-[16px] font-[400]">
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   All Moods
                 </option>
-                <option className="px-1 text-[16px] font-[400]">Happy</option>
-                <option className="px-1 text-[16px] font-[400]">Sad</option>
-                <option className="px-1 text-[16px] font-[400]">
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Happy
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Sad
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Energetic
                 </option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
                 {isMoodsDropdownOpen ? (
-                  <FiChevronUp className="text-xl text-black" />
+                  <FiChevronUp class="text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown className="text-xl text-black" />
+                  <FiChevronDown class="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
 
-            {/* Custom Genres Dropdown */}
-            <div className="relative">
+            <div class="relative">
               <select
                 value={selectedGenres}
                 onChange={(e) =>
@@ -231,27 +237,32 @@ const TracksPage = () => {
                     setIsGenresDropdownOpen,
                   )
                 }
-                className="appearance-none rounded-md bg-white px-4 py-2 pr-8 pl-2 text-black"
+                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsGenresDropdownOpen)}
               >
-                <option className="px-1 text-[16px] font-[400]">
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   All Genres
                 </option>
-                <option className="px-1 text-[16px] font-[400]">Pop</option>
-                <option className="px-1 text-[16px] font-[400]">Rock</option>
-                <option className="px-1 text-[16px] font-[400]">Jazz</option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Pop
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Rock
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Jazz
+                </option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
                 {isGenresDropdownOpen ? (
-                  <FiChevronUp className="pl-1 text-xl text-black" />
+                  <FiChevronUp class="pl-1 text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown className="text-xl text-black" />
+                  <FiChevronDown class="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
 
-            {/* Custom Genres Default Dropdown */}
-            <div className="relative">
+            <div class="relative">
               <select
                 value={selectedGenres}
                 onChange={(e) =>
@@ -261,25 +272,32 @@ const TracksPage = () => {
                     setIsGenresDropdownOpen,
                   )
                 }
-                className="appearance-none rounded-md bg-white px-4 py-2 pr-8 pl-2 text-black"
+                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsGenresDropdownOpen)}
               >
-                <option className="px-1 text-[16px] font-[400]">Default</option>
-                <option className="px-1 text-[16px] font-[400]">Default</option>
-                <option className="px-1 text-[16px] font-[400]">Default</option>
-                <option className="px-1 text-[16px] font-[400]">Default</option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Default
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Default
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Default
+                </option>
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                  Default
+                </option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
                 {isGenresDropdownOpen ? (
-                  <FiChevronUp className="pl-1 text-xl text-black" />
+                  <FiChevronUp class="pl-1 text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown className="text-xl text-black" />
+                  <FiChevronDown class="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
 
-            {/* Custom Genres Default Dropdown */}
-            <div className="relative">
+            <div class="relative">
               <select
                 value={selectedGenres}
                 onChange={(e) =>
@@ -289,49 +307,42 @@ const TracksPage = () => {
                     setIsGenresDropdownOpen,
                   )
                 }
-                className="appearance-none rounded-md bg-white px-4 py-2 pr-8 pl-2 text-black"
+                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsGenresDropdownOpen)}
               >
-                <option className="px-1 text-[16px] font-[400]">
-                  {" "}
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Default List
                 </option>
-                <option className="px-1 text-[16px] font-[400]">
-                  {" "}
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Default List
                 </option>
-                <option className="px-1 text-[16px] font-[400]">
-                  {" "}
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Default List
                 </option>
-                <option className="px-1 text-[16px] font-[400]">
-                  {" "}
+                <option class="px-1 text-sm font-[400] md:text-[16px]">
                   Default List
                 </option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
                 {isGenresDropdownOpen ? (
-                  <FiChevronUp className="pl-1 text-xl text-black" />
+                  <FiChevronUp class="pl-1 text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown className="text-xl text-black" />
+                  <FiChevronDown class="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="mx-auto flex items-center justify-center">
-            <div className="inline-flex w-[880px] items-center justify-between rounded-lg bg-white px-4 py-2">
-              {/* Input box */}
+          <div class="mx-auto flex items-center justify-center px-2">
+            <div class="inline-flex w-full max-w-[880px] items-center justify-between rounded-lg bg-white px-3 py-1 md:px-4 md:py-2">
               <input
                 type="text"
                 placeholder="What type of track are you looking for?"
-                className="w-full bg-transparent font-['Poppins'] text-base font-normal text-black outline-none placeholder:text-black/60"
+                class="w-full bg-transparent font-['Poppins'] text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
               />
 
-              {/* Search icon */}
-              <div className="ml-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-neutral-200 p-2.5">
-                <LuSearch className="text-2xl text-black" />
+              <div class="ml-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-neutral-200 p-1.5 md:ml-3 md:h-9 md:w-9 md:p-2.5">
+                <LuSearch class="text-lg text-black md:text-2xl" />
               </div>
             </div>
           </div>

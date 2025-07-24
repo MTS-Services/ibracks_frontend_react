@@ -48,7 +48,7 @@ const NavStyle = () => {
             <Link to="/video" className="cursor-pointer hover:text-white">
               Video
             </Link>
-            <Link to="/tracks-view" className="cursor-pointer hover:text-white">
+            <Link to="/tracks" className="cursor-pointer hover:text-white">
               TracksView
             </Link>
             <Link to="/products" className="cursor-pointer hover:text-white">

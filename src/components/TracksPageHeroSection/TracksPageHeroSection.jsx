@@ -48,18 +48,25 @@ const TracksPageHeroSection = () => {
   ];
 
   return (
-    <div className="mx-auto flex w-[1270px] items-center justify-center">
-      <div>
+    // Outer container for centering and defining max width
+    <div className="mx-auto flex max-w-7xl items-center justify-center md:px-6 lg:px-8">
+      {/* Left Navigation Button */}
+      <div className="hidden lg:block">
+        {" "}
+        {/* Hide on smaller screens, show on large */}
         <div className="swiper-button-prev-custom cursor-pointer rounded-full bg-black/50 p-2 transition-colors hover:bg-black/70">
           <FiArrowLeftCircle className="h-6 w-6 font-bold text-white" />
         </div>
       </div>
-      {/* Header and Swiper Content Area */}
-      <div>
-        <div className="mx-auto flex h-72 w-[1200px] flex-col items-start justify-start gap-5 overflow-hidden rounded-lg bg-white/10 px-4.5 py-2 font-sans">
+
+      {/* Main Content Area (Header + Swiper) */}
+      <div className="w-full lg:w-[1200px]">
+        {" "}
+        {/* Adjusted width for responsiveness */}
+        <div className="mx-auto flex h-auto min-h-[288px] flex-col items-start justify-start gap-5 overflow-hidden rounded-lg bg-white/10 px-4 py-2 font-sans md:min-h-[300px] lg:min-h-72">
           <div>
             <div className="inline-flex items-center justify-start gap-3 self-stretch py-2 pb-3">
-              <div className="-mt-2 text-[23px] font-semibold text-white">
+              <div className="-mt-2 text-xl font-semibold text-white md:text-2xl">
                 New Releases
               </div>
               <div className="">
@@ -70,61 +77,75 @@ const TracksPageHeroSection = () => {
             {/* Swiper Carousel */}
             <Swiper
               modules={[Navigation, Pagination]}
-              slidesPerView={4.5} // Show 4.5 items at a time
-              spaceBetween={20} // Space between slides
+              // Responsive breakpoints
+              breakpoints={{
+                // When window width is >= 320px (mobile)
+                320: {
+                  slidesPerView: 2,
+                  spaceBetween: 10,
+                },
+                // When window width is >= 768px (tablet)
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 15,
+                },
+                // When window width is >= 1024px (desktop/large)
+                1024: {
+                  slidesPerView: 4.5,
+                  spaceBetween: 20,
+                },
+              }}
               navigation={{
                 nextEl: ".swiper-button-next-custom",
                 prevEl: ".swiper-button-prev-custom",
               }}
               pagination={{
                 clickable: true,
-                el: ".swiper-pagination-custom", // Swiper will populate this element
+                el: ".swiper-pagination-custom",
               }}
-              loop={true} // <--- THIS IS THE KEY CHANGE for infinite looping
-              className="relative w-full flex-1" // Added relative for button positioning
+              loop={true}
+              className="relative w-full flex-1"
             >
               {releases.map((release, index) => (
                 <SwiperSlide
                   key={index}
-                  className="flex !h-60 !w-44 flex-col items-start justify-start gap-2.5"
+                  // Responsive slide dimensions
+                  className="flex !h-auto !w-auto flex-col items-start justify-start gap-2.5"
                 >
                   <img
-                    className="h-44 w-44 rounded object-cover"
+                    className="h-auto max-h-[144px] w-full max-w-[144px] rounded object-cover sm:max-h-[160px] sm:max-w-[160px] md:max-h-[176px] md:max-w-[176px] lg:max-h-[176px] lg:max-w-[176px] xl:max-h-[176px] xl:max-w-[176px]"
                     src={release.image}
                     alt={release.title}
                   />
-                  <div className="flex w-44 flex-col items-start justify-start gap-0.5 py-1">
-                    <div className="self-stretch truncate text-base font-semibold text-neutral-200">
+                  <div className="flex w-full flex-col items-start justify-start gap-0.5 py-1">
+                    <div className="self-stretch truncate text-sm font-semibold text-neutral-200 sm:text-base">
                       {release.title}
                     </div>
-                    <div className="self-stretch truncate text-sm font-normal text-zinc-400">
+                    <div className="self-stretch truncate text-xs font-normal text-zinc-400 sm:text-sm">
                       {release.artist}
                     </div>
                   </div>
                 </SwiperSlide>
               ))}
-              {/* Note: The swiper-pagination-custom div is intentionally NOT inside Swiper here */}
             </Swiper>
           </div>
         </div>
-
-        {/* HERE IS THE ONLY SIGNIFICANT CHANGE: */}
-        {/* The pagination div is moved outside the Swiper, but still within the parent div */}
+        {/* Pagination Dots */}
         <div className="mx-auto flex items-center justify-center py-1">
-          {/* This is the container Swiper will use for pagination dots */}
-          <div className="swiper-pagination-custom w mt-4 flex justify-center pb-2"></div>
+          <div className="swiper-pagination-custom mt-4 flex justify-center pb-2"></div>
         </div>
       </div>
-      <div>
-        <div className="swiper-button-next-custom top-1/2 right-0 z-10 cursor-pointer rounded-full bg-black/50 p-2 transition-colors hover:bg-black/70">
+
+      {/* Right Navigation Button */}
+      <div className="hidden lg:block">
+        {" "}
+        {/* Hide on smaller screens, show on large */}
+        <div className="swiper-button-next-custom cursor-pointer rounded-full bg-black/50 p-2 transition-colors hover:bg-black/70">
           <FiArrowRightCircle className="h-6 w-6 font-bold text-white" />
         </div>
       </div>
 
-      {/* IMPORTANT: These <style> tags are for overriding Swiper's default CSS directly
-            within the component using Tailwind-like properties.
-            For a larger project, consider a global CSS file or CSS modules for better maintainability.
-       */}
+      {/* Global Styles for Swiper Overrides */}
       <style jsx="true">{`
         /* Custom pagination dots using Swiper's default classes */
         .swiper-pagination-bullet {
@@ -157,6 +178,14 @@ const TracksPageHeroSection = () => {
         .swiper-button-next-custom.swiper-button-disabled {
           opacity: 0.5; /* Tailwind's opacity-50 */
           cursor: not-allowed;
+        }
+
+        /* Adjustments for smaller screens (mobile & tablet) */
+        @media (max-width: 1023px) {
+          .swiper-button-prev-custom,
+          .swiper-button-next-custom {
+            display: none !important; /* Hide custom navigation buttons on mobile/tablet */
+          }
         }
       `}</style>
     </div>
