@@ -13,14 +13,10 @@ const navLinks = [
 const NavStyle = () => {
   return (
     <header className="sticky top-0 z-10 bg-black">
-      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between py-4">
+      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between py-2">
         {/* Logo */}
         <Link to="/">
-          <img
-            className="h-[63px] w-[90px]"
-            src="/image/ibracks_logo.png"
-            alt="Logo"
-          />
+          <img className="w-[100px]" src="/image/ibracks_logo.png" alt="Logo" />
         </Link>
 
         {/* Navigation Links */}
