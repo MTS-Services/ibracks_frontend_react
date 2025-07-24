@@ -1,9 +1,10 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
+import ReleasesSection from "./ReleasesSection";
 
 const HeroSection = () => {
   return (
-    <section className="bg-[url('/image/home/hero-bg.jpg')] bg-cover bg-center py-20">
+    <section className="relative min-h-[800px] bg-[url('/image/home/hero-bg.jpg')] bg-cover bg-center py-20">
       <div className="absolute inset-0 bg-black opacity-40" />
 
       <div className="mx-auto max-w-7xl">

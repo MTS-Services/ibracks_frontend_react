@@ -36,38 +36,30 @@ const ReleasesSection = () => {
   ];
 
   return (
-    <section className="">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 overflow-hidden">
-        {/* Title */}
-        <div className="flex w-full items-center gap-5">
-          <h2 className="text-2xl font-semibold text-white">New Releases</h2>
-          <FiPlay className="flex h-7 w-7 items-center rounded-full bg-gray-200 p-1.5" />
-        </div>
+    <section className="absolute">
+      {/* Title */}
+      <div className="flex items-center gap-4">
+        <h2 className="text-xl font-semibold text-white sm:text-2xl">
+          New Releases
+        </h2>
+        <FiPlay className="h-6 w-6 rounded-full bg-white p-1 text-black" />
+      </div>
 
-        {/* Song List */}
-        <div className="flex items-center justify-between overflow-hidden">
-          {songs.map((song, index) => (
-            <div key={index} className="relative h-60 w-44">
-              <div className="absolute top-0 left-0 flex flex-col gap-2.5">
-                <img
-                  src={song.image}
-                  alt={song.title}
-                  className="h-44 w-44 rounded"
-                />
-                <div className="w-44">
-                  <div className="flex flex-col gap-0.5">
-                    <p className="text-base font-semibold text-neutral-200">
-                      {song.title}
-                    </p>
-                    <p className="text-sm font-normal text-zinc-400">
-                      {song.artist}
-                    </p>
-                  </div>
-                </div>
-              </div>
+      {/* Song List */}
+      <div className="flex flex-wrap justify-center gap-6 py-10">
+        {songs.map((song, index) => (
+          <div key={index} className="w-48">
+            <img src={song.image} alt={song.title} className="w-48 rounded" />
+            <div className="mt-2">
+              <p className="truncate text-base font-semibold text-neutral-200">
+                {song.title}
+              </p>
+              <p className="truncate text-sm font-normal text-zinc-400">
+                {song.artist}
+              </p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

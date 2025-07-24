@@ -8,7 +8,7 @@ import {
 
 const FooterStyle = () => {
   return (
-    <footer className="flex w-full flex-col border-t border-neutral-500 bg-fuchsia-950">
+    <footer className="flex w-full flex-col border-t border-neutral-500 bg-[#3B0045]">
       <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-start justify-between gap-8 px-8 py-8 md:px-16 lg:px-28">
         <div className="flex w-full flex-col gap-8 md:w-60">
           <div className="flex flex-col gap-6">
@@ -80,7 +80,8 @@ const FooterStyle = () => {
           </div>
         </div>
       </div>
-      <div className="mx-auto flex w-full justify-center border-t border-zinc-500 bg-fuchsia-950 px-8 py-4 md:px-16 lg:px-28">
+
+      <div className="mx-auto flex w-full justify-center border-t border-zinc-500 px-8 py-4 md:px-16 lg:px-28">
         <p className="text-center text-base font-normal text-neutral-200">
           © 2025 BeatzInGeez. All rights reserved. Made with for travelers
           worldwide.

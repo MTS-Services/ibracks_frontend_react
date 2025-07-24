@@ -153,6 +153,9 @@
   button {
     cursor: pointer;
   }
+  body {
+    background: #000;
+  }
 }
 
 /* ==================== */
