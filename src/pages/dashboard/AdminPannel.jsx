@@ -31,7 +31,7 @@ import { SlPlaylist } from "react-icons/sl";
 import { BsPersonBoundingBox } from "react-icons/bs";
 import { TfiBarChart } from "react-icons/tfi";
 import { IoMdTime } from "react-icons/io";
-import { PiDotsThreeOutline } from "react-icons/pi";
+import { PiDotsThreeOutline, PiUploadSimpleBold } from "react-icons/pi";
 import { RiBarChartBoxLine } from "react-icons/ri";
 import { CiShoppingTag, CiCalendar } from "react-icons/ci";
 
@@ -50,8 +50,7 @@ import { Bar } from "react-chartjs-2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { differenceInDays, format } from "date-fns";
-import { HiH1 } from "react-icons/hi2";
-
+import { HiOutlinePhotograph } from "react-icons/hi";
 // Registering Chart.js components
 ChartJS.register(
   CategoryScale,
@@ -526,9 +525,9 @@ const SongList = ({
     </div>
   );
 };
-const RightSidebar = () => {
-  /* ... Unchanged ... */ const [isDropdownOpen, setIsDropdownOpen] =
-    useState(false);
+const RightSidebar = ({ setActiveLink }) => {
+  // Takes setActiveLink as a prop
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -578,7 +577,11 @@ const RightSidebar = () => {
       </div>
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
-        <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90">
+        {/* UPDATED: Added onClick to switch the view to the Upload Page */}
+        <div
+          onClick={() => setActiveLink("Upload Page")}
+          className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90"
+        >
           {" "}
           <MdFileUpload className="text-5xl" />{" "}
           <p className="font-bold">Upload Here</p>{" "}
@@ -617,6 +620,240 @@ const RightSidebar = () => {
         </div>
       </div>
     </aside>
+  );
+};
+
+// =================================================================================
+//  HIGHLIGHT START: This is the new UploadPage component.
+// =================================================================================
+const UploadPage = () => {
+  const initialFormState = {
+    songName: "",
+    description: "",
+    musicTag: "Inspiring",
+    price: "",
+    duration: "00:00",
+    bpm: "",
+    coverImage: null,
+    musicFile: null,
+  };
+  const [formData, setFormData] = useState(initialFormState);
+  const [coverImagePreview, setCoverImagePreview] = useState(null);
+  const [musicFileName, setMusicFileName] = useState(
+    "Click to upload MP3, WAV, etc.",
+  );
+
+  const coverImageRef = useRef(null);
+  const musicFileRef = useRef(null); // Ref for music file input
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, coverImage: file });
+      setCoverImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleMusicFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, musicFile: file });
+      setMusicFileName(file.name);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleDiscard = () => {
+    setFormData(initialFormState);
+    setCoverImagePreview(null);
+    setMusicFileName("Click to upload MP3, WAV, etc.");
+    if (coverImageRef.current) coverImageRef.current.value = "";
+    if (musicFileRef.current) musicFileRef.current.value = "";
+  };
+
+  const handlePublish = () => {
+    const dataToPublish = [formData];
+    console.log("Publishing Data:", dataToPublish);
+    alert("Check the console for the published data!");
+    handleDiscard();
+  };
+
+  return (
+    <div className="mr-4 ml-4 space-y-6 p-8 text-white">
+      <div className="mb-12 pl-105">
+        {" "}
+        {/* Centered Title */}
+        <h2 className="text-lg font-semibold text-white">Upload Song</h2>
+      </div>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {/* Left Column */}
+        <div className="lg:col-span-1">
+          <p className="mb-2 flex items-center gap-2 text-base font-normal text-white">
+            <HiOutlinePhotograph className="text-xl" /> Upload Cover Image
+          </p>
+          <div className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-lg bg-neutral-200/30">
+            {coverImagePreview ? (
+              <img
+                src={coverImagePreview}
+                alt="Cover preview"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <PiUploadSimpleBold className="text-5xl text-neutral-400" />
+            )}
+            <div className="absolute inset-0 flex flex-col items-center justify-center space-y-2 bg-black/50 opacity-0 transition-opacity hover:opacity-100">
+              <input
+                type="file"
+                accept="image/*"
+                ref={coverImageRef}
+                onChange={handleImageChange}
+                className="hidden"
+              />
+              {!coverImagePreview ? (
+                <button
+                  onClick={() => coverImageRef.current.click()}
+                  className="rounded bg-white px-4 py-1 text-sm text-black"
+                >
+                  Upload
+                </button>
+              ) : (
+                <button
+                  onClick={() => coverImageRef.current.click()}
+                  className="rounded bg-white px-4 py-1 text-sm text-black"
+                >
+                  Replace
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
+          <div className="sm:col-span-2">
+            <label className="mb-2 block text-base font-normal">
+              Song Name/Title
+            </label>
+            <input
+              type="text"
+              name="songName"
+              value={formData.songName}
+              onChange={handleInputChange}
+              placeholder="Type Here"
+              className="w-full rounded bg-neutral-200/30 p-2.5 focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-2 block text-base font-normal">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder="Type Here"
+              rows="5"
+              className="w-full rounded bg-neutral-200/30 p-2.5 focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
+            ></textarea>
+          </div>
+          <div>
+            <label className="mb-2 block text-base font-normal">
+              Music Tag
+            </label>
+            <select
+              name="musicTag"
+              value={formData.musicTag}
+              onChange={handleInputChange}
+              className="w-full rounded bg-neutral-200/30 p-2.5 focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
+            >
+              <option className="text-black">Inspiring</option>
+              <option className="text-black">Chill</option>{" "}
+              <option className="text-black">Upbeat</option>
+              <option className="text-black">Melancholic</option>
+            </select>
+          </div>
+          <div>
+            <label className="mb-2 block text-base font-normal">Pricing</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleInputChange}
+              placeholder="$0.00"
+              className="w-full rounded bg-neutral-200/30 p-2.5 focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="mb-2 block text-base font-normal">
+              Music Time Duration
+            </label>
+            <input
+              type="text"
+              name="duration"
+              value={formData.duration}
+              onChange={handleInputChange}
+              placeholder="02:39"
+              className="w-full rounded bg-neutral-200/30 p-2.5 focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="mb-2 block text-base font-normal">
+              Music BPM Set
+            </label>
+            <input
+              type="number"
+              name="bpm"
+              value={formData.bpm}
+              onChange={handleInputChange}
+              placeholder="103"
+              className="w-full rounded bg-neutral-200/30 p-2.5 focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-2 block text-base font-normal">
+              Upload Music File
+            </label>
+            <input
+              type="file"
+              accept="audio/*"
+              ref={musicFileRef}
+              onChange={handleMusicFileChange}
+              className="hidden"
+            />
+            <div
+              onClick={() => musicFileRef.current.click()}
+              className="w-full cursor-pointer truncate rounded bg-neutral-200/30 p-2.5 text-neutral-300 hover:text-white"
+            >
+              {musicFileName}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Action Buttons */}
+      <div className="flex items-center justify-end gap-4 pt-4">
+        {" "}
+        {/* Right-aligned buttons */}
+        <button
+          onClick={handleDiscard}
+          className="rounded-lg border border-orange-200 px-10 py-2.5 font-semibold text-white transition-colors hover:bg-orange-200/10"
+        >
+          Discard
+        </button>
+        <button className="rounded-lg bg-neutral-200 px-10 py-2.5 font-semibold text-neutral-800 transition-colors hover:bg-neutral-300">
+          Schedule
+        </button>
+        <button
+          onClick={handlePublish}
+          className="rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-10 py-2.5 font-semibold text-black transition-opacity hover:opacity-90"
+        >
+          Publish
+        </button>
+      </div>
+    </div>
   );
 };
 const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
@@ -954,6 +1191,7 @@ const SalesDashboard = ({
 // =================================================================================
 
 const AdminPannel = () => {
+  // ... Unchanged State and Functions
   const [songs, setSongs] = useState(songsData);
   const [currentSong, setCurrentSong] = useState(songsData[2]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -965,7 +1203,6 @@ const AdminPannel = () => {
   });
   const [dateRange, setDateRange] = useState([null, null]);
   const [salesData, setSalesData] = useState(null);
-
   useEffect(() => {
     setSalesData(null);
     const timer = setTimeout(() => {
@@ -973,14 +1210,12 @@ const AdminPannel = () => {
     }, 300);
     return () => clearTimeout(timer);
   }, [salesFilter]);
-
   useEffect(() => {
     const [start, end] = dateRange;
     if (start && end) {
       setSalesFilter({ type: "date_range", value: dateRange });
     }
   }, [dateRange]);
-
   const handlePlayPause = (song) => {
     if (currentSong?.id === song.id) setIsPlaying(!isPlaying);
     else {
@@ -1015,7 +1250,7 @@ const AdminPannel = () => {
   return (
     <div className="mx-auto h-screen max-w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900 font-sans text-white">
       <div
-        className={`flex ${activeLink !== "Total Sales (Amount)" ? "h-[calc(100%-6rem)]" : "h-full"}`}
+        className={`flex ${activeLink !== "Total Sales (Amount)" && activeLink !== "Upload Page" ? "h-[calc(100%-6rem)]" : "h-full"}`}
       >
         <Sidebar activeLink={activeLink} setActiveLink={setActiveLink} />
         <main className="flex-1 overflow-y-auto">
@@ -1038,23 +1273,25 @@ const AdminPannel = () => {
               setDateRange={setDateRange}
             />
           )}
+          {activeLink === "Upload Page" && <UploadPage />}
           {activeLink === "User Admin" && (
             <div className="p-8 text-white">User Admin Page Coming Soon</div>
           )}
         </main>
-        <RightSidebar />
+        <RightSidebar setActiveLink={setActiveLink} />
       </div>
-      {activeLink !== "Total Sales (Amount)" && (
-        <div className="h-24">
-          {" "}
-          <Player
-            currentSong={currentSong}
-            isPlaying={isPlaying}
-            onPlayPause={handlePlayPause}
-            onLikeToggle={handleLikeToggle}
-          />{" "}
-        </div>
-      )}
+      {/* The Player is now hidden on both Sales and Upload pages */}
+      {activeLink !== "Total Sales (Amount)" &&
+        activeLink !== "Upload Page" && (
+          <div className="h-24">
+            <Player
+              currentSong={currentSong}
+              isPlaying={isPlaying}
+              onPlayPause={handlePlayPause}
+              onLikeToggle={handleLikeToggle}
+            />
+          </div>
+        )}
     </div>
   );
 };
