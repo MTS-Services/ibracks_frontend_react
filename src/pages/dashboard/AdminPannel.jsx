@@ -637,12 +637,7 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
   );
 };
 const SalesFilterBar = ({ activeFilter, setFilter }) => {
-  /* ... Unchanged ... */ const predefinedFilters = [
-    "24 hours",
-    "7 days",
-    "30 days",
-    "12 months",
-  ];
+  const predefinedFilters = ["24 hours", "7 days", "30 days", "12 months"];
   const months = [
     "January",
     "February",
@@ -658,6 +653,26 @@ const SalesFilterBar = ({ activeFilter, setFilter }) => {
     "December",
   ];
   const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+
+  // --- NEW: Create a ref for the dropdown container ---
+  const dropdownRef = useRef(null);
+
+  // --- NEW: Add useEffect to handle clicks outside the dropdown ---
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If the ref is attached and the click is outside the referenced element...
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowMonthDropdown(false); // ...close the dropdown.
+      }
+    };
+    // Add event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]); // Dependency array
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-8">
@@ -677,7 +692,9 @@ const SalesFilterBar = ({ activeFilter, setFilter }) => {
           {" "}
           <IoCalendarOutline /> <span>Select Dates</span>{" "}
         </button>
-        <div className="relative">
+
+        {/* --- NEW: Attach the ref to this container div --- */}
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
             className="flex items-center gap-2 rounded border border-neutral-400 px-2 py-1.5 text-xs text-white hover:bg-white/10"
