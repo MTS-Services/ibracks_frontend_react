@@ -13,7 +13,7 @@ import {
   IoRepeat,
   IoNotifications,
   IoHeadsetSharp,
-  IoCalendarOutline,
+  IoFilterSharp,
 } from "react-icons/io5";
 
 import { FiEdit, FiFilter } from "react-icons/fi";
@@ -25,17 +25,18 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaCrown,
-  FaDollarSign,
-  FaShoppingCart,
+  FaSlidersH,
 } from "react-icons/fa";
 
 import { RiPlayListFill } from "react-icons/ri";
 import { MdFileUpload } from "react-icons/md";
 import { SlPlaylist } from "react-icons/sl";
-import { BsPersonBoundingBox, BsArrowDownUp } from "react-icons/bs";
+import { BsPersonBoundingBox } from "react-icons/bs";
 import { TfiBarChart } from "react-icons/tfi";
 import { IoMdTime } from "react-icons/io";
 import { PiDotsThreeOutline } from "react-icons/pi";
+import { RiBarChartBoxLine } from "react-icons/ri";
+import { CiShoppingTag, CiCalendar } from "react-icons/ci";
 
 // --- CHART.JS IMPORTS ---
 import {
@@ -48,6 +49,11 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { differenceInDays, format } from "date-fns";
+import { HiH1 } from "react-icons/hi2";
 
 // Registering Chart.js components
 ChartJS.register(
@@ -144,6 +150,16 @@ const songsData = [
     likes: "18.5K",
     albumArt: "https://placehold.co/54x54/E91E63/FFFFFF?text=BL",
   },
+  {
+    id: 8,
+    title: "Feel Something",
+    artist: "Ed Sheeran",
+    plays: "1,000,000,000",
+    duration: "3:10",
+    isLiked: false,
+    likes: "5.6K",
+    albumArt: "https://placehold.co/54x54/FFC107/000000?text=FS",
+  },
 ];
 const recentUploadsData = [
   {
@@ -176,6 +192,18 @@ const recentUploadsData = [
     time: "11hr ago",
     albumArt: "https://placehold.co/44x44/795548/FFFFFF?text=FS",
   },
+  {
+    title: "Shape of You",
+    artist: "Ed Sheeran",
+    time: "1day ago",
+    albumArt: "https://placehold.co/44x44/2ECC71/FFFFFF?text=SOY",
+  },
+  {
+    title: "Bad Habits",
+    artist: "Ed Sheeran",
+    time: "1day ago",
+    albumArt: "https://placehold.co/44x44/F1C40F/000000?text=BH",
+  },
 ];
 const generateSalesData = (filter) => {
   const randomValue = (min, max) =>
@@ -201,9 +229,16 @@ const generateSalesData = (filter) => {
     purchaseChange = randomValue(-10, 30);
     periodLabel = `previous month`;
   }
+  // HIGHLIGHT: Added summary logic for date range
+  else if (filter.type === "date_range") {
+    revenue = randomValue(5000, 150000);
+    purchases = randomValue(50, 1500);
+    revenueChange = randomValue(-15, 25);
+    purchaseChange = randomValue(-10, 30);
+    periodLabel = `previous period`;
+  }
 
-  // --- NEW LOGIC ---
-  // This `if` block now handles the new requirement for the month filter.
+  // Chart data logic
   if (filter.type === "month") {
     const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
     for (const week of weeks) {
@@ -213,8 +248,33 @@ const generateSalesData = (filter) => {
         purchase: randomValue(50, 200),
       });
     }
+  }
+  // HIGHLIGHT: Added chart logic for date range
+  else if (filter.type === "date_range" && filter.value[0] && filter.value[1]) {
+    const [start, end] = filter.value;
+    const days = differenceInDays(end, start) + 1;
+    // Show days if range is small, otherwise show weeks
+    if (days <= 14) {
+      for (let i = 0; i < days; i++) {
+        const date = new Date(start.valueOf());
+        date.setDate(date.getDate() + i);
+        chartData.push({
+          label: format(date, "MMM d"),
+          revenue: randomValue(20, 220),
+          purchase: randomValue(20, 220),
+        });
+      }
+    } else {
+      const weeks = Math.ceil(days / 7);
+      for (let i = 1; i <= weeks; i++) {
+        chartData.push({
+          label: `Week ${i}`,
+          revenue: randomValue(100, 500),
+          purchase: randomValue(100, 500),
+        });
+      }
+    }
   } else {
-    // This switch handles all the other predefined filters.
     switch (filter.value) {
       case "24 hours": {
         const hours = [
@@ -237,7 +297,6 @@ const generateSalesData = (filter) => {
         break;
       }
       case "30 days": {
-        // Also shows weeks, consistent with the month filter
         const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
         for (const week of weeks) {
           chartData.push({
@@ -639,7 +698,12 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
     </div>
   );
 };
-const SalesFilterBar = ({ activeFilter, setFilter }) => {
+const SalesFilterBar = ({
+  activeFilter,
+  setFilter,
+  dateRange,
+  setDateRange,
+}) => {
   const predefinedFilters = ["24 hours", "7 days", "30 days", "12 months"];
   const months = [
     "January",
@@ -656,25 +720,21 @@ const SalesFilterBar = ({ activeFilter, setFilter }) => {
     "December",
   ];
   const [showMonthDropdown, setShowMonthDropdown] = useState(false);
-
-  // --- NEW: Create a ref for the dropdown container ---
   const dropdownRef = useRef(null);
 
-  // --- NEW: Add useEffect to handle clicks outside the dropdown ---
+  const [startDate, endDate] = dateRange;
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // If the ref is attached and the click is outside the referenced element...
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowMonthDropdown(false); // ...close the dropdown.
+        setShowMonthDropdown(false);
       }
     };
-    // Add event listener when the component mounts
     document.addEventListener("mousedown", handleClickOutside);
-    // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]); // Dependency array
+  }, [dropdownRef]);
 
   return (
     <div className="flex items-center justify-between">
@@ -682,28 +742,40 @@ const SalesFilterBar = ({ activeFilter, setFilter }) => {
         {predefinedFilters.map((filter) => (
           <button
             key={filter}
-            onClick={() => setFilter({ type: "predefined", value: filter })}
-            className={`text-xs capitalize transition-colors ${activeFilter.value === filter ? "border-b border-white font-semibold text-white" : "font-normal text-neutral-300 hover:text-white"}`}
+            onClick={() => {
+              setFilter({ type: "predefined", value: filter });
+              setDateRange([null, null]);
+            }}
+            className={`text-base capitalize transition-colors ${activeFilter.type === "predefined" && activeFilter.value === filter ? "border-b border-white font-semibold text-white" : "font-normal text-neutral-300 hover:text-white"}`}
           >
-            {" "}
-            {filter}{" "}
+            {filter}
           </button>
         ))}
       </div>
       <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 rounded border border-neutral-400 px-2 py-1.5 text-xs text-white hover:bg-white/10">
-          {" "}
-          <IoCalendarOutline /> <span>Select Dates</span>{" "}
-        </button>
+        {/* --- NEW: DatePicker Component --- */}
+        <DatePicker
+          selectsRange={true}
+          startDate={startDate}
+          endDate={endDate}
+          onChange={(update) => {
+            setDateRange(update);
+          }}
+          customInput={
+            <button className="flex items-center gap-2 rounded border border-neutral-400 px-2 py-1.5 text-xs text-white hover:bg-white/10">
+              <CiCalendar className="text-xl" />
+              <span>Select Dates</span>
+            </button>
+          }
+        />
 
-        {/* --- NEW: Attach the ref to this container div --- */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
             className="flex items-center gap-2 rounded border border-neutral-400 px-2 py-1.5 text-xs text-white hover:bg-white/10"
           >
             {" "}
-            <FiFilter />{" "}
+            <IoFilterSharp className="text-xl" />
             <span>
               {activeFilter.type === "month" ? activeFilter.value : "Filters"}
             </span>{" "}
@@ -716,6 +788,7 @@ const SalesFilterBar = ({ activeFilter, setFilter }) => {
                   key={month}
                   onClick={() => {
                     setFilter({ type: "month", value: month });
+                    setDateRange([null, null]);
                     setShowMonthDropdown(false);
                   }}
                   className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
@@ -749,9 +822,9 @@ const SummaryCard = ({
         {icon}
       </div>
       <div>
-        <p className="text-2xl font-semibold">{value}</p>
-        <p className="text-base font-medium">{title}</p>
-        <p className="text-xs font-medium">
+        <h1 className="text-2xl font-semibold text-neutral-700">{value}</h1>
+        <p className="text-base font-medium text-black">{title}</p>
+        <p className="text-xs font-medium text-black">
           {" "}
           <span className={isPositive ? "text-green-800" : "text-red-800"}>
             {isPositive ? "+" : ""}
@@ -822,8 +895,8 @@ const SalesChart = ({ data }) => {
         <h3 className="text-lg font-semibold text-white capitalize">
           Sales Statistic
         </h3>
-        <div className="flex cursor-pointer items-center gap-2 rounded-md p-2 text-white hover:bg-white/10">
-          <BsArrowDownUp />
+        <div className="flex cursor-pointer items-center gap-2 rounded-md bg-white p-2 text-white">
+          <FaSlidersH className="rotate-90 transform text-sm text-black" />
         </div>
       </div>
       <div className="h-64">
@@ -832,36 +905,46 @@ const SalesChart = ({ data }) => {
     </div>
   );
 };
-const SalesDashboard = ({ salesData, activeFilter, setFilter }) => {
-  /* ... Unchanged ... */ if (!salesData)
+const SalesDashboard = ({
+  salesData,
+  activeFilter,
+  setFilter,
+  dateRange,
+  setDateRange,
+}) => {
+  if (!salesData)
     return (
       <div className="flex h-full items-center justify-center text-white">
         Loading...
       </div>
     );
   return (
-    <div className="space-y-6 p-8">
-      <h2 className="text-lg font-semibold text-white capitalize">
-        Sales Analysis
-      </h2>
-      <SalesFilterBar activeFilter={activeFilter} setFilter={setFilter} />
+    <div className="mr-4 ml-4 space-y-6 p-8">
+      <h1 className="mb-4 text-xl font-bold text-white">Sales Analysis</h1>
+      {/* This now passes the date props down to the filter bar */}
+      <SalesFilterBar
+        activeFilter={activeFilter}
+        setFilter={setFilter}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+      />
       <div className="flex gap-6">
         <SummaryCard
-          icon={<FaDollarSign />}
+          icon={<RiBarChartBoxLine className="text-xl" />}
           value={`$${salesData.summary.revenue.toLocaleString()}`}
           title="Revenue"
           change={salesData.summary.revenueChange}
           periodLabel={salesData.summary.periodLabel}
           bgColor="bg-amber-400"
-          textColor="text-neutral-700"
+          textColor="text-white"
         />
         <SummaryCard
-          icon={<FaShoppingCart />}
+          icon={<CiShoppingTag className="text-xl" />}
           value={salesData.summary.purchases.toLocaleString()}
           title="Purchases"
           change={salesData.summary.purchaseChange}
           periodLabel={salesData.summary.periodLabel}
-          bgColor="bg-violet-500"
+          bgColor="bg-violet-500 "
           textColor="text-white"
         />
       </div>
@@ -869,7 +952,6 @@ const SalesDashboard = ({ salesData, activeFilter, setFilter }) => {
     </div>
   );
 };
-
 // =================================================================================
 //  MAIN ADMIN PANNEL COMPONENT
 // =================================================================================
@@ -884,6 +966,7 @@ const AdminPannel = () => {
     type: "predefined",
     value: "7 days",
   });
+  const [dateRange, setDateRange] = useState([null, null]);
   const [salesData, setSalesData] = useState(null);
 
   useEffect(() => {
@@ -893,6 +976,13 @@ const AdminPannel = () => {
     }, 300);
     return () => clearTimeout(timer);
   }, [salesFilter]);
+
+  useEffect(() => {
+    const [start, end] = dateRange;
+    if (start && end) {
+      setSalesFilter({ type: "date_range", value: dateRange });
+    }
+  }, [dateRange]);
 
   const handlePlayPause = (song) => {
     if (currentSong?.id === song.id) setIsPlaying(!isPlaying);
@@ -908,7 +998,6 @@ const AdminPannel = () => {
       ),
     );
   };
-
   const filteredSongs = songs.filter(
     (song) =>
       song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -917,13 +1006,17 @@ const AdminPannel = () => {
   useEffect(() => {
     if (currentSong) {
       const updatedCurrentSong = songs.find((s) => s.id === currentSong.id);
-      setCurrentSong(updatedCurrentSong);
+      if (
+        updatedCurrentSong &&
+        updatedCurrentSong.isLiked !== currentSong.isLiked
+      ) {
+        setCurrentSong(updatedCurrentSong);
+      }
     }
-  }, [songs, currentSong, currentSong?.id]);
+  }, [songs, currentSong]);
 
   return (
     <div className="mx-auto h-screen max-w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900 font-sans text-white">
-      {/* THIS IS THE FIRST CHANGE: The height of this container is now dynamic */}
       <div
         className={`flex ${activeLink !== "Total Sales (Amount)" ? "h-[calc(100%-6rem)]" : "h-full"}`}
       >
@@ -944,6 +1037,8 @@ const AdminPannel = () => {
               salesData={salesData}
               activeFilter={salesFilter}
               setFilter={setSalesFilter}
+              dateRange={dateRange}
+              setDateRange={setDateRange}
             />
           )}
           {activeLink === "User Admin" && (
@@ -952,16 +1047,15 @@ const AdminPannel = () => {
         </main>
         <RightSidebar />
       </div>
-
-      {/* THIS IS THE SECOND CHANGE: The Player is now only rendered if the active link is NOT Total Sales */}
       {activeLink !== "Total Sales (Amount)" && (
         <div className="h-24">
+          {" "}
           <Player
             currentSong={currentSong}
             isPlaying={isPlaying}
             onPlayPause={handlePlayPause}
             onLikeToggle={handleLikeToggle}
-          />
+          />{" "}
         </div>
       )}
     </div>
