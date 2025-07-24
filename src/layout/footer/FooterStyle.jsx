@@ -12,11 +12,7 @@ const FooterStyle = () => {
       <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-start justify-between gap-8 px-8 py-8 md:px-16 lg:px-28">
         <div className="flex w-full flex-col gap-8 md:w-60">
           <div className="flex flex-col gap-6">
-            <img
-              className="h-16 w-24"
-              src="/footer/footerlogo.png"
-              alt="Logo"
-            />
+            <img className="w-40" src="/footer/footerlogo.png" alt="Logo" />
             <p className="text-base font-normal text-neutral-200 capitalize">
               Simplicity drives results. Keep it simple, and sell more.
             </p>
