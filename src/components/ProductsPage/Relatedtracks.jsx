@@ -80,7 +80,7 @@ const RelatedTracks = () => {
     <div>
       <dvi>
         <div className="mx-auto flex items-center justify-center">
-          <div className="max-w-[1240px]">
+          <div className="">
             <div className="mb-9 flex items-center">
               <h2 className="gap-12 font-['Poppins'] text-lg font-[600] text-white md:text-4xl lg:pr-13 lg:text-3xl">
                 Related Tracks
@@ -90,7 +90,7 @@ const RelatedTracks = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {tracks.map((track) => (
                 <div
                   key={track.id}
