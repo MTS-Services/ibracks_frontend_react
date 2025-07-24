@@ -15,6 +15,7 @@ import VideosView from "../pages/public/videos/VideosView";
 import CheckOut from "../pages/Checkout/CheckOut";
 import TracksView from "../pages/public/tracks/TracksView";
 import ProductsPage from "../pages/ProductsPage/ProductsPage";
+import AdminPannel from "../pages/dashboard/AdminPannel";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/video",
         element: <VideosView />,
+      },
+      {
+        path: "/admin",
+        element: <AdminPannel />,
       },
     ],
   },
