@@ -184,7 +184,7 @@ const generateSalesData = (filter) => {
     periodLabel = "";
   const chartData = [];
 
-  // Generate summary card data (this logic remains similar)
+  // Summary card logic
   if (filter.type === "predefined") {
     revenue = randomValue(1000, 50000);
     purchases = randomValue(20, 500);
@@ -199,70 +199,97 @@ const generateSalesData = (filter) => {
     periodLabel = `previous month`;
   }
 
-  // Generate chart data based on the selected filter
-  switch (filter.value) {
-    case "24 hours":
-      const hours = ["12am", "3am", "6am", "9am", "12pm", "3pm", "6pm", "9pm"];
-      for (const hour of hours) {
-        chartData.push({
-          label: hour,
-          revenue: randomValue(10, 100),
-          purchase: randomValue(10, 100),
-        });
+  // --- NEW LOGIC ---
+  // This `if` block now handles the new requirement for the month filter.
+  if (filter.type === "month") {
+    const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
+    for (const week of weeks) {
+      chartData.push({
+        label: week,
+        revenue: randomValue(50, 200),
+        purchase: randomValue(50, 200),
+      });
+    }
+  } else {
+    // This switch handles all the other predefined filters.
+    switch (filter.value) {
+      case "24 hours": {
+        const hours = [
+          "12am",
+          "3am",
+          "6am",
+          "9am",
+          "12pm",
+          "3pm",
+          "6pm",
+          "9pm",
+        ];
+        for (const hour of hours) {
+          chartData.push({
+            label: hour,
+            revenue: randomValue(10, 100),
+            purchase: randomValue(10, 100),
+          });
+        }
+        break;
       }
-      break;
-    case "30 days":
-      const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
-      for (const week of weeks) {
-        chartData.push({
-          label: week,
-          revenue: randomValue(50, 200),
-          purchase: randomValue(50, 200),
-        });
+      case "30 days": {
+        // Also shows weeks, consistent with the month filter
+        const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
+        for (const week of weeks) {
+          chartData.push({
+            label: week,
+            revenue: randomValue(50, 200),
+            purchase: randomValue(50, 200),
+          });
+        }
+        break;
       }
-      break;
-    case "12 months":
-      const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      for (const month of months) {
-        chartData.push({
-          label: month,
-          revenue: randomValue(100, 250),
-          purchase: randomValue(100, 250),
-        });
+      case "12 months": {
+        const months = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        for (const month of months) {
+          chartData.push({
+            label: month,
+            revenue: randomValue(100, 250),
+            purchase: randomValue(100, 250),
+          });
+        }
+        break;
       }
-      break;
-    case "7 days":
-    default: // Default to 7 days view
-      const days = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-      ];
-      for (const day of days) {
-        chartData.push({
-          label: day,
-          revenue: randomValue(20, 220),
-          purchase: randomValue(20, 220),
-        });
+      case "7 days":
+      default: {
+        const days = [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
+        ];
+        for (const day of days) {
+          chartData.push({
+            label: day,
+            revenue: randomValue(20, 220),
+            purchase: randomValue(20, 220),
+          });
+        }
+        break;
       }
-      break;
+    }
   }
 
   return {
@@ -872,7 +899,7 @@ const AdminPannel = () => {
       const updatedCurrentSong = songs.find((s) => s.id === currentSong.id);
       setCurrentSong(updatedCurrentSong);
     }
-  }, [songs, currentSong?.id]);
+  }, [songs, currentSong, currentSong?.id]);
 
   return (
     <div className="mx-auto h-screen max-w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900 font-sans text-white">
