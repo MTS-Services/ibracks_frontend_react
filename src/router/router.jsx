@@ -12,6 +12,9 @@ import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
 import ShoppingCart from "../pages/ShoppingCart/ShoppingCart";
 import VideosView from "../pages/public/videos/VideosView";
+import CheckOut from "../pages/Checkout/CheckOut";
+import TracksView from "../pages/public/tracks/TracksView";
+import ProductsPage from "../pages/ProductsPage/ProductsPage";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -47,6 +50,20 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/shopping-cart",
         element: <ShoppingCart />,
+      },
+
+      {
+        path: "/check-out",
+        element: <CheckOut />,
+      },
+
+      {
+        path: "/tracks-view",
+        element: <TracksView />,
+      },
+      {
+        path: "/products",
+        element: <ProductsPage />,
       },
 
       {
