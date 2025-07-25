@@ -1,4 +1,4 @@
-import { Route, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "../layout/template/main/MainLayout";
 import NotFoundView from "../pages/error/NotFoundView";
@@ -13,7 +13,6 @@ import VideosView from "../pages/public/videos/VideosView";
 
 import TracksView from "../pages/public/tracks/TracksView";
 import ProductsView from "../pages/public/products/ProductsView";
-import AdminPannel from "../pages/private/dashboard/AdminPannel";
 import DashboardLayout from "../layout/template/admin/DashboardLayout";
 import CheckOutView from "../pages/public/Checkout/CheckOut";
 import CartView from "../pages/public/cart/CartView";
