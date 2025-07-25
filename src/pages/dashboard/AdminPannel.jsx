@@ -834,8 +834,7 @@ const UploadPage = () => {
         </div>
       </div>
       {/* Action Buttons */}
-      <div className="flex items-center justify-end gap-4 pt-4">
-        {" "}
+      <div className="flex items-center justify-center gap-4 pt-4 pl-14">
         {/* Right-aligned buttons */}
         <button
           onClick={handleDiscard}
