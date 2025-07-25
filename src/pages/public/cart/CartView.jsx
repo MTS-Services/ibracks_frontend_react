@@ -44,9 +44,7 @@ function CartView() {
   return (
     <div>
       <div
-        className={`m-auto flex min-h-screen items-center justify-center bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8${
-          showSuccessModal ? "blur-sm brightness-50 filter" : ""
-        }`}
+        className={`m-auto flex min-h-screen items-center justify-center bg-neutral-900 px-2 py-10 sm:px-6 lg:px-8`} // <--- `showSuccessModal` এর শর্তমূলক ব্লার ক্লাসটি সরানো হয়েছে
         style={{
           background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
         }}
@@ -76,33 +74,33 @@ function CartView() {
             </div>
 
             {/* Cart Items */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 lg:gap-6">
               {cartItems.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center gap-4 rounded-2xl bg-white p-4 pr-6 shadow-md"
                 >
                   <img
-                    className="h-20 w-20 rounded-lg object-cover"
+                    className="h-16 w-16 rounded-lg object-cover sm:h-20 sm:w-20"
                     src={item.imageUrl}
                     alt={item.name}
                   />
                   <div className="flex flex-1 flex-col gap-1">
-                    <div className="font-['Poppins'] text-lg font-[600] text-[#3B3B3B] capitalize">
+                    <div className="font-['Poppins'] text-base font-[600] text-[#3B3B3B] capitalize sm:text-lg">
                       {item.name}
                     </div>
-                    <div className="font-['Poppins'] text-base font-[400] text-neutral-700 capitalize">
+                    <div className="font-['Poppins'] text-sm font-[400] text-neutral-700 capitalize sm:text-base">
                       {item.genre}
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 sm:gap-4">
                     {" "}
                     {/* Price, Ellipsis, and Trash Icon */}
-                    <div className="text-right font-['Poppins'] text-sm font-[500] text-[#393939]">
+                    <div className="text-right font-['Poppins'] text-xs font-[500] text-[#393939] sm:text-sm">
                       ${item.price.toFixed(2)}
                     </div>
-                    <FaEllipsisV className="cursor-pointer text-base text-[#393939]" />
-                    <FaTrashAlt className="cursor-pointer text-xl text-gray-500" />
+                    <FaEllipsisV className="cursor-pointer text-sm text-[#393939] sm:text-base" />
+                    <FaTrashAlt className="cursor-pointer text-lg text-gray-500 sm:text-xl" />
                   </div>
                 </div>
               ))}

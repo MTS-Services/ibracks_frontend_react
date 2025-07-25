@@ -38,11 +38,11 @@ const AppRoutes = createBrowserRouter([
         element: <LoginView />,
       },
       {
-        path: "/signup",
+        path: "/register",
         element: <RegisterView />,
       },
       {
-        path: "/contact-view",
+        path: "/contact",
         element: <ContactView />,
       },
       {
@@ -59,7 +59,7 @@ const AppRoutes = createBrowserRouter([
         element: <CheckOutView />,
       },
       {
-        path: "/tracks-view",
+        path: "/tracks",
         element: <TracksView />,
       },
       {

@@ -111,7 +111,7 @@ const VideosView = () => {
 
   return (
     <div
-      className="min-h-screen bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
+      className="min-h-screen bg-neutral-900 px-4 py-10 sm:px-6 md:py-14 lg:px-8"
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
@@ -161,26 +161,27 @@ const VideosView = () => {
         ))}
       </div>
 
-      <div className="mx-auto flex items-center justify-center pt-10">
+      <div className="mx-auto flex items-center justify-center py-0 pt-10 lg:py-8">
         {hasMore && (
           <div
-            className="inline-flex items-center justify-center gap-1 overflow-hidden rounded-2xl border-1 bg-[#43024F] px-12 py-3 shadow-2xl transition-all duration-300 ease-in-out hover:bg-gradient-to-t hover:from-[#DAA520] hover:to-[#F5DEB3]"
+            // This is the outer container for the border effect
+            className="inline-flex items-center justify-center gap-1 rounded-md p-[1px] shadow-2xl transition-all duration-300 ease-in-out"
             style={{
-              borderRadius: "8px",
-              borderImage:
-                "linear-gradient(to top, #DAA520 50%, #F5DEB3 50%) 1",
-              borderColor: "transparent",
-              outline: "none",
+              background: "linear-gradient(to bottom, #F5DEB3, #DAA520)", // Gradient for the "border"
+              borderRadius: "8px", // Apply border-radius here
             }}
           >
             <div
-              className="cursor-pointer rounded-4xl text-center font-['Plus_Jakarta_Sans'] text-base leading-normal font-semibold text-white capitalize shadow-2xl" // Added cursor-pointer
+              // This is the inner button content
+              className="inline-flex items-center justify-center gap-1 rounded-[7px] bg-[#43024F] px-12 py-3 transition-all duration-300 ease-in-out hover:bg-gradient-to-t hover:from-[#DAA520] hover:to-[#F5DEB3]"
               onClick={loadMoreVideos}
             >
-              Load more
-            </div>
-            <div data-size="48" className="h-6 w-6">
-              <FaArrowRight className="rotate-[-60deg] font-bold text-white" />
+              <div className="cursor-pointer text-center font-['Plus_Jakarta_Sans'] text-base leading-normal font-semibold text-white capitalize shadow-2xl">
+                Load more
+              </div>
+              <div data-size="48" className="h-6 w-6">
+                <FaArrowRight className="rotate-[-60deg] font-bold text-white" />
+              </div>
             </div>
           </div>
         )}
