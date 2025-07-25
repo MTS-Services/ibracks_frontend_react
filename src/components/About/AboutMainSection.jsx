@@ -1,5 +1,3 @@
-import React from "react";
-
 const AboutMainSection = () => {
   return (
     <div
@@ -78,7 +76,7 @@ const AboutMainSection = () => {
                 </div>
               </div>
             </div>
-            <div className="relative h-60 w-44">
+            <div className="relative h-60 w-64">
               <div className="absolute top-0 left-0 inline-flex flex-col items-start justify-start gap-2.5">
                 {/* This image was not provided, using a placeholder or assuming it's part of the first uploaded image but cropped */}
                 <img
@@ -96,8 +94,6 @@ const AboutMainSection = () => {
             </div>
           </div>
         </div>
-        {/* Assuming the abstract image on the right is a background or a separate component */}
-        {/* For this example, I'm not including the abstract image as it seems to be a visual background element rather than part of the main content flow. */}
       </div>
       <div>
         <img
