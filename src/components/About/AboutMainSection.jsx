@@ -20,10 +20,10 @@ const AboutMainSection = () => {
         <div className="inline-flex flex-col items-start justify-start gap-9">
           <div className="flex w-[641px] flex-col items-start justify-start gap-9">
             <div className="flex flex-col items-start justify-start gap-4 self-stretch">
-              <div className="justify-center self-stretch font-['Poppins'] text-4xl font-semibold text-white capitalize">
+              <div className="justify-center self-stretch text-4xl font-semibold text-white capitalize">
                 About Us
               </div>
-              <div className="h-40 justify-start self-stretch font-['Poppins'] text-base font-normal text-white capitalize">
+              <div className="h-40 justify-start self-stretch text-base font-normal text-white capitalize">
                 At Beatzingeez Music, we live and breathe music. Whether you're
                 a passionate artist, content creator, or music enthusiast, our
                 platform is built to fuel your sound journey. We provide
@@ -42,7 +42,7 @@ const AboutMainSection = () => {
               data-show-button="true"
               className="inline-flex items-center justify-center gap-1 overflow-hidden rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-12 py-3"
             >
-              <div className="justify-center text-center font-['Plus_Jakarta_Sans'] text-base leading-normal font-semibold text-black capitalize">
+              <div className="justify-center text-center text-base leading-normal font-semibold text-black capitalize">
                 Browse our tracks
               </div>
             </button>
@@ -55,10 +55,10 @@ const AboutMainSection = () => {
                   src="/aboutpage/cart4.png"
                   alt="Red (Taylor's Version)"
                 />
-                <div className="font-['Poppins'] text-sm leading-none font-normal text-white">
+                <div className="text-sm leading-none font-normal text-white">
                   Red (Taylor's Version)
                 </div>
-                <div className="font-['Poppins'] text-xs leading-none font-normal text-white">
+                <div className="text-xs leading-none font-normal text-white">
                   Taylor Swift
                 </div>
               </div>
@@ -70,10 +70,10 @@ const AboutMainSection = () => {
                   src="/aboutpage/cart6.png"
                   alt="Need to Know"
                 />
-                <div className="font-['Poppins'] text-sm leading-none font-normal text-white">
+                <div className="text-sm leading-none font-normal text-white">
                   Need to Know
                 </div>
-                <div className="font-['Poppins'] text-xs leading-none font-normal text-white">
+                <div className="text-xs leading-none font-normal text-white">
                   Doja Cat
                 </div>
               </div>
@@ -86,10 +86,10 @@ const AboutMainSection = () => {
                   src="/aboutpage/cart1.png"
                   alt="Save Your Tear"
                 />
-                <div className="font-['Poppins'] text-sm leading-none font-normal text-white">
+                <div className="text-sm leading-none font-normal text-white">
                   Save Your Tear
                 </div>
-                <div className="font-['Poppins'] text-xs leading-none font-normal text-white">
+                <div className="text-xs leading-none font-normal text-white">
                   The Weekend
                 </div>
               </div>
