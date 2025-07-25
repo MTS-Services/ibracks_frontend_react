@@ -1128,9 +1128,6 @@ const SalesChart = ({ data }) => {
         <h3 className="text-lg font-semibold text-white capitalize">
           Sales Statistic
         </h3>
-        <div className="flex cursor-pointer items-center gap-2 rounded-md bg-white p-2 text-white">
-          <FaSlidersH className="rotate-90 transform text-sm text-black" />
-        </div>
       </div>
       <div className="h-64">
         <Bar options={options} data={chartData} />
