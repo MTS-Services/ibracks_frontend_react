@@ -34,7 +34,7 @@ import { SlPlaylist } from "react-icons/sl";
 import { BsPersonBoundingBox } from "react-icons/bs";
 import { TfiBarChart } from "react-icons/tfi";
 import { IoMdTime } from "react-icons/io";
-import { PiDotsThreeOutline } from "react-icons/pi";
+import { PiDotsThreeOutline, PiUploadSimpleBold } from "react-icons/pi";
 import { RiBarChartBoxLine } from "react-icons/ri";
 import { CiShoppingTag, CiCalendar } from "react-icons/ci";
 
@@ -53,8 +53,7 @@ import { Bar } from "react-chartjs-2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { differenceInDays, format } from "date-fns";
-import { HiH1 } from "react-icons/hi2";
-
+import { HiOutlinePhotograph } from "react-icons/hi";
 // Registering Chart.js components
 ChartJS.register(
   CategoryScale,
@@ -869,9 +868,6 @@ const SalesChart = ({ data }) => {
         <h3 className="text-lg font-semibold text-white capitalize">
           Sales Statistic
         </h3>
-        <div className="flex cursor-pointer items-center gap-2 rounded-md bg-white p-2 text-white">
-          <FaSlidersH className="rotate-90 transform text-sm text-black" />
-        </div>
       </div>
       <div className="h-64">
         <Bar options={options} data={chartData} />
@@ -932,6 +928,7 @@ const SalesDashboard = ({
 //  MAIN ADMIN PANNEL COMPONENT
 // =================================================================================
 const AdminPannel = () => {
+  // ... Unchanged State and Functions
   const [songs, setSongs] = useState(songsData);
   const [currentSong, setCurrentSong] = useState(songsData[2]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -944,7 +941,6 @@ const AdminPannel = () => {
 
   const [dateRange, setDateRange] = useState([null, null]);
   const [salesData, setSalesData] = useState(null);
-
   useEffect(() => {
     setSalesData(null);
     const timer = setTimeout(() => {
@@ -952,14 +948,12 @@ const AdminPannel = () => {
     }, 300);
     return () => clearTimeout(timer);
   }, [salesFilter]);
-
   useEffect(() => {
     const [start, end] = dateRange;
     if (start && end) {
       setSalesFilter({ type: "date_range", value: dateRange });
     }
   }, [dateRange]);
-
   const handlePlayPause = (song) => {
     if (currentSong?.id === song.id) setIsPlaying(!isPlaying);
     else {
@@ -994,7 +988,7 @@ const AdminPannel = () => {
   return (
     <div className="mx-auto h-screen max-w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900 font-sans text-white">
       <div
-        className={`flex ${activeLink !== "Total Sales (Amount)" ? "h-[calc(100%-6rem)]" : "h-full"}`}
+        className={`flex ${activeLink !== "Total Sales (Amount)" && activeLink !== "Upload Page" ? "h-[calc(100%-6rem)]" : "h-full"}`}
       >
         <Sidebar activeLink={activeLink} setActiveLink={setActiveLink} />
         <main className="flex-1 overflow-y-auto">
@@ -1017,11 +1011,12 @@ const AdminPannel = () => {
               setDateRange={setDateRange}
             />
           )}
+          {activeLink === "Upload Page" && <UploadPage />}
           {activeLink === "User Admin" && (
             <div className="p-8 text-white">User Admin Page Coming Soon</div>
           )}
         </main>
-        <RightSidebar />
+        <RightSidebar setActiveLink={setActiveLink} />
       </div>
       {activeLink !== "Total Sales (Amount)" && (
         <div className="h-24">
