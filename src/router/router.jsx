@@ -6,6 +6,15 @@ import NotFoundView from "../pages/error/NotFoundView";
 
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
+import ContactView from "../pages/public/contact/ContactView";
+import ServicesView from "../pages/public/Services/ServicesView";
+import RegisterView from "../pages/auth/register/RegisterView";
+import LoginView from "../pages/auth/login/LoginView";
+import ShoppingCart from "../pages/ShoppingCart/ShoppingCart";
+import VideosView from "../pages/public/videos/VideosView";
+import CheckOut from "../pages/Checkout/CheckOut";
+import TracksView from "../pages/public/tracks/TracksView";
+import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import AdminPannel from "../pages/dashboard/AdminPannel";
 
 const AppRoutes = createBrowserRouter([
@@ -21,6 +30,46 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/about",
         element: <AboutView />,
+      },
+      {
+        path: "/login",
+        element: <LoginView />,
+      },
+      {
+        path: "/signup",
+        element: <RegisterView />,
+      },
+      {
+        path: "/contact-view",
+        element: <ContactView />,
+      },
+      {
+        path: "/services",
+        element: <ServicesView />,
+      },
+
+      {
+        path: "/shopping-cart",
+        element: <ShoppingCart />,
+      },
+
+      {
+        path: "/check-out",
+        element: <CheckOut />,
+      },
+
+      {
+        path: "/tracks-view",
+        element: <TracksView />,
+      },
+      {
+        path: "/products",
+        element: <ProductsPage />,
+      },
+
+      {
+        path: "/video",
+        element: <VideosView />,
       },
       {
         path: "/admin",
