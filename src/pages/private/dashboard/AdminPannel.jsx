@@ -70,9 +70,9 @@ ChartJS.register(
 // =================================================================================
 
 const navLinksData = [
-  { name: "Total Songs Uploaded", icon: <SlPlaylist /> },
-  { name: "Total Sales (Amount)", icon: <TfiBarChart /> },
-  { name: "User Admin", icon: <BsPersonBoundingBox /> },
+  { name: "Total Songs Uploaded", icon: <SlPlaylist />, path: "/" },
+  { name: "Total Sales (Amount)", icon: <TfiBarChart />, path: "/" },
+  { name: "User Admin", icon: <BsPersonBoundingBox />, path: "/" },
 ];
 const userRolesData = [
   { role: "Administrator", email: "roman@gmai.com", status: "active" },
@@ -205,6 +205,7 @@ const recentUploadsData = [
     albumArt: "https://placehold.co/44x44/F1C40F/000000?text=BH",
   },
 ];
+
 const generateSalesData = (filter) => {
   const randomValue = (min, max) =>
     Math.floor(Math.random() * (max - min + 1)) + min;
@@ -359,16 +360,14 @@ const generateSalesData = (filter) => {
     chartData,
   };
 };
-
 // =================================================================================
 //  UI COMPONENTS
 // =================================================================================
-
 const Sidebar = ({ activeLink, setActiveLink }) => {
-  /* ... Unchanged ... */ return (
-    <aside className="hidden w-72 flex-shrink-0 flex-col space-y-4 bg-neutral-800 p-4 text-white md:flex">
+  return (
+    <aside className="hidden w-70 flex-shrink-0 flex-col space-y-4 bg-neutral-800 p-4 text-white md:flex">
       <div className="mt-4 flex h-32 w-32 items-start">
-        <img src="/public/image/ibracks_logo.png" alt="Logo" />
+        <img src="/image/ibracks_logo.png" alt="Logo" />
       </div>
       <nav className="flex flex-col space-y-2">
         {navLinksData.map((link) => (
@@ -390,6 +389,7 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
           </a>
         ))}
       </nav>
+
       <div className="flex flex-col gap-4 rounded-lg bg-white/10 p-4">
         {userRolesData.map((user) => (
           <div key={user.role} className="flex items-center justify-between">
@@ -408,8 +408,7 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
               onClick={() => alert(`Editing ${user.role}`)}
               className="text-amber-400 hover:text-amber-300"
             >
-              {" "}
-              <FiEdit />{" "}
+              <FiEdit />
             </button>
           </div>
         ))}
@@ -417,13 +416,13 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
     </aside>
   );
 };
+
 const TopBar = ({ searchTerm, setSearchTerm }) => {
   /* ... Unchanged ... */ return (
     <header className="sticky top-0 z-10 flex flex-shrink-0 items-center justify-between gap-4 bg-black/30 p-2">
       <div className="ml-9 flex items-center gap-2">
         <button className="rounded-lg bg-neutral-800 p-4 text-white hover:bg-neutral-700">
-          {" "}
-          <FaChevronLeft />{" "}
+          <FaChevronLeft />
         </button>
         <span className="text-neutral-400">Home</span>
         <FaChevronRight className="text-neutral-500" />
@@ -431,8 +430,7 @@ const TopBar = ({ searchTerm, setSearchTerm }) => {
       <div className="flex flex-1 justify-center px-4">
         <div className="relative w-full max-w-lg">
           <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-400">
-            {" "}
-            <FaSearch />{" "}
+            <FaSearch />
           </span>
           <input
             type="search"
@@ -444,12 +442,12 @@ const TopBar = ({ searchTerm, setSearchTerm }) => {
         </div>
       </div>
       <button className="mr-9 rounded-lg bg-neutral-800 p-4 text-xl text-white hover:bg-neutral-700">
-        {" "}
-        <IoNotifications />{" "}
+        <IoNotifications />
       </button>
     </header>
   );
 };
+
 const SongList = ({
   songs,
   currentSong,
@@ -471,23 +469,20 @@ const SongList = ({
                 onClick={() => onPlayPause(song)}
                 className="text-xl text-white"
               >
-                {" "}
-                <IoPause />{" "}
+                <IoPause />
               </button>
             ) : (
               <button
                 onClick={() => onPlayPause(song)}
                 className="absolute inset-0 flex items-center justify-center text-xl text-white opacity-0 transition-opacity group-hover:opacity-100"
               >
-                {" "}
-                <IoPlay />{" "}
+                <IoPlay />
               </button>
             )}
             <span
               className={`transition-opacity ${currentSong?.id === song.id || "group-hover:opacity-0"}`}
             >
-              {" "}
-              {index + 1}{" "}
+              {index + 1}
             </span>
           </div>
           <div className="flex items-center gap-4">
@@ -499,14 +494,12 @@ const SongList = ({
             <p className="truncate font-bold text-white">{song.title}</p>
           </div>
           <div className="flex items-center gap-3 text-neutral-200">
-            {" "}
-            <IoHeadsetSharp className="text-xl" />{" "}
-            <span>{song.plays}</span>{" "}
+            <IoHeadsetSharp className="text-xl" />
+            <span>{song.plays}</span>
           </div>
           <div className="flex items-center gap-2 text-neutral-200">
-            {" "}
-            <IoMdTime className="rounded-full text-xl" />{" "}
-            <span>{song.duration}</span>{" "}
+            <IoMdTime className="rounded-full text-xl" />
+            <span>{song.duration}</span>
           </div>
           <div className="flex items-center justify-end gap-6 text-neutral-200">
             <div className="flex items-center gap-2">
@@ -514,14 +507,12 @@ const SongList = ({
                 onClick={() => onLikeToggle(song.id)}
                 className={`${song.isLiked ? "text-red-500" : "text-white"} text-xl hover:text-red-500`}
               >
-                {" "}
-                {song.isLiked ? <FaHeart /> : <FaRegHeart />}{" "}
+                {song.isLiked ? <FaHeart /> : <FaRegHeart />}
               </button>
               <span className="w-20 text-sm">{song.likes} Likes</span>
             </div>
             <button className="hover:text-white">
-              {" "}
-              <PiDotsThreeOutline className="text-2xl" />{" "}
+              <PiDotsThreeOutline className="text-2xl" />
             </button>
           </div>
         </div>
@@ -529,9 +520,9 @@ const SongList = ({
     </div>
   );
 };
+
 const RightSidebar = () => {
-  /* ... Unchanged ... */ const [isDropdownOpen, setIsDropdownOpen] =
-    useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -557,8 +548,7 @@ const RightSidebar = () => {
             <div>
               <p className="font-semibold text-white">James Rodriguez</p>
               <div className="flex items-center gap-1 text-xs text-neutral-400">
-                {" "}
-                <span>Admin</span> <FaCrown className="text-amber-400" />{" "}
+                <span>Admin</span> <FaCrown className="text-amber-400" />
               </div>
             </div>
           </div>
@@ -568,34 +558,28 @@ const RightSidebar = () => {
         </div>
         {isDropdownOpen && (
           <div className="absolute top-full right-0 z-20 mt-2 w-48 rounded-lg bg-neutral-700 shadow-lg">
-            {" "}
             <button
               onClick={() => alert("Logging out...")}
               className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
             >
-              {" "}
-              Log Out{" "}
-            </button>{" "}
+              Log Out
+            </button>
           </div>
         )}
       </div>
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
         <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90">
-          {" "}
-          <MdFileUpload className="text-5xl" />{" "}
-          <p className="font-bold">Upload Here</p>{" "}
+          <MdFileUpload className="text-5xl" />
+          <p className="font-bold">Upload Here</p>
         </div>
       </div>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-center justify-between">
-          {" "}
-          <h2 className="text-base font-semibold text-white">
-            Recent Uploads
-          </h2>{" "}
+          <h2 className="text-base font-semibold text-white">Recent Uploads</h2>
           <a href="#" className="text-sm text-green-500 hover:underline">
             See All
-          </a>{" "}
+          </a>
         </div>
         <div className="space-y-3">
           {recentUploadsData.map((song) => (
@@ -607,11 +591,8 @@ const RightSidebar = () => {
                   className="h-11 w-11 rounded-lg"
                 />
                 <div>
-                  {" "}
-                  <p className="text-sm font-bold text-white">
-                    {song.title}
-                  </p>{" "}
-                  <p className="text-xs text-neutral-400">{song.artist}</p>{" "}
+                  <p className="text-sm font-bold text-white">{song.title}</p>
+                  <p className="text-xs text-neutral-400">{song.artist}</p>
                 </div>
               </div>
               <p className="text-xs text-neutral-400">{song.time}</p>
@@ -622,6 +603,7 @@ const RightSidebar = () => {
     </aside>
   );
 };
+
 const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
   /* ... Unchanged ... */ if (!currentSong)
     return <div className="h-24 bg-neutral-900"></div>;
@@ -634,46 +616,39 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
           className="h-16 w-16 rounded-lg"
         />
         <div>
-          {" "}
-          <p className="font-semibold text-white">{currentSong.title}</p>{" "}
-          <p className="text-sm text-neutral-400">{currentSong.artist}</p>{" "}
+          <p className="font-semibold text-white">{currentSong.title}</p>
+          <p className="text-sm text-neutral-400">{currentSong.artist}</p>
         </div>
         <button
           onClick={() => onLikeToggle(currentSong.id)}
           className={`${currentSong.isLiked ? "text-red-500" : "text-white"} transition-colors hover:text-red-500`}
         >
-          {" "}
           {currentSong.isLiked ? (
             <FaHeart />
           ) : (
             <FaRegHeart className="text-xl" />
-          )}{" "}
+          )}
         </button>
       </div>
       <div className="flex flex-col items-center justify-center">
         <div className="flex items-center gap-6">
           <button className="text-neutral-400 hover:text-white">
-            {" "}
-            <IoShuffle className="text-xl" />{" "}
+            <IoShuffle className="text-xl" />
           </button>
           <button className="text-neutral-400 hover:text-white">
-            {" "}
-            <IoPlaySkipBack className="text-2xl" />{" "}
+            <IoPlaySkipBack className="text-2xl" />
           </button>
           <button
             onClick={() => onPlayPause(currentSong)}
             className="rounded-full bg-white p-3 text-2xl text-black transition-transform hover:scale-105"
           >
-            {" "}
-            {isPlaying ? <IoPause /> : <IoPlay />}{" "}
+            {isPlaying ? <IoPause /> : <IoPlay />}
           </button>
           <button className="text-neutral-400 hover:text-white">
-            {" "}
-            <IoPlaySkipForward className="text-2xl" />{" "}
+            <IoPlaySkipForward className="text-2xl" />
           </button>
           <button className="text-neutral-400 hover:text-white">
-            {" "}
-            <IoRepeat className="text-xl" />{" "}
+            <IoRepeat className="text-xl" />
           </button>
         </div>
         <div className="mt-2 flex w-full items-center gap-2 text-xs">
@@ -698,6 +673,7 @@ const Player = ({ currentSong, isPlaying, onPlayPause, onLikeToggle }) => {
     </div>
   );
 };
+
 const SalesFilterBar = ({
   activeFilter,
   setFilter,
@@ -774,15 +750,13 @@ const SalesFilterBar = ({
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
             className="flex items-center gap-2 rounded border border-neutral-400 px-2 py-1.5 text-xs text-white hover:bg-white/10"
           >
-            {" "}
             <IoFilterSharp className="text-xl" />
             <span>
               {activeFilter.type === "month" ? activeFilter.value : "Filters"}
-            </span>{" "}
+            </span>
           </button>
           {showMonthDropdown && (
             <div className="absolute top-full right-0 z-20 mt-2 w-40 rounded-lg bg-neutral-700 shadow-lg">
-              {" "}
               {months.map((month) => (
                 <button
                   key={month}
@@ -793,10 +767,9 @@ const SalesFilterBar = ({
                   }}
                   className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
                 >
-                  {" "}
-                  {month}{" "}
+                  {month}
                 </button>
-              ))}{" "}
+              ))}
             </div>
           )}
         </div>
@@ -804,6 +777,7 @@ const SalesFilterBar = ({
     </div>
   );
 };
+
 const SummaryCard = ({
   icon,
   value,
@@ -825,17 +799,17 @@ const SummaryCard = ({
         <h1 className="text-2xl font-semibold text-neutral-700">{value}</h1>
         <p className="text-base font-medium text-black">{title}</p>
         <p className="text-xs font-medium text-black">
-          {" "}
           <span className={isPositive ? "text-green-800" : "text-red-800"}>
             {isPositive ? "+" : ""}
             {change}%
-          </span>{" "}
-          from {periodLabel}{" "}
+          </span>
+          from {periodLabel}
         </p>
       </div>
     </div>
   );
 };
+
 const SalesChart = ({ data }) => {
   const options = {
     responsive: true,
@@ -905,6 +879,7 @@ const SalesChart = ({ data }) => {
     </div>
   );
 };
+
 const SalesDashboard = ({
   salesData,
   activeFilter,
@@ -918,6 +893,7 @@ const SalesDashboard = ({
         Loading...
       </div>
     );
+
   return (
     <div className="mr-4 ml-4 space-y-6 p-8">
       <h1 className="mb-4 text-xl font-bold text-white">Sales Analysis</h1>
@@ -955,7 +931,6 @@ const SalesDashboard = ({
 // =================================================================================
 //  MAIN ADMIN PANNEL COMPONENT
 // =================================================================================
-
 const AdminPannel = () => {
   const [songs, setSongs] = useState(songsData);
   const [currentSong, setCurrentSong] = useState(songsData[2]);
@@ -966,6 +941,7 @@ const AdminPannel = () => {
     type: "predefined",
     value: "7 days",
   });
+
   const [dateRange, setDateRange] = useState([null, null]);
   const [salesData, setSalesData] = useState(null);
 
@@ -1049,13 +1025,12 @@ const AdminPannel = () => {
       </div>
       {activeLink !== "Total Sales (Amount)" && (
         <div className="h-24">
-          {" "}
           <Player
             currentSong={currentSong}
             isPlaying={isPlaying}
             onPlayPause={handlePlayPause}
             onLikeToggle={handleLikeToggle}
-          />{" "}
+          />
         </div>
       )}
     </div>

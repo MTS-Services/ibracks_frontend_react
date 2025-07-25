@@ -12,7 +12,7 @@ const navLinks = [
 
 const NavStyle = () => {
   return (
-    <header className="sticky top-0 z-10 bg-black">
+    <header className="sticky top-0 z-20 bg-black">
       <nav className="mx-auto flex w-full max-w-7xl items-center justify-between py-2">
         {/* Logo */}
         <Link to="/">

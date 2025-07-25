@@ -1,12 +1,7 @@
-import {
-  FaTrashAlt,
-  FaEllipsisV,
-  FaArrowRight,
-  FaArrowLeft,
-} from "react-icons/fa"; // react-icons থেকে প্রয়োজনীয় আইকন ইমপোর্ট করা হলো
+import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 
-function ShoppingCart() {
+function CheckOutPage() {
   const cartItems = [
     {
       id: 1,
@@ -258,4 +253,4 @@ function ShoppingCart() {
   );
 }
 
-export default ShoppingCart;
+export default CheckOutPage;

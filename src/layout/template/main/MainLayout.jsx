@@ -1,12 +1,13 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
-import NavStyle from "../../navbar/NavStyle";
-import FooterStyle from "../../footer/FooterStyle";
+import NavStyle from "./NavStyle";
+import FooterStyle from "./FooterStyle";
 
 const MainLayout = () => {
   return (
     <>
-      <NavStyle />
+      <nav>
+        <NavStyle />
+      </nav>
       <main>
         <Outlet />
       </main>
