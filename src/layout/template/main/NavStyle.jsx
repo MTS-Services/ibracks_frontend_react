@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Video", path: "/video" },
   { label: "Services", path: "/services" },
   { label: "Contact", path: "/contact" },
+  { label: "Admin", path: "/admin" },
 ];
 
 const NavStyle = () => {
