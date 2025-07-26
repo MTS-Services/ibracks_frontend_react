@@ -135,6 +135,8 @@ const RelatedTracks = () => {
             </div>
           </div>
         </div>
+
+        {/* learn  more button part  */}
         <div className="mx-auto flex items-center justify-center pt-10">
           <div
             className="inline-flex items-center justify-center gap-1 overflow-hidden rounded-2xl border-[1px] bg-[#43024F] px-12 py-3 shadow-2xl transition-all duration-300 ease-in-out hover:bg-gradient-to-t hover:from-[#DAA520] hover:to-[#F5DEB3]"
