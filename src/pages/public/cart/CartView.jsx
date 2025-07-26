@@ -1,40 +1,27 @@
-import { useState } from "react";
+// src/pages/CartView.jsx
+import { useState, useContext } from "react"; // useContext import করুন
 import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
-import PurchaseSuccessModal from "../../../components/PurchaseSuccessModal";
+import PurchaseSuccessModal from "../../../components/PurchaseSuccessModal"; // আপনার মডাল কম্পোনেন্টের সঠিক পাথ নিশ্চিত করুন
+import { Link } from "react-router-dom"; // Link কম্পোনেন্ট import করুন "Shopping Continue" এর জন্য
+import { CartContext } from "../../../utils/CartContextDefinition";
 
 function CartView() {
-  const cartItems = [
-    {
-      id: 1,
-      name: "NOLSTAGIA",
-      genre: "Afrobeat",
-      price: 30.0,
-      imageUrl: "/shoppingcart/cart5.jpg",
-    },
-    {
-      id: 2,
-      name: "NOLSTAGIA",
-      genre: "Afrobeat",
-      price: 30.0,
-      imageUrl: "/shoppingcart/cart6.jpg",
-    },
-    {
-      id: 3,
-      name: "NOLSTAGIA",
-      genre: "Afrobeat",
-      price: 30.0,
-      imageUrl: "/shoppingcart/cart7.jpg",
-    },
-  ];
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-  const shipping = 4.0;
-  const total = 86.0;
+  // CartContext থেকে প্রয়োজনীয় ডেটা এবং ফাংশনগুলো নিন
+  const { cartItems, removeFromCart, subtotal, shipping, tax, total } =
+    useContext(CartContext);
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const handlecheckout = () => {
+
+  const handleCheckout = () => {
+    // এখানে আপনার আসল পেমেন্ট প্রসেসিং লজিক আসবে (যেমন, একটি পেমেন্ট গেটওয়ে API কল)।
+    // সফল হলে setShowSuccessModal(true) কল করবেন।
+    console.log("Proceeding to checkout with items:", cartItems);
+    // For demonstration, simply show the modal:
     setShowSuccessModal(true);
+    // Note: In a real application, you might clear the cart only AFTER the payment is confirmed by the backend.
+    // If you add a clearCart function to your context, you could call it here:
+    // clearCart();
   };
 
   const handleCloseModal = () => {
@@ -44,7 +31,7 @@ function CartView() {
   return (
     <div>
       <div
-        className={`m-auto flex min-h-screen items-center justify-center bg-neutral-900 px-2 py-10 sm:px-6 lg:px-8`} // <--- `showSuccessModal` এর শর্তমূলক ব্লার ক্লাসটি সরানো হয়েছে
+        className={`m-auto flex min-h-screen items-center justify-center bg-neutral-900 px-2 py-10 sm:px-6 lg:px-8`}
         style={{
           background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
         }}
@@ -52,14 +39,13 @@ function CartView() {
         <div className="flex w-full max-w-6xl flex-col gap-8 rounded-2xl p-6 md:p-10 lg:flex-row">
           {/* Left Section: Shopping Cart */}
           <div className="flex flex-1 flex-col gap-6">
-            {/* Shopping Continue  */}
-            <div className="flex items-center gap-2">
+            {/* Shopping Continue Button - Link ব্যবহার করা হয়েছে */}
+            <Link to="/tracks" className="flex items-center gap-2">
               <IoIosArrowBack className="h-6 w-6 cursor-pointer font-[600] text-white" />{" "}
-              {/* React Icon replaces SVG */}
               <span className="font-['Poppins'] text-lg font-[600] text-white">
                 Shopping Continue
               </span>
-            </div>
+            </Link>
 
             <hr className="border-t border-stone-300 opacity-50" />
 
@@ -69,41 +55,56 @@ function CartView() {
                 Shopping cart
               </h2>
               <p className="font-['Nunito'] text-sm font-[500] text-white">
-                You have {cartItems.length} item in your cart
+                You have {cartItems.length} item
+                {cartItems.length !== 1 ? "s" : ""} in your cart
               </p>
             </div>
 
             {/* Cart Items */}
             <div className="flex flex-col gap-4 lg:gap-6">
-              {cartItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-4 rounded-2xl bg-white p-4 pr-6 shadow-md"
-                >
-                  <img
-                    className="h-16 w-16 rounded-lg object-cover sm:h-20 sm:w-20"
-                    src={item.imageUrl}
-                    alt={item.name}
-                  />
-                  <div className="flex flex-1 flex-col gap-1">
-                    <div className="font-['Poppins'] text-base font-[600] text-[#3B3B3B] capitalize sm:text-lg">
-                      {item.name}
+              {cartItems.length === 0 ? (
+                // যদি কার্ট খালি থাকে
+                <p className="text-center text-lg text-white">
+                  Your cart is empty.
+                </p>
+              ) : (
+                // কার্ট আইটেমগুলো ম্যাপ করে দেখানো
+                cartItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-4 rounded-2xl bg-white p-4 pr-6 shadow-md"
+                  >
+                    <img
+                      className="h-16 w-16 rounded-lg object-cover sm:h-20 sm:w-20"
+                      src={item.thumbnail || "/shoppingcart/default.jpg"} // ট্র্যাক ডেটা থেকে thumbnail ব্যবহার করুন
+                      alt={item.title} // alt text item.title ব্যবহার করবে
+                    />
+                    <div className="flex flex-1 flex-col gap-1">
+                      <div className="font-['Poppins'] text-base font-[600] text-[#3B3B3B] capitalize sm:text-lg">
+                        {item.title} {/* ট্র্যাকের title ব্যবহার করুন */}
+                      </div>
+                      <div className="font-['Poppins'] text-sm font-[400] text-neutral-700 capitalize sm:text-base">
+                        {/* Assuming genre is the first tag, or handle it as per your data */}
+                        {item.tags && item.tags.length > 0
+                          ? item.tags[0]
+                          : "N/A"}
+                      </div>
                     </div>
-                    <div className="font-['Poppins'] text-sm font-[400] text-neutral-700 capitalize sm:text-base">
-                      {item.genre}
+                    <div className="flex items-center gap-2 sm:gap-4">
+                      {/* প্রতিটি আইটেমের মূল্য (quantity সহ) */}
+                      <div className="text-right font-['Poppins'] text-xs font-[500] text-[#393939] sm:text-sm">
+                        ${(item.price * item.quantity).toFixed(2)}{" "}
+                      </div>
+                      <FaEllipsisV className="cursor-pointer text-sm text-[#393939] sm:text-base" />
+                      {/* ট্র্যাশ আইকন ক্লিক করলে আইটেমটি সরিয়ে দেবে */}
+                      <FaTrashAlt
+                        className="cursor-pointer text-lg text-gray-500 sm:text-xl"
+                        onClick={() => removeFromCart(item.id)}
+                      />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 sm:gap-4">
-                    {" "}
-                    {/* Price, Ellipsis, and Trash Icon */}
-                    <div className="text-right font-['Poppins'] text-xs font-[500] text-[#393939] sm:text-sm">
-                      ${item.price.toFixed(2)}
-                    </div>
-                    <FaEllipsisV className="cursor-pointer text-sm text-[#393939] sm:text-base" />
-                    <FaTrashAlt className="cursor-pointer text-lg text-gray-500 sm:text-xl" />
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
@@ -120,7 +121,7 @@ function CartView() {
               />
             </div>
 
-            {/* Card Type section */}
+            {/* Card Type section (unchanged) */}
             <div className="flex flex-col gap-2">
               <span className="font-['Nunito'] text-base font-[500] text-white">
                 Card type
@@ -153,7 +154,7 @@ function CartView() {
               </div>
             </div>
 
-            {/* Name on card input field */}
+            {/* Name on card input field (unchanged) */}
             <label
               htmlFor="nameOnCard"
               className="bottom-0 mt-1 mb-0 pb-0 font-['Poppins'] text-sm font-[500] text-white"
@@ -169,7 +170,7 @@ function CartView() {
               />
             </div>
 
-            {/* Card Number ইনপুট */}
+            {/* Card Number ইনপুট (unchanged) */}
             <label
               htmlFor="cardNumber"
               className="bottom-0 mt-1 mb-0 pb-0 font-['Poppins'] text-sm font-[500] text-white"
@@ -185,7 +186,7 @@ function CartView() {
               />
             </div>
 
-            {/* Expiration date and CVV input */}
+            {/* Expiration date and CVV input (unchanged) */}
             <div className="mt-2 grid grid-cols-2 gap-4">
               <div>
                 <label
@@ -197,7 +198,7 @@ function CartView() {
                 <input
                   type="text"
                   id="expirationDate"
-                  defaultValue="mm/yy" // Figma অনুযায়ী ডিফল্ট টেক্সট
+                  defaultValue="mm/yy"
                   className="mt-1 h-10 w-full rounded-md bg-white p-3 font-['Poppins'] text-xs font-medium text-stone-300 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.25)] focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                 />
               </div>
@@ -211,7 +212,7 @@ function CartView() {
                 <input
                   type="text"
                   id="cvv"
-                  defaultValue="123" // Figma
+                  defaultValue="123"
                   className="mt-1 h-10 w-full rounded-md bg-white p-3 font-['Poppins'] text-xs font-medium text-stone-300 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.25)] focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                 />
               </div>
@@ -219,7 +220,7 @@ function CartView() {
 
             <hr className="mt-4 border-t border-indigo-500 opacity-50" />
 
-            {/* Subtotal, Shipping, Total */}
+            {/* Subtotal, Shipping, Total - Context থেকে প্রাপ্ত মান ব্যবহার করা হয়েছে */}
             <div className="gap-2">
               <div className="flex items-center justify-between p-0 pt-1">
                 <span className="font-['Poppins'] text-sm font-[500] text-white">
@@ -240,6 +241,14 @@ function CartView() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="font-['Poppins'] text-sm font-[500] text-white">
+                  Tax
+                </span>
+                <span className="font-['Poppins'] text-sm font-[500] text-white">
+                  ${tax.toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="font-['Poppins'] text-sm font-[500] text-white">
                   Total (Tax incl.)
                 </span>
                 <span className="font-['Poppins'] text-sm font-[500] text-white">
@@ -248,9 +257,9 @@ function CartView() {
               </div>
             </div>
 
-            {/* Checkout Button */}
+            {/* Checkout Button - onClick handler যোগ করা হয়েছে */}
             <button
-              onClick={handlecheckout}
+              onClick={handleCheckout}
               className="mt-4 flex items-center justify-between rounded-xl bg-[#DAA520] px-6 py-4 transition-colors duration-200 hover:bg-yellow-600"
             >
               <span className="font-['Poppins'] text-base font-[500] text-white">
@@ -264,6 +273,7 @@ function CartView() {
           </div>
         </div>
 
+        {/* Purchase Success Modal */}
         {showSuccessModal && (
           <PurchaseSuccessModal onClose={handleCloseModal} />
         )}

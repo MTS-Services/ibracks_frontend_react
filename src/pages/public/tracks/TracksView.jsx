@@ -1,96 +1,70 @@
-import { useState } from "react";
+// src/pages/TracksPage.jsx
+import { useState, useContext } from "react"; // useContext import করুন
+import { FaShareAlt } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import { FaShareAlt } from "react-icons/fa";
-import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 
+import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
+import { CartContext } from "../../../utils/CartContextDefinition";
+
+// প্রতিটি ট্র্যাকের একটি 'price' প্রপার্টি থাকা জরুরি
 const tracks = [
   {
     id: 1,
     title: "NOLSTAGIA",
-    time: "02:59",
+    time: "2:45",
     bpm: "103",
-    tags: ["Afrobeat", "Inspiring", "Pop"], // Added 'Pop' for genre filtering example
-    thumbnail: "/image/home/music3.png",
+    tags: ["Afrobeat", "Happy"],
+    thumbnail: "/shoppingcart/cart5.jpg",
+    price: 30.0,
   },
   {
     id: 2,
-    title: "SUMMER VIBES", // Changed title for variety
-    time: "03:15",
+    title: "Melody Magic",
+    time: "3:10",
     bpm: "120",
-    tags: ["Chill", "Happy", "Hip-hop"], // Added tags for filtering
-    thumbnail: "/image/home/music3.png",
+    tags: ["Electronic", "Energetic"],
+    thumbnail: "/shoppingcart/cart6.jpg",
+    price: 25.0,
   },
   {
     id: 3,
-    title: "DREAMSCAPE", // Changed title for variety
-    time: "04:00",
-    bpm: "140",
-    tags: ["Energetic", "Electronic", "Jazz"], // Added tags for filtering
-    thumbnail: "/image/home/music3.png",
+    title: "Chill Vibes",
+    time: "4:00",
+    bpm: "90",
+    tags: ["Jazz", "Chill"],
+    thumbnail: "/shoppingcart/cart7.jpg",
+    price: 35.0,
   },
   {
     id: 4,
-    title: "MIDNIGHT GROOVE",
-    time: "02:30",
-    bpm: "103",
-    tags: ["Afrobeat", "Sad"],
-    thumbnail: "/image/home/music3.png",
+    title: "Groovy Beat",
+    time: "2:50",
+    bpm: "110",
+    tags: ["Hip-hop", "Inspiring"],
+    thumbnail: "/shoppingcart/cart1.jpg",
+    price: 28.0,
   },
-  {
-    id: 5,
-    title: "CITY LIGHTS",
-    time: "03:45",
-    bpm: "120",
-    tags: ["Pop", "Inspiring"],
-    thumbnail: "/image/home/music3.png",
-  },
-  {
-    id: 6,
-    title: "FOREST WALK",
-    time: "03:05",
-    bpm: "140",
-    tags: ["Chill", "Energetic", "Electronic"],
-    thumbnail: "/image/home/music3.png",
-  },
-  {
-    id: 7,
-    title: "RAINY DAYS",
-    time: "02:50",
-    bpm: "103",
-    tags: ["Sad", "Jazz"],
-    thumbnail: "/image/home/music3.png",
-  },
-  {
-    id: 8,
-    title: "SUNRISE MELODY",
-    time: "03:20",
-    bpm: "120",
-    tags: ["Happy", "Afrobeat"],
-    thumbnail: "/image/home/music3.png",
-  },
+  // আরও ট্র্যাক যোগ করুন
 ];
 
 const TracksPage = () => {
+  // CartContext থেকে addToCart ফাংশনটি নিন
+  const { addToCart } = useContext(CartContext);
+
   const [searchTerm, setSearchTerm] = useState("");
-  // State for dropdown values
   const [selectedCategory, setSelectedCategory] = useState("All Category");
   const [selectedBpm, setSelectedBpm] = useState("All Bpm");
   const [selectedMoods, setSelectedMoods] = useState("All Moods");
   const [selectedGenres, setSelectedGenres] = useState("All Genres");
+  const [selectedSortOption, setSelectedSortOption] = useState("Default");
+  const [selectedListView, setSelectedListView] = useState("Default List");
 
-  // NEW: Separate states for the last two dropdowns
-  const [selectedSortOption, setSelectedSortOption] = useState("Default"); // Renamed for clarity
-  const [selectedListView, setSelectedListView] = useState("Default List"); // Renamed for clarity
-
-  // State to manage dropdown open/close for custom arrow (though native select handles this)
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isBpmDropdownOpen, setIsBpmDropdownOpen] = useState(false);
   const [isMoodsDropdownOpen, setIsMoodsDropdownOpen] = useState(false);
   const [isGenresDropdownOpen, setIsGenresDropdownOpen] = useState(false);
-
-  // NEW: Separate states for the open/close of the new dropdowns
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
 
@@ -104,47 +78,44 @@ const TracksPage = () => {
 
   const handleDropdownChange = (e, setSelectedValue, setDropdownOpenState) => {
     setSelectedValue(e.target.value);
-    // For native select, closing is automatic. If you implement a custom dropdown,
-    // you'd typically setDropdownOpenState(false) here.
+    // Native select এর জন্য এটি প্রয়োজন নেই কারণ ব্রাউজার নিজে বন্ধ করে।
+    // কাস্টম ড্রপডাউন বানালে এটি ব্যবহার করতে পারেন।
+    // setDropdownOpenState(false);
   };
 
-  // Function to toggle dropdown state (primarily for the custom arrow icon)
   const toggleDropdown = (setDropdownOpenState) => {
     setDropdownOpenState((prevState) => !prevState);
   };
 
-  // --- Filtering Logic ---
+  // Add to Cart handler
+  const handleAddToCart = (track) => {
+    addToCart(track); // Context থেকে প্রাপ্ত addToCart ফাংশন কল করুন
+    alert(`${track.title} added to cart!`); // ইউজারকে জানানোর জন্য একটি simple alert
+  };
+
   const filteredTracks = tracks.filter((track) => {
-    // 1. Filter by Search Term (Title)
     const matchesSearch = track.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
-    // 2. Filter by Category (Dummy filter as no category in track data, just an example)
     const matchesCategory =
       selectedCategory === "All Category" ||
-      track.tags.includes(selectedCategory); // Assuming category could be a tag
+      track.tags.includes(selectedCategory);
 
-    // 3. Filter by BPM
     const matchesBpm =
-      selectedBpm === "All Bpm" || track.bpm === selectedBpm.split(" ")[0]; // Extract "103" from "103 BPM"
+      selectedBpm === "All Bpm" || track.bpm === selectedBpm.split(" ")[0];
 
-    // 4. Filter by Moods (Check if any of the track's tags match the selected mood)
     const matchesMood =
       selectedMoods === "All Moods" ||
       track.tags.some(
         (tag) => tag.toLowerCase() === selectedMoods.toLowerCase(),
       );
 
-    // 5. Filter by Genres (Check if any of the track's tags match the selected genre)
     const matchesGenre =
       selectedGenres === "All Genres" ||
       track.tags.some(
         (tag) => tag.toLowerCase() === selectedGenres.toLowerCase(),
       );
-
-    // 6. No explicit filtering for Sort Option or List View as they typically control display, not data filtering
-    // If you want them to filter, you'd add similar logic here based on `selectedSortOption` and `selectedListView`
 
     return (
       matchesSearch &&
@@ -154,7 +125,6 @@ const TracksPage = () => {
       matchesGenre
     );
   });
-  // --- End Filtering Logic ---
 
   return (
     <div
@@ -323,16 +293,16 @@ const TracksPage = () => {
             {/* Sort Option Dropdown (second dropdown you highlighted) */}
             <div className="relative">
               <select
-                value={selectedSortOption} // Now uses its own state
+                value={selectedSortOption}
                 onChange={(e) =>
                   handleDropdownChange(
                     e,
-                    setSelectedSortOption, // Set its own setter
-                    setIsSortDropdownOpen, // Set its own open state
+                    setSelectedSortOption,
+                    setIsSortDropdownOpen,
                   )
                 }
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                onClick={() => toggleDropdown(setIsSortDropdownOpen)} // Toggle its own open state
+                onClick={() => toggleDropdown(setIsSortDropdownOpen)}
               >
                 <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Default
@@ -348,7 +318,7 @@ const TracksPage = () => {
                 </option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
-                {isSortDropdownOpen ? ( // Uses its own open state
+                {isSortDropdownOpen ? (
                   <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
                 ) : (
                   <FiChevronDown className="text-base text-black md:text-xl" />
@@ -358,16 +328,16 @@ const TracksPage = () => {
             {/* List View Dropdown (third dropdown you highlighted) */}
             <div className="relative">
               <select
-                value={selectedListView} // Now uses its own state
+                value={selectedListView}
                 onChange={(e) =>
                   handleDropdownChange(
                     e,
-                    setSelectedListView, // Set its own setter
-                    setIsListViewDropdownOpen, // Set its own open state
+                    setSelectedListView,
+                    setIsListViewDropdownOpen,
                   )
                 }
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                onClick={() => toggleDropdown(setIsListViewDropdownOpen)} // Toggle its own open state
+                onClick={() => toggleDropdown(setIsListViewDropdownOpen)}
               >
                 <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Default List
@@ -380,7 +350,7 @@ const TracksPage = () => {
                 </option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
-                {isListViewDropdownOpen ? ( // Uses its own open state
+                {isListViewDropdownOpen ? (
                   <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
                 ) : (
                   <FiChevronDown className="text-base text-black md:text-xl" />
@@ -407,7 +377,7 @@ const TracksPage = () => {
           </div>
         </div>
       </div>
-      {/* tabale part  */}
+      {/* table part */}
       <section className="sm:p-6 lg:p-8">
         {" "}
         <div className="mx-auto w-full max-w-7xl">
@@ -425,7 +395,7 @@ const TracksPage = () => {
                     Time
                   </th>{" "}
                   <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">BPM</th>{" "}
-                  <th className="py-3 font-medium sm:py-4 md:px-4">Tags</th>{" "}
+                  <th className="py-3 font-medium md:px-4">Tags</th>{" "}
                   <th className="py-3 font-medium md:px-4 md:py-4"></th>{" "}
                 </tr>
               </thead>
@@ -473,9 +443,14 @@ const TracksPage = () => {
                           <button className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2">
                             <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />{" "}
                           </button>
-                          <button className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2">
+                          {/* "Add to Cart" button - onClick handler যোগ করা হয়েছে */}
+                          <button
+                            onClick={() => handleAddToCart(track)} // এখানে addToCart ফাংশন কল করা হয়েছে
+                            className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
+                          >
                             <HiOutlineShoppingBag className="text-xs sm:text-sm" />{" "}
-                            <span>$30.00</span>
+                            <span>${track.price.toFixed(2)}</span>{" "}
+                            {/* পণ্যের মূল্য দেখানো হয়েছে */}
                           </button>
                         </div>
                       </td>

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiUser } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { getCurrentUser } from "../../../featured/auth/authUtils";
+import { CartContext } from "../../../utils/CartContextDefinition";
+import { useContext } from "react";
 
 const navLinks = [
   { label: "About", path: "/about" },
@@ -12,6 +14,8 @@ const navLinks = [
 ];
 
 const NavStyle = () => {
+  const { cartItems } = useContext(CartContext);
+
   const user = getCurrentUser();
 
   return (
@@ -40,7 +44,19 @@ const NavStyle = () => {
           {/* Icons + Login */}
           <div className="flex items-center gap-6 text-zinc-300">
             <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
-            <HiOutlineShoppingBag className="h-5 w-5 cursor-pointer hover:text-white" />
+
+            <Link
+              to="/shop-cart"
+              className="relative flex items-center hover:text-gray-300"
+            >
+              <HiOutlineShoppingBag className="text-2xl" />
+
+              {cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white">
+                  {cartItems.length}
+                </span>
+              )}
+            </Link>
             {user ? (
               ""
             ) : (
