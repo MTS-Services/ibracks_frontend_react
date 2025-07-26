@@ -1,7 +1,7 @@
 import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 
-function CheckOutPage() {
+function CheckOutView() {
   const cartItems = [
     {
       id: 1,
@@ -253,4 +253,4 @@ function CheckOutPage() {
   );
 }
 
-export default CheckOutPage;
+export default CheckOutView;
