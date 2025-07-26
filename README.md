@@ -1,4 +1,4 @@
-![alt text](public/view/view.png)
+![alt text](public/image/ibracks.png)
 
 # 🎙️ Feel the Sound. Own the Vibe.
 
@@ -84,17 +84,20 @@ Discover the magic of music with us. Our platform is your gateway to a world of 
 ### 💻 Application Code (`src/`)
 
 - 🧩 **Components**
+
   - ♻️ `common/` - Shared UI
   - ❌ `error/` - Error boundaries
   - ⭐ `Favourite*` - Bookmarking
   - 🌐 `LanguageSwitcher` - i18n toggle
 
 - 🌐 **Context Providers**
+
   - 🔐 `AuthContext` - JWT management
   - 💖 `FavouriteContext` - Saved properties
   - 🌓 `ThemeContext` - Dark/light mode
 
 - 🚀 **Features**
+
   - 🔑 `auth/` - Authentication
   - 🏘️ `property/` - Listing logic
 
