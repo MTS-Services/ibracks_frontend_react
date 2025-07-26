@@ -2,8 +2,7 @@ import { useState } from "react";
 import { LuSearch } from "react-icons/lu";
 // Import icons for up/down arrows
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import Availabestems from "../../../components/ProductsPage/Availabestems";
-import { FaShareAlt, FaThumbsUp } from "react-icons/fa";
+import { FaShareAlt } from "react-icons/fa";
 import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 
 const tracks = [
@@ -74,7 +73,7 @@ const tracks = [
   // Repeat or map your tracks as needed...
 ];
 
-const TracksPage = () => {
+const TracksView = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // State for dropdown values
@@ -117,7 +116,7 @@ const TracksPage = () => {
       }}
     >
       <div className="">
-        <TracksPageHeroSection></TracksPageHeroSection>
+        <TracksPageHeroSection />
       </div>
 
       <div class="py-4 lg:py-10">
@@ -419,4 +418,4 @@ const TracksPage = () => {
   );
 };
 
-export default TracksPage;
+export default TracksView;

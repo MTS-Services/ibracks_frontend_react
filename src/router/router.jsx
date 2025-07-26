@@ -1,24 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
 
+import ServicesView from "../pages/public/services/ServicesView";
 import MainLayout from "../layout/template/main/MainLayout";
-import NotFoundView from "../pages/error/NotFoundView";
-
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
-import ContactView from "../pages/public/contact/ContactView";
-import ServicesView from "../pages/public/services/ServicesView";
-import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
-import VideosView from "../pages/public/videos/VideosView";
-
+import RegisterView from "../pages/auth/register/RegisterView";
+import ContactView from "../pages/public/contact/ContactView";
+import CartView from "../pages/public/cart/CartView";
+import CheckOutView from "../pages/public/checkout/CheckOut";
 import TracksView from "../pages/public/tracks/TracksView";
 import ProductsView from "../pages/public/products/ProductsView";
+import VideosView from "../pages/public/videos/VideosView";
 import DashboardLayout from "../layout/template/admin/DashboardLayout";
-import CheckOutView from "../pages/public/Checkout/CheckOut";
-import CartView from "../pages/public/cart/CartView";
 import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
 import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
+import NotFoundView from "../pages/error/NotFoundView";
 
 const AppRoutes = createBrowserRouter([
   {
