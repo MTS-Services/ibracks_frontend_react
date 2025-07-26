@@ -30,9 +30,9 @@ const TextContent = () => (
 
 // Right Column: This component has been reverted to your original design
 const ImageDisplay = () => (
-  <div className="relative mt-8 w-full flex-shrink-0 lg:mt-0 lg:h-[500px] lg:w-[500px]">
-    <div className="relative mx-auto flex h-64 w-64 max-w-7xl items-center justify-center border-1 border-gray-400 xl:h-96 xl:w-full">
-      <div className="absolute top-20 -left-2 h-60 w-30 bg-[#40014B] xl:top-50 xl:-left-2 xl:h-50 xl:w-80" />
+  <div className="relative w-full flex-shrink-0 lg:mt-0 lg:h-[500px] lg:w-[500px]">
+    <div className="relative mx-auto mt-2 flex h-64 w-64 max-w-7xl items-center justify-center border-1 border-gray-400 xl:h-96 xl:w-full">
+      <div className="absolute top-20 -left-2 h-50 w-30 bg-[#2B0232] lg:-left-2 lg:w-80 xl:top-50" />
       <img
         className="absolute mt-10 -ml-20 w-full origin-center object-cover md:w-full xl:mt-40 xl:-ml-40"
         // style={{ transform: "skewY(-10deg) rotate(20deg)" }}
@@ -46,7 +46,7 @@ const ImageDisplay = () => (
 // The main, orchestrated component with the original flexbox layout
 const WhatSetsUsApart = () => {
   return (
-    <section className="bg-[#40014B] py-16 sm:py-24">
+    <section className="bg-backdrop bg-[#2B0232] py-16 sm:py-8 lg:py-16">
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-12 px-4 sm:px-6 lg:flex-row lg:items-start lg:gap-16 lg:px-0">
         <TextContent />
         <ImageDisplay />

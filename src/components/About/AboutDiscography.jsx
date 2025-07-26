@@ -132,7 +132,7 @@ const AboutDiscography = ({ album }) => {
 // Main Discography Display Component
 const DiscographyDisplay = () => {
   return (
-    <div className="py-8 sm:py-12 md:py-16">
+    <div className="bg-[#2B0232] py-4 sm:py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="mb-6 text-center text-2xl font-bold text-white sm:mb-8 sm:text-3xl md:text-4xl">
           Discography
