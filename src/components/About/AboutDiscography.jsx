@@ -82,7 +82,7 @@ const AboutDiscography = ({ album }) => {
 
   return (
     <div
-      className="flex h-28 w-full max-w-xs overflow-hidden rounded-[10px] shadow-lg sm:max-w-sm md:max-w-xs lg:max-w-sm xl:max-w-md"
+      className="flex h-28 w-full overflow-hidden rounded-[10px] shadow-lg sm:max-w-sm md:max-w-xs lg:max-w-sm xl:max-w-md"
       style={{ backgroundColor: backgroundColor }}
     >
       {/* Image Section */}
@@ -132,12 +132,12 @@ const AboutDiscography = ({ album }) => {
 // Main Discography Display Component
 const DiscographyDisplay = () => {
   return (
-    <div className="bg-[#2B0232] py-4 sm:py-12 md:py-16">
+    <div className="bg-[#2B0232] pb-20 sm:py-8 md:py-16 lg:pb-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="mb-6 text-center text-2xl font-bold text-white sm:mb-8 sm:text-3xl md:text-4xl">
           Discography
         </h1>
-        <div className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+        <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
           {albumsData.map((album) => (
             <AboutDiscography key={album.id} album={album} />
           ))}
