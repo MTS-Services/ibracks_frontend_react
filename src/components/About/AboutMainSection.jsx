@@ -1,55 +1,51 @@
-import React from "react";
-
 const AboutMainSection = () => {
   return (
     <div
-      className="mx-auto flex min-h-screen w-full items-center justify-center"
+      className="mx-auto flex w-full items-center justify-center px-4 py-2 lg:px-8 lg:py-0"
       style={{
         background: `
-      linear-gradient(
-        to bottom right,
-        #4B257A 20%,
-        #2B0232 40%,
-        #2B0232 0%,
-        #2B0232 95%
-      )
-    `,
+          linear-gradient(
+            to bottom right,
+            #4B257A 20%,
+            #2B0232 40%,
+            #2B0232 0%,
+            #2B0232 95%
+          )
+        `,
       }}
     >
-      <div className="inline-flex items-center justify-start">
-        <div className="inline-flex flex-col items-start justify-start gap-9">
-          <div className="flex w-[641px] flex-col items-start justify-start gap-9">
+      <div className="mt-8 flex w-full max-w-7xl flex-col items-center justify-center gap-12 lg:-mb-8 lg:flex-row lg:items-start lg:justify-between">
+        {/* Left Column (on desktop) */}
+        <div className="order-2 flex w-full flex-col items-center justify-center gap-9 lg:order-1 lg:items-start">
+          <div className="flex w-full flex-col items-center justify-start gap-9 text-center lg:items-start lg:text-left">
             <div className="flex flex-col items-start justify-start gap-4 self-stretch">
-              <div className="justify-center self-stretch text-4xl font-semibold text-white capitalize">
+              <div className="-mt-14 self-stretch text-3xl font-semibold text-white md:text-4xl lg:mt-4">
                 About Us
               </div>
-              <div className="h-40 justify-start self-stretch text-base font-normal text-white capitalize">
-                At Beatzingeez Music, we live and breathe music. Whether you're
-                a passionate artist, content creator, or music enthusiast, our
-                platform is built to fuel your sound journey. We provide
-                high-quality, royalty-free music tracks that inspire, energize,
-                and elevate every project.
+              <div className="h-auto self-stretch text-base font-normal text-white capitalize">
+                At Beatzingeez Music, We Live And Breathe Music. Whether You're
+                A Passionate Artist, Content Creator, Or Music Enthusiast, Our
+                Platform Is Built To Fuel Your Sound Journey. We Provide
+                High-Quality, Royalty-Free Music Tracks That Inspire, Energize,
+                And Elevate Every Project.
                 <br />
-                Our team of talented composers and producers are committed to
-                delivering unique, studio-grade music across genres—from
-                cinematic scores and lo-fi beats to electronic, pop, and
-                hip-hop.
+                <br />
+                Our Team Of Talented Composers And Producers Are Committed To
+                Delivering Unique, Studio-Grade Music Across Genres—From
+                Cinematic Scores And Lo-Fi Beats To Electronic, Pop, And
+                Hip-Hop.
               </div>
             </div>
-            <button
-              data-property-1="Default"
-              data-show-arrow-up-right="false"
-              data-show-button="true"
-              className="inline-flex items-center justify-center gap-1 overflow-hidden rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-12 py-3"
-            >
-              <div className="justify-center text-center text-base leading-normal font-semibold text-black capitalize">
-                Browse our tracks
+            <button className="inline-flex items-center justify-center gap-1 self-center overflow-hidden rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-12 py-3 transition-transform hover:scale-105 lg:self-start">
+              <div className="text-center text-base leading-normal font-semibold text-black capitalize">
+                Browse Our Tracks
               </div>
             </button>
           </div>
-          <div className="inline-flex h-60 flex-wrap content-center items-center justify-start gap-6 self-stretch overflow-hidden">
-            <div className="relative h-60 w-44">
-              <div className="absolute top-0 left-0 inline-flex flex-col items-start justify-start gap-2.5">
+          <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:gap-6">
+            {/* Card 1 */}
+            <div>
+              <div className="inline-flex flex-col items-start justify-start gap-2.5">
                 <img
                   className="h-44 w-44 rounded"
                   src="/aboutpage/cart4.png"
@@ -63,8 +59,9 @@ const AboutMainSection = () => {
                 </div>
               </div>
             </div>
-            <div className="relative h-60 w-44">
-              <div className="absolute top-0 left-0 inline-flex flex-col items-start justify-start gap-2.5">
+            {/* Card 2 */}
+            <div>
+              <div className="inline-flex flex-col items-start justify-start gap-2.5">
                 <img
                   className="h-44 w-44 rounded"
                   src="/aboutpage/cart6.png"
@@ -78,9 +75,9 @@ const AboutMainSection = () => {
                 </div>
               </div>
             </div>
-            <div className="relative h-60 w-44">
-              <div className="absolute top-0 left-0 inline-flex flex-col items-start justify-start gap-2.5">
-                {/* This image was not provided, using a placeholder or assuming it's part of the first uploaded image but cropped */}
+            {/* Card 3 */}
+            <div>
+              <div className="inline-flex flex-col items-start justify-start gap-2.5">
                 <img
                   className="h-44 w-44 rounded"
                   src="/aboutpage/cart1.png"
@@ -90,21 +87,20 @@ const AboutMainSection = () => {
                   Save Your Tear
                 </div>
                 <div className="text-xs leading-none font-normal text-white">
-                  The Weekend
+                  The Weeknd
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* Assuming the abstract image on the right is a background or a separate component */}
-        {/* For this example, I'm not including the abstract image as it seems to be a visual background element rather than part of the main content flow. */}
-      </div>
-      <div>
-        <img
-          className="h-[877.49px] w-[658.12px]"
-          src="/aboutpage/cart7.png"
-          alt="Placeholder Image"
-        />
+        {/* Right Column (on desktop) */}
+        <div className="order-1 flex w-full justify-center lg:order-2 lg:w-auto">
+          <img
+            className="-mt-10 h-auto w-full lg:-mt-26 lg:w-[650px] lg:max-w-none"
+            src="/aboutpage/cart7.png"
+            alt="Abstract purple splash"
+          />
+        </div>
       </div>
     </div>
   );
