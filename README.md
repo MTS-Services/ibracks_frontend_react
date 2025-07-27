@@ -84,20 +84,17 @@ Discover the magic of music with us. Our platform is your gateway to a world of 
 ### 💻 Application Code (`src/`)
 
 - 🧩 **Components**
-
   - ♻️ `common/` - Shared UI
   - ❌ `error/` - Error boundaries
   - ⭐ `Favourite*` - Bookmarking
   - 🌐 `LanguageSwitcher` - i18n toggle
 
 - 🌐 **Context Providers**
-
   - 🔐 `AuthContext` - JWT management
   - 💖 `FavouriteContext` - Saved properties
   - 🌓 `ThemeContext` - Dark/light mode
 
 - 🚀 **Features**
-
   - 🔑 `auth/` - Authentication
   - 🏘️ `property/` - Listing logic
 

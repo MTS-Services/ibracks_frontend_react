@@ -68,9 +68,7 @@ const HomeView = () => {
   return (
     <div className="">
       <HeroSection />
-      <div className="relative z-10 mx-auto -mt-50 max-w-7xl">
-        <ReleasesSection />
-      </div>
+      <ReleasesSection />
       <BrowseSection />
       <LicensingSection />
       <SoundSection />

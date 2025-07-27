@@ -337,7 +337,7 @@ const TracksView = () => {
               <input
                 type="text"
                 placeholder="What type of track are you looking for?"
-                class="w-full bg-transparent font-['Poppins'] text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
+                class="w-full bg-transparent text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
               />
 
               <div class="ml-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-neutral-200 p-1.5 md:ml-3 md:h-9 md:w-9 md:p-2.5">
