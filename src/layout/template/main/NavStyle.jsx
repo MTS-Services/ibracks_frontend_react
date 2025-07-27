@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiUser, FiMenu, FiX } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { getCurrentUser } from "../../../featured/auth/authUtils";
+import { CartContext } from "../../../utils/CartContextDefinition";
+import { useContext } from "react";
 
 // Navigation Links Data
 const navLinks = [
