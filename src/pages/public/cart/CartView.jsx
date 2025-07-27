@@ -1,35 +1,72 @@
 // src/pages/CartView.jsx
-import { useState, useContext } from "react"; // useContext import করুন
+import { useState, useContext } from "react";
 import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
-import PurchaseSuccessModal from "../../../components/PurchaseSuccessModal"; // আপনার মডাল কম্পোনেন্টের সঠিক পাথ নিশ্চিত করুন
-import { Link } from "react-router-dom"; // Link কম্পোনেন্ট import করুন "Shopping Continue" এর জন্য
+import PurchaseSuccessModal from "../../../components/PurchaseSuccessModal";
+import { Link } from "react-router-dom";
 import { CartContext } from "../../../utils/CartContextDefinition";
+import toast, { Toaster } from "react-hot-toast"; // react-hot-toast import করুন
 
 function CartView() {
-  // CartContext থেকে প্রয়োজনীয় ডেটা এবং ফাংশনগুলো নিন
-  const { cartItems, removeFromCart, subtotal, shipping, tax, total } =
+  const { cartItems, removeFromCart, subtotal, total } =
     useContext(CartContext);
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleCheckout = () => {
-    // এখানে আপনার আসল পেমেন্ট প্রসেসিং লজিক আসবে (যেমন, একটি পেমেন্ট গেটওয়ে API কল)।
-    // সফল হলে setShowSuccessModal(true) কল করবেন।
     console.log("Proceeding to checkout with items:", cartItems);
-    // For demonstration, simply show the modal:
     setShowSuccessModal(true);
-    // Note: In a real application, you might clear the cart only AFTER the payment is confirmed by the backend.
-    // If you add a clearCart function to your context, you could call it here:
-    // clearCart();
   };
 
   const handleCloseModal = () => {
     setShowSuccessModal(false);
   };
 
+  const handleRemoveClick = (itemId, itemTitle) => {
+    toast(
+      (t) => (
+        <div className="flex flex-col items-center">
+          <p className="font-['Poppins'] text-base font-semibold text-gray-800">
+            Are you sure you want to remove{" "}
+            <strong className="capitalize">{itemTitle}</strong>?
+          </p>
+          <div className="mt-4 flex gap-4">
+            <button
+              onClick={() => {
+                removeFromCart(itemId);
+                toast.dismiss(t.id);
+                toast.success(`${itemTitle} removed from cart!`);
+              }}
+              className="rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600 focus:ring-2 focus:ring-red-500 focus:outline-none"
+            >
+              Yes, remove
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="rounded-md bg-gray-300 px-4 py-2 text-gray-800 hover:bg-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: Infinity, // Keep the toast open until user interacts
+        position: "top-center",
+        style: {
+          background: "#fff",
+          color: "#333",
+          borderRadius: "10px",
+          padding: "20px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+        },
+      },
+    );
+  };
+
   return (
     <div>
+      <Toaster /> {/* Toaster কম্পোনেন্ট যোগ করুন */}
       <div
         className={`m-auto flex min-h-screen items-center justify-center bg-neutral-900 px-2 py-10 sm:px-6 lg:px-8`}
         style={{
@@ -76,30 +113,27 @@ function CartView() {
                   >
                     <img
                       className="h-16 w-16 rounded-lg object-cover sm:h-20 sm:w-20"
-                      src={item.thumbnail || "/shoppingcart/default.jpg"} // ট্র্যাক ডেটা থেকে thumbnail ব্যবহার করুন
-                      alt={item.title} // alt text item.title ব্যবহার করবে
+                      src={item.thumbnail || "/shoppingcart/default.jpg"}
+                      alt={item.title}
                     />
                     <div className="flex flex-1 flex-col gap-1">
                       <div className="font-['Poppins'] text-base font-[600] text-[#3B3B3B] capitalize sm:text-lg">
-                        {item.title} {/* ট্র্যাকের title ব্যবহার করুন */}
+                        {item.title}
                       </div>
                       <div className="font-['Poppins'] text-sm font-[400] text-neutral-700 capitalize sm:text-base">
-                        {/* Assuming genre is the first tag, or handle it as per your data */}
                         {item.tags && item.tags.length > 0
                           ? item.tags[0]
                           : "N/A"}
                       </div>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-4">
-                      {/* প্রতিটি আইটেমের মূল্য (quantity সহ) */}
                       <div className="text-right font-['Poppins'] text-xs font-[500] text-[#393939] sm:text-sm">
                         ${(item.price * item.quantity).toFixed(2)}{" "}
                       </div>
                       <FaEllipsisV className="cursor-pointer text-sm text-[#393939] sm:text-base" />
-                      {/* ট্র্যাশ আইকন ক্লিক করলে আইটেমটি সরিয়ে দেবে */}
                       <FaTrashAlt
                         className="cursor-pointer text-lg text-gray-500 sm:text-xl"
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => handleRemoveClick(item.id, item.title)}
                       />
                     </div>
                   </div>
@@ -128,25 +162,25 @@ function CartView() {
               </span>
               <div className="flex gap-4">
                 <img
-                  className="h-[55px] w-[75px] rounded-[5px] object-contain"
+                  className="h-[40px] w-[60px] rounded-[5px] object-contain sm:h-[55px] md:w-[75px]"
                   style={{ background: "rgba(217, 217, 217, 0.2)" }}
                   src="/shoppingcart/cart2.png"
                   alt="Mastercard"
                 />
                 <img
-                  className="h-[55px] w-[75px] rounded-[5px] object-contain"
+                  className="h-[40px] w-[60px] rounded-[5px] object-contain sm:h-[55px] sm:w-[75px] md:w-[75px]"
                   style={{ background: "rgba(217, 217, 217, 0.2)" }}
                   src="/shoppingcart/cart3.png"
-                  alt="Mastercard"
+                  alt="Visa"
                 />
                 <img
-                  className="h-[55px] w-[75px] rounded-[5px] object-contain"
+                  className="h-[40px] w-[60px] rounded-[5px] object-contain sm:h-[55px] sm:w-[75px] md:w-[75px]"
                   style={{ background: "rgba(217, 217, 217, 0.2)" }}
                   src="/shoppingcart/cart4.png"
-                  alt="Mastercard"
+                  alt="Amex"
                 />
 
-                <div className="flex h-[55px] w-[75px] items-center justify-center rounded-[5px] bg-zinc-300/20">
+                <div className="flex h-[40px] w-[60px] items-center justify-center rounded-[5px] bg-zinc-300/20 sm:h-[55px] sm:w-[75px] md:w-[75px]">
                   <span className="font-['Open_Sans'] text-sm font-[700] text-white">
                     See all
                   </span>
@@ -228,31 +262,6 @@ function CartView() {
                 </span>
                 <span className="font-['Poppins'] text-sm font-[500] text-white">
                   ${subtotal.toFixed(2)}
-                </span>
-              </div>
-
-              <div className="top-0 bottom-0 flex items-center justify-between py-2">
-                <span className="font-['Poppins'] text-sm font-[500] text-white">
-                  Shipping
-                </span>
-                <span className="font-['Poppins'] text-sm font-[500] text-white">
-                  ${shipping.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-['Poppins'] text-sm font-[500] text-white">
-                  Tax
-                </span>
-                <span className="font-['Poppins'] text-sm font-[500] text-white">
-                  ${tax.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-['Poppins'] text-sm font-[500] text-white">
-                  Total (Tax incl.)
-                </span>
-                <span className="font-['Poppins'] text-sm font-[500] text-white">
-                  ${total.toFixed(2)}
                 </span>
               </div>
             </div>

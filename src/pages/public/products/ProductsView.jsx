@@ -1,5 +1,6 @@
 import Availabestems from "../../../components/ProductsPage/Availabestems";
 import ProductsHero from "../../../components/ProductsPage/ProductsHero";
+import ProductsHeroMobail from "../../../components/ProductsPage/ProductsHeroMobail";
 import RelatedTracks from "../../../components/ProductsPage/Relatedtracks";
 
 const ProductsView = () => {
@@ -10,8 +11,14 @@ const ProductsView = () => {
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <ProductsHero />
-      <Availabestems></Availabestems>
+      <div className="hidden lg:block">
+        <ProductsHero />
+      </div>
+      <div className="block lg:hidden">
+        <ProductsHeroMobail />
+      </div>
+
+      <Availabestems />
       <RelatedTracks />
     </div>
   );

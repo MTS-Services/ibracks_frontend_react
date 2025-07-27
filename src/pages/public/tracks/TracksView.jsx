@@ -417,16 +417,16 @@ const TracksPage = () => {
                         </div>
                       </td>
                       {/* Time */}
-                      <td className="px-4 py-2 text-xs text-neutral-400 sm:py-4 sm:text-sm md:px-2">
+                      <td className="px-4 py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-2">
                         {track.time}
                       </td>{" "}
                       {/* BPM */}
-                      <td className="py-2 text-xs text-neutral-400 sm:py-4 sm:text-sm md:px-4">
+                      <td className="text- py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
                         {track.bpm}
                       </td>{" "}
                       {/* Tags */}
                       <td className="py-2 sm:px-4 sm:py-4">
-                        <div className="flex flex-wrap gap-1 sm:gap-2">
+                        <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
                           {track.tags.map((tag, i) => (
                             <span
                               key={i}
