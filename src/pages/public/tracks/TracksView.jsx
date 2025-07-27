@@ -1,13 +1,13 @@
 // src/pages/TracksPage.jsx
-import { useState, useContext } from "react"; // useContext import করুন
+import { useState, useContext, useEffect } from "react"; // useContext import করুন
 import { FaShareAlt } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import { FiChevronDown, FiChevronUp, FiPlay } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 
 import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
-import { CartContext } from "../../../utils/CartContextDefinition";
-import CustomSwiper from "./components/common/swiper/CustomSwiper";
+import { getAllSongs } from "../../../featured/song/trackService";
+
 const songs = [
   // ... your song data
   {
@@ -32,46 +32,6 @@ const songs = [
   },
   // ... more songs
 ];
-// প্রতিটি ট্র্যাকের একটি 'price' প্রপার্টি থাকা জরুরি
-const tracks = [
-  {
-    id: 1,
-    title: "NOLSTAGIA",
-    time: "2:45",
-    bpm: "103",
-    tags: ["Afrobeat", "Happy"],
-    thumbnail: "/shoppingcart/cart5.jpg",
-    price: 30.0,
-  },
-  {
-    id: 2,
-    title: "Melody Magic",
-    time: "3:10",
-    bpm: "120",
-    tags: ["Electronic", "Energetic"],
-    thumbnail: "/shoppingcart/cart6.jpg",
-    price: 25.0,
-  },
-  {
-    id: 3,
-    title: "Chill Vibes",
-    time: "4:00",
-    bpm: "90",
-    tags: ["Jazz", "Chill"],
-    thumbnail: "/shoppingcart/cart7.jpg",
-    price: 35.0,
-  },
-  {
-    id: 4,
-    title: "Groovy Beat",
-    time: "2:50",
-    bpm: "110",
-    tags: ["Hip-hop", "Inspiring"],
-    thumbnail: "/shoppingcart/cart1.jpg",
-    price: 28.0,
-  },
-  // আরও ট্র্যাক যোগ করুন
-];
 
 const TracksView = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -89,33 +49,19 @@ const TracksView = () => {
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
 
-  // Prepare slides data (can be JSX or image URLs)
-  const slides = songs.map((song) => (
-    <div key={song.title} className="flex flex-col items-center p-2">
-      {/* Added padding */}
-      <div className="group relative w-full">
-        {" "}
-        {/* Added w-full for image container */}
-        <img
-          src={song.image}
-          alt={song.title}
-          className="h-auto w-full rounded border border-gray-800 object-cover transition-transform duration-300 group-hover:scale-105" // Adjusted w-full, h-auto
-        />
-        <div className="bg-opacity-40 absolute inset-0 flex items-center justify-center rounded bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <FiPlay className="h-8 w-8 text-white" />
-        </div>
-      </div>
-      <div className="mt-3 text-center">
-        {/* Added text-center for alignment */}
-        <p className="truncate text-base font-semibold text-neutral-200">
-          {song.title}
-        </p>
-        <p className="truncate text-sm font-normal text-zinc-400">
-          {song.artist}
-        </p>
-      </div>
-    </div>
-  ));
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getAllSongs();
+        const limitedData = data.slice(0, 10);
+        setSongs(limitedData);
+      } catch (err) {
+        console.error(err, "Could not load songs");
+      }
+    })();
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -125,11 +71,8 @@ const TracksView = () => {
     console.log("Searching for: ", searchTerm);
   };
 
-  const handleDropdownChange = (e, setSelectedValue, setDropdownOpenState) => {
+  const handleDropdownChange = (e, setSelectedValue) => {
     setSelectedValue(e.target.value);
-    // Native select এর জন্য এটি প্রয়োজন নেই কারণ ব্রাউজার নিজে বন্ধ করে।
-    // কাস্টম ড্রপডাউন বানালে এটি ব্যবহার করতে পারেন।
-    // setDropdownOpenState(false);
   };
 
   const toggleDropdown = (setDropdownOpenState) => {
@@ -138,11 +81,10 @@ const TracksView = () => {
 
   // Add to Cart handler
   const handleAddToCart = (track) => {
-    addToCart(track); // Context থেকে প্রাপ্ত addToCart ফাংশন কল করুন
-    alert(`${track.title} added to cart!`); // ইউজারকে জানানোর জন্য একটি simple alert
+    alert(`${track} added to cart!`);
   };
 
-  const filteredTracks = tracks.filter((track) => {
+  const filteredTracks = songs.filter((track) => {
     const matchesSearch = track.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -185,9 +127,9 @@ const TracksView = () => {
       <TracksPageHeroSection />
 
       <header className="">
-        <div className="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:text-4xl">
+        <h2 className="flex justify-center py-4 text-2xl font-[600] text-white capitalize md:py-10 md:text-3xl lg:text-4xl">
           Tracks
-        </div>
+        </h2>
         <div className="mx-auto max-w-[950px] rounded-md bg-white/5 p-4 md:p-6">
           <div className="mx-auto mb-6 flex flex-wrap justify-center gap-2 md:gap-10">
             {/* Category Dropdown */}
@@ -412,6 +354,7 @@ const TracksView = () => {
           <div className="mx-auto flex items-center justify-center px-2">
             <div className="inline-flex w-full max-w-[880px] items-center justify-between rounded-lg bg-white px-3 py-1 md:px-4 md:py-2">
               <input
+                onChange={handleSearchChange}
                 type="text"
                 placeholder="What type of track are you looking for?"
                 className="w-full bg-transparent text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
@@ -428,7 +371,7 @@ const TracksView = () => {
       </header>
 
       {/* table part */}
-      <main className="sm:p-6 lg:p-8">
+      <main className="sm:p-6 lg:py-14">
         {" "}
         <div className="mx-auto w-full max-w-7xl">
           <div className="overflow-x-auto border-b border-gray-500">
@@ -447,8 +390,6 @@ const TracksView = () => {
                   </th>
                   <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">BPM</th>
                   <th className="py-3 font-medium md:px-4">Tags</th>
-                  {/* Consider adding a label for the Actions column, or remove if intentionally empty */}
-                  <th className="py-3 font-medium md:px-4 md:py-4">Actions</th>
                 </tr>
               </thead>
 
@@ -461,7 +402,7 @@ const TracksView = () => {
                         <div className="flex items-center gap-2 sm:gap-4">
                           <img
                             src={track.thumbnail}
-                            alt={`${track.title} cover`} // Improved alt text
+                            alt={`${track.title} cover`}
                             className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
                           />
                           <span className="pr-3 text-[10px] text-neutral-300 sm:text-sm md:text-base">
@@ -482,7 +423,7 @@ const TracksView = () => {
                         <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
                           {track.tags.map((tag, i) => (
                             <span
-                              key={`${track.id}-${i}`} // Improved key for better React reconciliation
+                              key={`${track.id}-${i}`}
                               className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
                             >
                               {tag}
@@ -493,21 +434,21 @@ const TracksView = () => {
                       {/* Actions */}
                       <td className="py-2 sm:py-4">
                         <div className="flex justify-end gap-1 md:gap-2">
+                          {/* Share button */}
                           <button
                             className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
-                            aria-label={`Share ${track.title}`} // Added aria-label for accessibility
+                            aria-label={`Share ${track.title}`}
                           >
                             <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
                           </button>
-                          {/* "Add to Cart" button - onClick handler যোগ করা হয়েছে */}
+                          {/* Cart button */}
                           <button
-                            onClick={() => handleAddToCart(track)} // এখানে addToCart ফাংশন কল করা হয়েছে
+                            onClick={() => handleAddToCart(track.id)}
                             className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
-                            aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`} // Added aria-label for accessibility
+                            aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`}
                           >
                             <HiOutlineShoppingBag className="text-xs sm:text-sm" />
                             <span>${track.price.toFixed(2)}</span>
-                            {/* পণ্যের মূল্য দেখানো হয়েছে */}
                           </button>
                         </div>
                       </td>

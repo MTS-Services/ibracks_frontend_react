@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import CartProvider from "./utils/CartProvider";
+import CartProvider from "./context/cart/CartProvider";
 
 const App = () => {
   return (

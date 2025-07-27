@@ -3,7 +3,7 @@ import React from "react";
 const ContactView = () => {
   return (
     <div
-      className="m-auto flex h-screen justify-center py-8 sm:py-16 md:py-24" // Added vertical padding for small, medium, and large screens
+      className="m-auto flex justify-center py-10 md:py-20 lg:py-32" // Added vertical padding for small, medium, and large screens
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
@@ -77,7 +77,7 @@ const ContactView = () => {
           <img
             src="/contactpage/img1.jpg"
             alt="Contact Us"
-            className="h-[470px] w-[416px] rounded-xl object-cover"
+            className="h-[500px] w-[500px] rounded-xl object-cover"
           />
         </div>
       </div>

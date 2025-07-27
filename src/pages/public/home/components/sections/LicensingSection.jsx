@@ -1,103 +1,5 @@
-import React from "react";
 import { FaCheck } from "react-icons/fa";
-
-const premiumPlanData = [
-  {
-    id: 1,
-    tier: "Premium",
-    description:
-      "For all individuals and starters who want to start with domaining.",
-    price: "$50.00",
-    note: "Everything you need to get started.",
-    features: [
-      "Receive MP3 & WAV",
-      "Allow Youtube Use",
-      "Limited 500,000 audio/video streams",
-      "Upload to Social platforms (TikTok, Instagram etc.)",
-      "Release to Streaming Platforms (Spotify, Apple Music etc.)",
-    ],
-  },
-  {
-    id: 2,
-    tier: "Enterprise",
-    description:
-      "For all individuals and starters who want to start with domaining.",
-    price: "$100.00",
-    note: "Use anywhere, without limitations.",
-    features: [
-      "Youtube Monetize",
-      "1,000,000 Streams",
-      "Receive Mp3, WAV & Stems",
-      "Upload to social media platforms (Instagram, TikTok etc)",
-      "Upload to streaming platforms (Apple Music, Spotify etc)",
-      "1 Producer Tag on Beat",
-    ],
-  },
-  {
-    id: 3,
-    tier: "Unlimited",
-    description:
-      "For all individuals and starters who want to start with domaining.",
-    price: "$150.00",
-    note: "Complete freedom. No limits.",
-    features: [
-      "Unlimited Streams",
-      "Lifetime Use Rights",
-      "Receive All Formats (MP3, WAV, STEMS)",
-      "Use in Commercial Projects",
-      "No Tag / Tag Removal Rights",
-      "Use in Paid Ads / Sync Licensing",
-    ],
-  },
-  {
-    id: 4,
-    tier: "Unlimited",
-    description:
-      "For all individuals and starters who want to start with domaining.",
-    price: "$150.00",
-    note: "Complete freedom. No limits.",
-    features: [
-      "Unlimited Streams",
-      "Lifetime Use Rights",
-      "Receive All Formats (MP3, WAV, STEMS)",
-      "Use in Commercial Projects",
-      "No Tag / Tag Removal Rights",
-      "Use in Paid Ads / Sync Licensing",
-    ],
-  },
-  {
-    id: 5,
-    tier: "License",
-    description:
-      "For all individuals and starters who want to start with domaining.",
-    price: "$150.00",
-    note: "Complete freedom. No limits.",
-    features: [
-      "Unlimited Streams",
-      "Lifetime Use Rights",
-      "Receive All Formats (MP3, WAV, STEMS)",
-      "Use in Commercial Projects",
-      "No Tag / Tag Removal Rights",
-      "Use in Paid Ads / Sync Licensing",
-    ],
-  },
-  {
-    id: 6,
-    tier: "Enterprise",
-    description:
-      "For all individuals and starters who want to start with domaining.",
-    price: "$100.00",
-    note: "Use anywhere, without limitations.",
-    features: [
-      "Youtube Monetize",
-      "1,000,000 Streams",
-      "Receive Mp3, WAV & Stems",
-      "Upload to social media platforms (Instagram, TikTok etc)",
-      "Upload to streaming platforms (Apple Music, Spotify etc)",
-      "1 Producer Tag on Beat",
-    ],
-  },
-];
+import planData from "/public/data/plan";
 
 const LicensingSection = () => {
   return (
@@ -110,7 +12,7 @@ const LicensingSection = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {premiumPlanData.map((plan) => (
+          {planData.map((plan) => (
             <div
               key={plan.id}
               className="flex h-full flex-col justify-between rounded-2xl border border-gray-500 bg-[#0A030B] p-5 text-white sm:p-6"

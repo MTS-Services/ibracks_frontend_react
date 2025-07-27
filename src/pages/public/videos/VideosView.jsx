@@ -116,6 +116,7 @@ const VideosView = () => {
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
+      <h1 className="mb-4 text-center text-white md:mb-6 lg:mb-8">Videos</h1>
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
         {displayedVideos.map((video) => (
           <div

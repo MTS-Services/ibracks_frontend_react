@@ -41,52 +41,51 @@ const ServicesView = () => {
   ];
 
   return (
-    <div
+    <section
       style={{
         background:
           "var(--dark-purple-color, linear-gradient(180deg, #050306 0%, #5D006D 100%))",
       }}
       // Adjusted padding for mobile (px-4 py-10) and larger screens (sm:px-6 md:px-8 lg:px-10)
-      className="flex min-h-screen justify-center px-4 py-10 sm:px-6 md:px-8 md:py-20 lg:px-10"
+      className="py-8 md:py-14 lg:py-20"
     >
-      <div
-        // Default (mobile) grid: 1 column, gap-8
-        // Small screens (sm): 2 columns, gap-10
-        // Medium screens (md): 3 columns, gap-12
-        // Large screens (lg): 3 columns, gap-14 (your original lg setting)
-        className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 md:grid-cols-3 md:gap-12 lg:gap-14"
-      >
-        {musicCartData.map((item) => (
-          <div
-            key={item.id}
-            className="inline-flex flex-col items-start justify-start gap-5 overflow-hidden rounded-lg bg-white/10 pb-5 shadow-lg md:w-72"
-          >
-            {/* Image Section */}
-            <img
-              className="h-[237px] self-stretch rounded-t-lg object-cover"
-              src={item.img}
-              alt={item.title}
-            />
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mb-4 text-center text-white md:mb-6 lg:mb-8">
+          Services
+        </h1>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-10 md:grid-cols-3 md:gap-12 lg:gap-14">
+          {musicCartData.map((item) => (
+            <div
+              key={item.id}
+              className="inline-flex flex-col items-start justify-start gap-5 overflow-hidden rounded-lg bg-white/10 pb-5 shadow-lg md:w-90"
+            >
+              {/* Image Section */}
+              <img
+                className="w-full rounded-t-lg object-cover"
+                src={item.img}
+                alt={item.title}
+              />
 
-            {/* Content Section */}
-            <div className="flex flex-col items-center justify-start gap-3.5 self-stretch px-4">
-              <div className="bg-gradient-to-b from-orange-100 to-yellow-300 bg-clip-text text-center font-['Poppins'] text-2xl font-[600] text-transparent capitalize">
-                {item.title}
-              </div>
+              {/* Content Section */}
+              <div className="flex flex-col items-center justify-start gap-3.5 self-stretch px-4">
+                <div className="bg-gradient-to-b from-orange-100 to-yellow-300 bg-clip-text text-center font-['Poppins'] text-2xl font-[600] text-transparent capitalize">
+                  {item.title}
+                </div>
 
-              <div className="top-0 pb-1 text-center font-['Poppins'] text-sm font-[400] text-[#E0E0E0]">
-                {item.subtitle}
+                <div className="top-0 pb-1 text-center font-['Poppins'] text-sm font-[400] text-[#E0E0E0]">
+                  {item.subtitle}
+                </div>
+                <button className="inline-flex h-11 w-64 cursor-pointer items-center justify-center gap-2.5 rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 p-2.5 transition-all duration-300 hover:from-orange-300 hover:to-yellow-600">
+                  <span className="flex-1 text-center font-['Poppins'] text-lg font-[600] text-zinc-800 capitalize">
+                    DETAILS
+                  </span>
+                </button>
               </div>
-              <button className="inline-flex h-11 w-64 cursor-pointer items-center justify-center gap-2.5 rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 p-2.5 transition-all duration-300 hover:from-orange-300 hover:to-yellow-600">
-                <span className="flex-1 text-center font-['Poppins'] text-lg font-[600] text-zinc-800 capitalize">
-                  DETAILS
-                </span>
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
