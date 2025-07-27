@@ -3,7 +3,7 @@ import React from "react";
 const ContactView = () => {
   return (
     <div
-      className="m-auto flex h-screen justify-center py-8 sm:py-16 md:py-24" // Added vertical padding for small, medium, and large screens
+      className="m-auto flex justify-center py-8 sm:py-14 md:py-16" // Added vertical padding for small, medium, and large screens
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}

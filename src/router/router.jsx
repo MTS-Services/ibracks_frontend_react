@@ -6,7 +6,7 @@ import NotFoundView from "../pages/error/NotFoundView";
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
 import ContactView from "../pages/public/contact/ContactView";
-import ServicesView from "../pages/public/services/ServicesView";
+
 import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
 import VideosView from "../pages/public/videos/VideosView";
@@ -19,6 +19,7 @@ import CartView from "../pages/public/cart/CartView";
 import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
 import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
+import ServicesView from "../pages/public/Services/ServicesView";
 
 const AppRoutes = createBrowserRouter([
   {
