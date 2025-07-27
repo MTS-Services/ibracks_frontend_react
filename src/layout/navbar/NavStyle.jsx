@@ -1,19 +1,32 @@
 import React, { useState } from "react";
 import { FiMenu, FiSearch, FiUser, FiX } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { FiSearch, FiUser } from "react-icons/fi";
+import { HiOutlineShoppingBag } from "react-icons/hi";
+import { getCurrentUser } from "../../../featured/auth/authUtils";
+import { CartContext } from "../../../utils/CartContextDefinition";
+import { useContext } from "react";
 
 const navLinks = [
   { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact-view" },
-  { label: "Services", path: "/services" },
-  { label: "Login", path: "/login" },
-  { label: "Signup", path: "/signup" },
-  { label: "Shopping Cart", path: "/shopping-cart" },
-  { label: "CheckOut", path: "/check-out" },
+  { label: "Tracks", path: "/tracks" },
   { label: "Video", path: "/video" },
-  { label: "TracksView", path: "/tracks" },
-  { label: "Products", path: "/products" },
+  { label: "Services", path: "/services" },
+  { label: "Contact", path: "/contact" },
 ];
+
+// const navLinks = [
+//   { label: "About", path: "/about" },
+//   { label: "Contact", path: "/contact-view" },
+//   { label: "Services", path: "/services" },
+//   { label: "Login", path: "/login" },
+//   { label: "Signup", path: "/signup" },
+//   { label: "Shopping Cart", path: "/shopping-cart" },
+//   { label: "CheckOut", path: "/check-out" },
+//   { label: "Video", path: "/video" },
+//   { label: "TracksView", path: "/tracks" },
+//   { label: "Products", path: "/products" },
+// ];
 
 const NavStyle = () => {
   const [menuOpen, setMenuOpen] = useState(false);

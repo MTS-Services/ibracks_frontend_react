@@ -8,7 +8,7 @@ const ContactView = () => {
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <div className="m-auto inline-flex flex-col items-center justify-center gap-[30px] rounded-[20px] border border-[rgba(10,13,23,0.05)] bg-[rgba(255,255,255,0.08)] px-4 backdrop-blur-[190px] sm:px-8 lg:flex-row">
+      <div className="m-auto inline-flex flex-col items-center justify-center gap-[30px] rounded-[20px] border border-[rgba(10,13,23,0.05)] bg-[rgba(255,255,255,0.08)] backdrop-blur-[190px] sm:px-8 lg:flex-row">
         {/* Form part */}
         <div className="mx-auto inline-flex w-full items-center justify-start gap-7 rounded-[20px] outline-offset-[-2px] lg:w-auto">
           <div className="inline-flex w-full flex-col items-start justify-start gap-10 p-6 sm:p-10">

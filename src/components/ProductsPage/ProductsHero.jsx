@@ -1,4 +1,3 @@
-import { FaShare } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import { MdEmojiFlags } from "react-icons/md";
 import AudioWaveformPlayer from "./AudioWaveformPlayer";
@@ -7,7 +6,6 @@ const ProductsHero = () => {
   return (
     <div className="mx-auto flex items-center justify-center">
       <div className="inline-flex min-w-[1200px] items-end justify-start gap-16 px-5 py-5 font-[Poppins]">
-        {" "}
         {/* Added px-5 py-5 for general padding around the card if needed, min-w based on total content width */}
         {/* Left Section: Image */}
         <div className="h-80 w-96 overflow-hidden rounded">
@@ -35,7 +33,7 @@ const ProductsHero = () => {
           <AudioWaveformPlayer></AudioWaveformPlayer>
 
           <div className="inline-flex items-center justify-start gap-6">
-            <button className="flex h-11 w-32 cursor-pointer items-center justify-center rounded-[30px] bg-gradient-to-b from-orange-200 to-yellow-500 px-2.5 pt-2.5 text-base font-normal text-zinc-800 capitalize">
+            <button className="flex h-11 w-32 cursor-pointer items-center justify-center rounded-[30px] bg-gradient-to-b from-orange-200 to-yellow-500 px-2.5 text-base font-normal text-zinc-800 capitalize">
               Buy now
             </button>
             <div className="w-24 text-lg font-semibold text-white capitalize">

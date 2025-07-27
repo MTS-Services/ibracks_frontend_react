@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const LoginView = () => {
   const [formData, setFormData] = useState({
@@ -132,6 +133,13 @@ const LoginView = () => {
             </button>
           </form>
 
+          <h6 className="mx-auto flex items-center justify-center gap-2 text-center text-sm font-bold text-white">
+            Don't have a account?{" "}
+            <Link className="font-bold" to="/register">
+              {" "}
+              Sign Up now{" "}
+            </Link>{" "}
+          </h6>
           {/* Separator */}
           <div className="my-2 flex w-full items-center gap-2 md:my-4 md:gap-4">
             {/* Adjusted margin and gap for responsiveness */}

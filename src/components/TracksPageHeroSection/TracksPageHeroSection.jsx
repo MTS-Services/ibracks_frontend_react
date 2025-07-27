@@ -1,10 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import { FaPlay } from "react-icons/fa";
 import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 import { IoMdArrowDroprightCircle } from "react-icons/io";
 
@@ -41,9 +37,14 @@ const TracksPageHeroSection = () => {
       image: "/treacks/cart2.png",
     },
     {
-      title: "Blinding Lights",
-      artist: "The Weeknd",
-      image: "/treacks/cart5.png",
+      title: "Need To Know",
+      artist: "Doja Cat",
+      image: "/treacks/cart2.png",
+    },
+    {
+      title: "Need To Know",
+      artist: "Doja Cat",
+      image: "/treacks/cart2.png",
     },
   ];
 
@@ -52,7 +53,6 @@ const TracksPageHeroSection = () => {
     <div className="mx-auto flex max-w-7xl items-center justify-center md:px-6 lg:px-8">
       {/* Left Navigation Button */}
       <div className="hidden lg:block">
-        {" "}
         {/* Hide on smaller screens, show on large */}
         <div className="swiper-button-prev-custom cursor-pointer rounded-full bg-black/50 p-2 transition-colors hover:bg-black/70">
           <FiArrowLeftCircle className="h-6 w-6 font-bold text-white" />
@@ -61,7 +61,6 @@ const TracksPageHeroSection = () => {
 
       {/* Main Content Area (Header + Swiper) */}
       <div className="w-full lg:w-[1200px]">
-        {" "}
         {/* Adjusted width for responsiveness */}
         <div className="mx-auto flex h-auto min-h-[288px] flex-col items-start justify-start gap-5 overflow-hidden rounded-lg bg-white/10 px-4 py-2 font-sans md:min-h-[300px] lg:min-h-72">
           <div>
@@ -138,56 +137,11 @@ const TracksPageHeroSection = () => {
 
       {/* Right Navigation Button */}
       <div className="hidden lg:block">
-        {" "}
         {/* Hide on smaller screens, show on large */}
         <div className="swiper-button-next-custom cursor-pointer rounded-full bg-black/50 p-2 transition-colors hover:bg-black/70">
           <FiArrowRightCircle className="h-6 w-6 font-bold text-white" />
         </div>
       </div>
-
-      {/* Global Styles for Swiper Overrides */}
-      <style jsx="true">{`
-        /* Custom pagination dots using Swiper's default classes */
-        .swiper-pagination-bullet {
-          width: 10px !important;
-          height: 10px !important;
-          background-color: rgba(
-            255,
-            255,
-            255,
-            0.4
-          ) !important; /* Inactive dot color */
-          border-radius: 50% !important;
-          opacity: 1 !important; /* Override default Swiper opacity */
-          transition: background-color 0.3s ease !important;
-          margin: 0 4px !important; /* Add some margin between dots */
-        }
-
-        .swiper-pagination-bullet-active {
-          background-color: white !important; /* Active dot color */
-        }
-
-        /* Hide default Swiper navigation arrows that might appear */
-        .swiper-button-prev,
-        .swiper-button-next {
-          display: none !important;
-        }
-
-        /* Style for disabled navigation buttons */
-        .swiper-button-prev-custom.swiper-button-disabled,
-        .swiper-button-next-custom.swiper-button-disabled {
-          opacity: 0.5; /* Tailwind's opacity-50 */
-          cursor: not-allowed;
-        }
-
-        /* Adjustments for smaller screens (mobile & tablet) */
-        @media (max-width: 1023px) {
-          .swiper-button-prev-custom,
-          .swiper-button-next-custom {
-            display: none !important; /* Hide custom navigation buttons on mobile/tablet */
-          }
-        }
-      `}</style>
     </div>
   );
 };

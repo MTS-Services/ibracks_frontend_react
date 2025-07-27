@@ -47,7 +47,7 @@ const ServicesView = () => {
           "var(--dark-purple-color, linear-gradient(180deg, #050306 0%, #5D006D 100%))",
       }}
       // Adjusted padding for mobile (px-4 py-10) and larger screens (sm:px-6 md:px-8 lg:px-10)
-      className="flex min-h-screen justify-center px-4 py-8 sm:px-6 md:px-8 md:py-20 lg:px-10"
+      className="flex min-h-screen justify-center px-4 py-10 sm:px-6 md:px-8 md:py-20 lg:px-10"
     >
       <div
         // Default (mobile) grid: 1 column, gap-8

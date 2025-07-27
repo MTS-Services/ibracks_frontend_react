@@ -1,92 +1,121 @@
-import { useState } from "react";
-import { LuSearch } from "react-icons/lu";
-// Import icons for up/down arrows
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+// src/pages/TracksPage.jsx
+import { useState, useContext } from "react"; // useContext import করুন
 import { FaShareAlt } from "react-icons/fa";
-import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
+import { LuSearch } from "react-icons/lu";
+import { FiChevronDown, FiChevronUp, FiPlay } from "react-icons/fi";
+import { HiOutlineShoppingBag } from "react-icons/hi";
 
+import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
+import { CartContext } from "../../../utils/CartContextDefinition";
+import CustomSwiper from "./components/common/swiper/CustomSwiper";
+const songs = [
+  // ... your song data
+  {
+    title: "Red (Taylor’s Version)",
+    artist: "Taylor Swift",
+    image: "/image/home/music1.png",
+  },
+  {
+    title: "Need To Know",
+    artist: "Doja Cat",
+    image: "/image/home/music2.png",
+  },
+  {
+    title: "Save Your Tear",
+    artist: "The Weeknd",
+    image: "/image/home/music3.png",
+  },
+  {
+    title: "HIT MACHINE",
+    artist: "Soundwave",
+    image: "/image/home/music4.png",
+  },
+  // ... more songs
+];
+// প্রতিটি ট্র্যাকের একটি 'price' প্রপার্টি থাকা জরুরি
 const tracks = [
   {
     id: 1,
     title: "NOLSTAGIA",
-    time: "02:59",
+    time: "2:45",
     bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
+    tags: ["Afrobeat", "Happy"],
+    thumbnail: "/shoppingcart/cart5.jpg",
+    price: 30.0,
   },
   {
     id: 2,
-    title: "NOLSTAGIA",
-    time: "02:59",
-    bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
+    title: "Melody Magic",
+    time: "3:10",
+    bpm: "120",
+    tags: ["Electronic", "Energetic"],
+    thumbnail: "/shoppingcart/cart6.jpg",
+    price: 25.0,
   },
   {
-    id: 2,
-    title: "NOLSTAGIA",
-    time: "02:59",
-    bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
+    id: 3,
+    title: "Chill Vibes",
+    time: "4:00",
+    bpm: "90",
+    tags: ["Jazz", "Chill"],
+    thumbnail: "/shoppingcart/cart7.jpg",
+    price: 35.0,
   },
   {
-    id: 2,
-    title: "NOLSTAGIA",
-    time: "02:59",
-    bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
+    id: 4,
+    title: "Groovy Beat",
+    time: "2:50",
+    bpm: "110",
+    tags: ["Hip-hop", "Inspiring"],
+    thumbnail: "/shoppingcart/cart1.jpg",
+    price: 28.0,
   },
-  {
-    id: 2,
-    title: "NOLSTAGIA",
-    time: "02:59",
-    bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
-  },
-  {
-    id: 2,
-    title: "NOLSTAGIA",
-    time: "02:59",
-    bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
-  },
-  {
-    id: 2,
-    title: "NOLSTAGIA",
-    time: "02:59",
-    bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
-  },
-  {
-    id: 2,
-    title: "NOLSTAGIA",
-    time: "02:59",
-    bpm: "103",
-    tags: ["Afrobeat", "Inspiring"],
-    thumbnail: "/products/cart9.png",
-  },
-  // Repeat or map your tracks as needed...
+  // আরও ট্র্যাক যোগ করুন
 ];
 
 const TracksView = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
-  // State for dropdown values
   const [selectedCategory, setSelectedCategory] = useState("All Category");
   const [selectedBpm, setSelectedBpm] = useState("All Bpm");
   const [selectedMoods, setSelectedMoods] = useState("All Moods");
   const [selectedGenres, setSelectedGenres] = useState("All Genres");
+  const [selectedSortOption, setSelectedSortOption] = useState("Default");
+  const [selectedListView, setSelectedListView] = useState("Default List");
 
-  // State to manage dropdown open/close for custom arrow
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isBpmDropdownOpen, setIsBpmDropdownOpen] = useState(false);
   const [isMoodsDropdownOpen, setIsMoodsDropdownOpen] = useState(false);
   const [isGenresDropdownOpen, setIsGenresDropdownOpen] = useState(false);
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
+
+  // Prepare slides data (can be JSX or image URLs)
+  const slides = songs.map((song) => (
+    <div key={song.title} className="flex flex-col items-center p-2">
+      {/* Added padding */}
+      <div className="group relative w-full">
+        {" "}
+        {/* Added w-full for image container */}
+        <img
+          src={song.image}
+          alt={song.title}
+          className="h-auto w-full rounded border border-gray-800 object-cover transition-transform duration-300 group-hover:scale-105" // Adjusted w-full, h-auto
+        />
+        <div className="bg-opacity-40 absolute inset-0 flex items-center justify-center rounded bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <FiPlay className="h-8 w-8 text-white" />
+        </div>
+      </div>
+      <div className="mt-3 text-center">
+        {/* Added text-center for alignment */}
+        <p className="truncate text-base font-semibold text-neutral-200">
+          {song.title}
+        </p>
+        <p className="truncate text-sm font-normal text-zinc-400">
+          {song.artist}
+        </p>
+      </div>
+    </div>
+  ));
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -98,34 +127,71 @@ const TracksView = () => {
 
   const handleDropdownChange = (e, setSelectedValue, setDropdownOpenState) => {
     setSelectedValue(e.target.value);
-    // When an option is selected, you might want to close the "custom" dropdown
-    // For a native select, this is automatic, but for a custom one, you'd manage it.
-    // setDropdownOpenState(false); // Uncomment if implementing a full custom dropdown
+    // Native select এর জন্য এটি প্রয়োজন নেই কারণ ব্রাউজার নিজে বন্ধ করে।
+    // কাস্টম ড্রপডাউন বানালে এটি ব্যবহার করতে পারেন।
+    // setDropdownOpenState(false);
   };
 
-  // Function to toggle dropdown state
   const toggleDropdown = (setDropdownOpenState) => {
     setDropdownOpenState((prevState) => !prevState);
   };
 
+  // Add to Cart handler
+  const handleAddToCart = (track) => {
+    addToCart(track); // Context থেকে প্রাপ্ত addToCart ফাংশন কল করুন
+    alert(`${track.title} added to cart!`); // ইউজারকে জানানোর জন্য একটি simple alert
+  };
+
+  const filteredTracks = tracks.filter((track) => {
+    const matchesSearch = track.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === "All Category" ||
+      track.tags.includes(selectedCategory);
+
+    const matchesBpm =
+      selectedBpm === "All Bpm" || track.bpm === selectedBpm.split(" ")[0];
+
+    const matchesMood =
+      selectedMoods === "All Moods" ||
+      track.tags.some(
+        (tag) => tag.toLowerCase() === selectedMoods.toLowerCase(),
+      );
+
+    const matchesGenre =
+      selectedGenres === "All Genres" ||
+      track.tags.some(
+        (tag) => tag.toLowerCase() === selectedGenres.toLowerCase(),
+      );
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesBpm &&
+      matchesMood &&
+      matchesGenre
+    );
+  });
+
   return (
-    <div
-      className="min-h-screen bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
+    <section
+      className="bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <div className="">
-        <TracksPageHeroSection />
-      </div>
+      <TracksPageHeroSection />
 
-      <div class="py-4 lg:py-10">
-        <div class="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:text-4xl">
+      <header className="">
+        <div className="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:text-4xl">
           Tracks
         </div>
-        <div class="mx-auto max-w-[950px] rounded-md bg-white/5 p-4 md:p-6">
-          <div class="mx-auto mb-6 flex flex-wrap justify-center gap-4 md:gap-10">
-            <div class="relative">
+        <div className="mx-auto max-w-[950px] rounded-md bg-white/5 p-4 md:p-6">
+          <div className="mx-auto mb-6 flex flex-wrap justify-center gap-2 md:gap-10">
+            {/* Category Dropdown */}
+            <div className="relative">
               <select
                 value={selectedCategory}
                 onChange={(e) =>
@@ -135,63 +201,64 @@ const TracksView = () => {
                     setIsCategoryDropdownOpen,
                   )
                 }
-                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                className="appearance-none rounded-md bg-white px-2 py-1 pr-6 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsCategoryDropdownOpen)}
               >
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   All Category
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Category 1
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Afrobeat
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Category 2
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Electronic
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Category 3
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Hip-hop
                 </option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
                 {isCategoryDropdownOpen ? (
-                  <FiChevronUp class="text-base text-black md:text-xl" />
+                  <FiChevronUp className="text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown class="text-base text-black md:text-xl" />
+                  <FiChevronDown className="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
-
-            <div class="relative">
+            {/* BPM Dropdown */}
+            <div className="relative">
               <select
                 value={selectedBpm}
                 onChange={(e) =>
                   handleDropdownChange(e, setSelectedBpm, setIsBpmDropdownOpen)
                 }
-                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsBpmDropdownOpen)}
               >
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   All Bpm
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  103 BPM
+                </option>
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   120 BPM
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  130 BPM
-                </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   140 BPM
                 </option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
                 {isBpmDropdownOpen ? (
-                  <FiChevronUp class="text-base text-black md:text-xl" />
+                  <FiChevronUp className="text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown class="text-base text-black md:text-xl" />
+                  <FiChevronDown className="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
 
-            <div class="relative">
+            {/* Moods Dropdown */}
+            <div className="relative">
               <select
                 value={selectedMoods}
                 onChange={(e) =>
@@ -201,32 +268,39 @@ const TracksView = () => {
                     setIsMoodsDropdownOpen,
                   )
                 }
-                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsMoodsDropdownOpen)}
               >
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   All Moods
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Happy
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Sad
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Energetic
                 </option>
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Chill
+                </option>
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Inspiring
+                </option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
                 {isMoodsDropdownOpen ? (
-                  <FiChevronUp class="text-base text-black md:text-xl" />
+                  <FiChevronUp className="text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown class="text-base text-black md:text-xl" />
+                  <FiChevronDown className="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
 
-            <div class="relative">
+            {/* Genres Dropdown (first dropdown you highlighted) */}
+            <div className="relative">
               <select
                 value={selectedGenres}
                 onChange={(e) =>
@@ -236,185 +310,225 @@ const TracksView = () => {
                     setIsGenresDropdownOpen,
                   )
                 }
-                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsGenresDropdownOpen)}
               >
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   All Genres
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Pop
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Rock
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Jazz
                 </option>
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Hip-hop
+                </option>
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Electronic
+                </option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
                 {isGenresDropdownOpen ? (
-                  <FiChevronUp class="pl-1 text-base text-black md:text-xl" />
+                  <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown class="text-base text-black md:text-xl" />
+                  <FiChevronDown className="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
-
-            <div class="relative">
+            {/* Sort Option Dropdown (second dropdown you highlighted) */}
+            <div className="relative">
               <select
-                value={selectedGenres}
+                value={selectedSortOption}
                 onChange={(e) =>
                   handleDropdownChange(
                     e,
-                    setSelectedGenres,
-                    setIsGenresDropdownOpen,
+                    setSelectedSortOption,
+                    setIsSortDropdownOpen,
                   )
                 }
-                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                onClick={() => toggleDropdown(setIsGenresDropdownOpen)}
+                className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                onClick={() => toggleDropdown(setIsSortDropdownOpen)}
               >
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Default
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Default
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  A-Z
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Default
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Newest
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Default
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Oldest
                 </option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
-                {isGenresDropdownOpen ? (
-                  <FiChevronUp class="pl-1 text-base text-black md:text-xl" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
+                {isSortDropdownOpen ? (
+                  <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown class="text-base text-black md:text-xl" />
+                  <FiChevronDown className="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
-
-            <div class="relative">
+            {/* List View Dropdown (third dropdown you highlighted) */}
+            <div className="relative">
               <select
-                value={selectedGenres}
+                value={selectedListView}
                 onChange={(e) =>
                   handleDropdownChange(
                     e,
-                    setSelectedGenres,
-                    setIsGenresDropdownOpen,
+                    setSelectedListView,
+                    setIsListViewDropdownOpen,
                   )
                 }
-                class="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                onClick={() => toggleDropdown(setIsGenresDropdownOpen)}
+                className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                onClick={() => toggleDropdown(setIsListViewDropdownOpen)}
               >
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
                   Default List
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Default List
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Compact View
                 </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Default List
-                </option>
-                <option class="px-1 text-sm font-[400] md:text-[16px]">
-                  Default List
+                <option className="px-1 text-sm font-[400] md:text-[16px]">
+                  Detailed View
                 </option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
-                {isGenresDropdownOpen ? (
-                  <FiChevronUp class="pl-1 text-base text-black md:text-xl" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
+                {isListViewDropdownOpen ? (
+                  <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
                 ) : (
-                  <FiChevronDown class="text-base text-black md:text-xl" />
+                  <FiChevronDown className="text-base text-black md:text-xl" />
                 )}
               </div>
             </div>
           </div>
 
-          <div class="mx-auto flex items-center justify-center px-2">
-            <div class="inline-flex w-full max-w-[880px] items-center justify-between rounded-lg bg-white px-3 py-1 md:px-4 md:py-2">
+          <div className="mx-auto flex items-center justify-center px-2">
+            <div className="inline-flex w-full max-w-[880px] items-center justify-between rounded-lg bg-white px-3 py-1 md:px-4 md:py-2">
               <input
                 type="text"
                 placeholder="What type of track are you looking for?"
-                class="w-full bg-transparent text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
+                className="w-full bg-transparent text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
               />
-
-              <div class="ml-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-neutral-200 p-1.5 md:ml-3 md:h-9 md:w-9 md:p-2.5">
-                <LuSearch class="text-lg text-black md:text-2xl" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* tabale part   */}
-
-      <section className="">
-        <div className="mx-auto w-full max-w-7xl py-16">
-          {/* Table Header */}
-          <div className="mb-6 grid grid-cols-6 items-center gap-6 px-4 text-xl font-medium text-orange-200">
-            <div className="col-span-2">
-              <p className="text-center text-xl font-medium text-orange-200">
-                Title
-              </p>
-            </div>
-            <div>Time</div>
-            <div>BPM</div>
-            <div>Tags</div>
-          </div>
-
-          {/* Track List */}
-          <div className="space-y-4">
-            {tracks.map((track) => (
               <div
-                key={track.id}
-                className="grid grid-cols-6 items-center gap-6 border-b border-gray-600 p-4"
+                className="ml-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-neutral-200 p-1.5 md:ml-3 md:h-9 md:w-9 md:p-2.5"
+                onClick={handleSearchClick}
               >
-                {/* Cover + Title */}
-                <div className="col-span-2 flex items-center gap-4">
-                  <img
-                    src={track.thumbnail}
-                    alt="Album"
-                    className="h-20 w-20 rounded-sm"
-                  />
-                  <p className="text-lg text-neutral-500">{track.title}</p>
-                </div>
-
-                {/* Time */}
-                <p className="text-lg text-neutral-400">{track.time}</p>
-                {/* BPM */}
-                <p className="text-lg text-neutral-400">{track.bpm}</p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2">
-                  {track.tags.map((tag, i) => (
-                    <div
-                      key={i}
-                      className="inline-flex items-center justify-center gap-2.5 rounded-[50px] bg-black/20 px-3 py-2.5"
-                    >
-                      <p className="justify-center text-base font-normal text-gray-400 capitalize">
-                        {tag}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Actions */}
-                <div className="flex justify-end gap-3">
-                  <button className="rounded-lg bg-zinc-900 px-4">
-                    <FaShareAlt className="text-white" />
-                  </button>
-
-                  <button className="flex items-center gap-2 rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-4 py-2 font-semibold text-black">
-                    <span>$30.00</span>
-                  </button>
-                </div>
+                <LuSearch className="text-lg text-black md:text-2xl" />
               </div>
-            ))}
+            </div>
           </div>
         </div>
-      </section>
-    </div>
+      </header>
+
+      {/* table part */}
+      <main className="sm:p-6 lg:p-8">
+        {" "}
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="overflow-x-auto border-b border-gray-500">
+            <table className="min-w-full text-left text-xs text-white sm:text-sm md:text-base">
+              <thead className="text-sm text-orange-300 sm:text-base md:text-xl">
+                {/* Added the missing <tr> tag here */}
+                <tr>
+                  <th
+                    className="px-2 py-3 text-center font-medium sm:px-4 sm:py-4"
+                    colSpan={2}
+                  >
+                    Title
+                  </th>
+                  <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">
+                    Time
+                  </th>
+                  <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">BPM</th>
+                  <th className="py-3 font-medium md:px-4">Tags</th>
+                  {/* Consider adding a label for the Actions column, or remove if intentionally empty */}
+                  <th className="py-3 font-medium md:px-4 md:py-4">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-500">
+                {filteredTracks.length > 0 ? (
+                  filteredTracks.map((track) => (
+                    <tr key={track.id} className="transition hover:bg-white/5">
+                      {/* Thumbnail + Title */}
+                      <td className="py-2 sm:py-4" colSpan={2}>
+                        <div className="flex items-center gap-2 sm:gap-4">
+                          <img
+                            src={track.thumbnail}
+                            alt={`${track.title} cover`} // Improved alt text
+                            className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
+                          />
+                          <span className="pr-3 text-[10px] text-neutral-300 sm:text-sm md:text-base">
+                            {track.title}
+                          </span>
+                        </div>
+                      </td>
+                      {/* Time */}
+                      <td className="px-4 py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-2">
+                        {track.time}
+                      </td>
+                      {/* BPM */}
+                      <td className="py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
+                        {track.bpm}
+                      </td>
+                      {/* Tags */}
+                      <td className="py-2 sm:px-4 sm:py-4">
+                        <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
+                          {track.tags.map((tag, i) => (
+                            <span
+                              key={`${track.id}-${i}`} // Improved key for better React reconciliation
+                              className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                      {/* Actions */}
+                      <td className="py-2 sm:py-4">
+                        <div className="flex justify-end gap-1 md:gap-2">
+                          <button
+                            className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
+                            aria-label={`Share ${track.title}`} // Added aria-label for accessibility
+                          >
+                            <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
+                          </button>
+                          {/* "Add to Cart" button - onClick handler যোগ করা হয়েছে */}
+                          <button
+                            onClick={() => handleAddToCart(track)} // এখানে addToCart ফাংশন কল করা হয়েছে
+                            className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
+                            aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`} // Added aria-label for accessibility
+                          >
+                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
+                            <span>${track.price.toFixed(2)}</span>
+                            {/* পণ্যের মূল্য দেখানো হয়েছে */}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="py-4 text-center text-neutral-400"
+                    >
+                      No tracks found matching your criteria.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </section>
   );
 };
 
