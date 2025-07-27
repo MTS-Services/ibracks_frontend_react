@@ -116,7 +116,7 @@
 
   p {
     font-size: var(--text-base);
-    font-family: var(--font-secondary);
+    font-family: var(--font-primary);
     font-weight: var(--font-normal);
     color: var(--text-color-paragraph);
     line-height: 1.6;

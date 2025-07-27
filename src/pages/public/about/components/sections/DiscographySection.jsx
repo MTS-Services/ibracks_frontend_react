@@ -130,10 +130,10 @@ const AboutDiscography = ({ album }) => {
 };
 
 // Main Discography Display Component
-const DiscographyDisplay = () => {
+const DiscographySection = () => {
   return (
     <div className="bg-[#2B0232] pb-20 sm:py-8 md:py-16 lg:pb-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">
         <h1 className="mb-6 text-center text-2xl font-bold text-white sm:mb-8 sm:text-3xl md:text-4xl">
           Discography
         </h1>
@@ -147,4 +147,4 @@ const DiscographyDisplay = () => {
   );
 };
 
-export default DiscographyDisplay;
+export default DiscographySection;

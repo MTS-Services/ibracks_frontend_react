@@ -1,18 +1,14 @@
-import DiscographyDisplay from "../../../components/About/AboutDiscography";
-import AboutMainSection from "../../../components/About/AboutMainSection";
-import WhatSetsUsApart from "../../../components/About/aboutwhatset/WhatSetsUsApart";
+import HeroSection from "./components/sections/HeroSection";
+import ApartSection from "./components/sections/ApartSection";
+import DiscographySection from "./components/sections/DiscographySection";
 
 const AboutView = () => {
   return (
-    <div
-      style={{
-        background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
-      }}
-    >
-      <AboutMainSection />
-      <WhatSetsUsApart />
-      <DiscographyDisplay />
-    </div>
+    <>
+      <HeroSection />
+      <ApartSection />
+      <DiscographySection />
+    </>
   );
 };
 

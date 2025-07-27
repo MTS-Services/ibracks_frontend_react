@@ -1,5 +1,21 @@
-import MusicCard from "./MusicCard";
-import { musicCards } from "./AboutPageData";
+import MusicCard from "../common/MusicCard";
+
+const musicCards = [
+  {
+    id: "card-1",
+    imageSrc: "/aboutpage/cartsecent1.png",
+    bgColor: "bg-[#2B0232] ",
+    title: "Rap Music",
+    stats: "0.3234",
+  },
+  {
+    id: "card-2",
+    imageSrc: "/aboutpage/cart2.png",
+    bgColor: "bg-[#2B0232] ",
+    title: "Rap Music",
+    stats: "0.3234",
+  },
+];
 
 // Left Column: This component remains the same
 const TextContent = () => (
@@ -8,7 +24,7 @@ const TextContent = () => (
       <h2 className="text-4xl leading-tight font-semibold text-white capitalize">
         What Sets Us Apart
       </h2>
-      <p className="text-base leading-relaxed font-normal text-white capitalize">
+      <p className="text-base text-gray-300 capitalize md:text-lg">
         At Beatzingeez Music, we live and breathe music. Whether you're a
         passionate artist, content creator, or music enthusiast, our platform is
         built to fuel your sound journey. We provide high-quality, royalty-free
@@ -30,24 +46,21 @@ const TextContent = () => (
 
 // Right Column: This component has been reverted to your original design
 const ImageDisplay = () => (
-  <div className="relative w-full flex-shrink-0 lg:mt-0 lg:h-[500px] lg:w-[500px]">
-    <div className="relative mx-auto mt-2 flex h-64 w-64 max-w-7xl items-center justify-center border-1 border-gray-400 xl:h-96 xl:w-full">
-      <div className="absolute top-20 -left-2 h-50 w-30 bg-[#2B0232] lg:-left-2 lg:w-80 xl:top-50" />
-      <img
-        className="absolute mt-10 -ml-20 w-full origin-center object-cover md:w-full xl:mt-40 xl:-ml-40"
-        // style={{ transform: "skewY(-10deg) rotate(20deg)" }}
-        src="/aboutpage/cart3.png"
-        alt="A collage of various music album covers"
-      />
-    </div>
+  <div className="">
+    <div className="h-90 w-90 rounded-full bg-[#30107088] blur-3xl" />
+    <img
+      className="absolute top-[1100px] right-0 md:top-0 md:w-[600px]"
+      src="/aboutpage/cans.png"
+      alt="A collage of various music album covers"
+    />
   </div>
 );
 
 // The main, orchestrated component with the original flexbox layout
 const WhatSetsUsApart = () => {
   return (
-    <section className="bg-backdrop bg-[#2B0232] py-16 sm:py-8 lg:py-16">
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-12 px-4 sm:px-6 lg:flex-row lg:items-start lg:gap-16 lg:px-0">
+    <section className="bg-backdrop bg-[#2B0232] py-16 sm:py-8 lg:py-20">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-12 px-4 sm:px-6 lg:flex-row lg:items-start lg:gap-16 lg:px-0">
         <TextContent />
         <ImageDisplay />
       </div>

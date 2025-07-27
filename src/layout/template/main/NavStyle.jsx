@@ -20,7 +20,7 @@ const NavStyle = () => {
 
   return (
     <header className="sticky top-0 z-20 bg-black text-white">
-      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6 lg:px-8">
+      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6 lg:px-0">
         {/* Logo */}
         <Link to="/">
           <img className="w-[100px]" src="/image/ibracks_logo.png" alt="Logo" />
