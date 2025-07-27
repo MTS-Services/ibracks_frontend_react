@@ -137,7 +137,7 @@ const TracksPage = () => {
         <TracksPageHeroSection />
       </div>
       <div className="">
-        <div className="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:text-4xl">
+        <div className="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:pt-8 lg:text-4xl">
           Tracks
         </div>
         <div className="mx-auto max-w-[950px] rounded-md bg-white/5 p-4 md:p-6">
