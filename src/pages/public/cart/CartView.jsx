@@ -4,7 +4,7 @@ import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import PurchaseSuccessModal from "../../../components/PurchaseSuccessModal";
 import { Link } from "react-router-dom";
-import { CartContext } from "../../../utils/CartContextDefinition";
+import { CartContext } from "../../../context/cart/CartContextDefinition";
 import toast, { Toaster } from "react-hot-toast"; // react-hot-toast import করুন
 
 function CartView() {

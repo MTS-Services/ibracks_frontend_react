@@ -1,18 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import ServicesView from "../pages/public/services/ServicesView";
 import MainLayout from "../layout/template/main/MainLayout";
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
-import ContactView from "../pages/public/contact/ContactView";
-
-import RegisterView from "../pages/auth/register/RegisterView";
-import LoginView from "../pages/auth/login/LoginView";
+import ServicesView from "../pages/public/services/ServicesView";
 import CartView from "../pages/public/cart/CartView";
 import CheckOutView from "../pages/public/checkout/CheckOut";
 import TracksView from "../pages/public/tracks/TracksView";
 import ProductsView from "../pages/public/products/ProductsView";
 import VideosView from "../pages/public/videos/VideosView";
+import ContactView from "../pages/public/contact/ContactView";
+
+import AuthLayout from "../layout/template/auth/AuthLayout";
+import RegisterView from "../pages/auth/register/RegisterView";
+import LoginView from "../pages/auth/login/LoginView";
+
 import DashboardLayout from "../layout/template/admin/DashboardLayout";
 import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
@@ -32,14 +34,7 @@ const AppRoutes = createBrowserRouter([
         path: "/about",
         element: <AboutView />,
       },
-      {
-        path: "/login",
-        element: <LoginView />,
-      },
-      {
-        path: "/register",
-        element: <RegisterView />,
-      },
+
       {
         path: "/contact",
         element: <ContactView />,
@@ -68,6 +63,20 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/video",
         element: <VideosView />,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <LoginView />,
+      },
+      {
+        path: "register",
+        element: <RegisterView />,
       },
     ],
   },

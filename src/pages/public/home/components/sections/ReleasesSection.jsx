@@ -1,40 +1,6 @@
-import React from "react";
 import { FiPlay } from "react-icons/fi";
 
-const ReleasesSection = () => {
-  const songs = [
-    {
-      title: "Red (Taylor’s Version)",
-      artist: "Taylor Swift",
-      image: "/image/home/music1.png",
-    },
-    {
-      title: "Need To Know",
-      artist: "Doja Cat",
-      image: "/image/home/music2.png",
-    },
-    {
-      title: "Save Your Tear",
-      artist: "The Weeknd",
-      image: "/image/home/music3.png",
-    },
-    {
-      title: "HIT MACHINE",
-      artist: "Soundwave",
-      image: "/image/home/music4.png",
-    },
-    {
-      title: "Red (Taylor’s Version)",
-      artist: "Ca sĩ",
-      image: "/image/home/music2.png",
-    },
-    {
-      title: "Need To Know",
-      artist: "Doja Cat",
-      image: "/image/home/music3.png",
-    },
-  ];
-
+const ReleasesSection = ({ songs }) => {
   return (
     <section className="bg-gradient-to-b from-[#000000] to-[#100418] py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">
@@ -52,7 +18,7 @@ const ReleasesSection = () => {
             <div key={index} className="flex flex-col">
               <div className="group relative">
                 <img
-                  src={song.image}
+                  src={song.thumbnail}
                   alt={song.title}
                   className="aspect-square w-full rounded border border-gray-800 object-cover transition-transform duration-300 group-hover:scale-105"
                 />

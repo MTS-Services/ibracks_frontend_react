@@ -5,15 +5,11 @@ import FooterStyle from "./FooterStyle";
 const MainLayout = () => {
   return (
     <>
-      <nav>
-        <NavStyle />
-      </nav>
+      <NavStyle />
       <main>
         <Outlet />
       </main>
-      <footer>
-        <FooterStyle />
-      </footer>
+      <FooterStyle />
     </>
   );
 };

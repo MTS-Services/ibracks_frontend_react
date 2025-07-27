@@ -3,34 +3,11 @@ import { FaShare, FaShareAlt, FaThumbsUp } from "react-icons/fa";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineArrowOutward } from "react-icons/md";
 
-const TrackList = () => {
-  const tracks = [
-    {
-      id: 1,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/image/home/music3.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/image/home/music3.png",
-    },
-    {
-      id: 3,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/image/home/music3.png",
-    },
-  ];
-
+const TrackList = ({ songs }) => {
+  // Add to Cart handler
+  const handleAddToCart = (track) => {
+    alert(`${track} added to cart!`);
+  };
   return (
     <section className="bg-gradient-to-b from-[#100418] to-[#150618] lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">
@@ -54,7 +31,7 @@ const TrackList = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-500">
-              {tracks.map((track) => (
+              {songs.map((track) => (
                 <tr key={track.id} className="transition hover:bg-white/5">
                   {/* Thumbnail + Title */}
                   <td className="py-4" colSpan={2}>
@@ -96,7 +73,10 @@ const TrackList = () => {
                       <button className="rounded-md bg-zinc-800 p-2 transition hover:bg-zinc-700">
                         <FaShareAlt className="text-base text-white" />
                       </button>
-                      <button className="flex items-center gap-2 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-3 py-2 text-sm font-semibold text-black">
+                      <button
+                        onClick={() => handleAddToCart(track.id)}
+                        className="flex items-center gap-2 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-3 py-2 text-sm font-semibold text-black"
+                      >
                         <HiOutlineShoppingBag />
                         <span>$30.00</span>
                       </button>
@@ -110,7 +90,7 @@ const TrackList = () => {
 
         {/* Mobile Card View */}
         <div className="space-y-4 md:hidden">
-          {tracks.map((track) => (
+          {songs.map((track) => (
             <div
               key={track.id}
               className="rounded-lg border border-gray-700 bg-black/20 p-2 transition hover:bg-white/5"
@@ -146,10 +126,15 @@ const TrackList = () => {
                   </div>
 
                   <div className="mt-4 flex justify-start gap-2">
+                    {/* Share button */}
                     <button className="rounded-md bg-zinc-800 p-2 transition hover:bg-zinc-700">
                       <FaShareAlt className="text-base text-white" />
                     </button>
-                    <button className="flex items-center gap-2 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-3 py-2 text-sm font-semibold text-black">
+                    {/* Cart button */}
+                    <button
+                      onClick={() => handleAddToCart(track.id)}
+                      className="flex items-center gap-2 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-3 py-2 text-sm font-semibold text-black"
+                    >
                       <HiOutlineShoppingBag className="text-sm" />
                       <span>$30.00</span>
                     </button>

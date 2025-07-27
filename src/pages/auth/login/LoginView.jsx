@@ -16,7 +16,7 @@ const LoginView = () => {
   };
 
   const handleChanges = (e) => {
-    const name = e;
+    const { name } = e.target.value;
     console.log(name);
   };
 
@@ -51,13 +51,16 @@ const LoginView = () => {
             backgroundColor: "rgba(243, 243, 243, 0.10)",
           }}
         >
+          <Link to="/" className="flex cursor-pointer items-center text-white">
+            {"< "} Back{" "}
+          </Link>
           <div className="mx-auto flex justify-center">
             <div className="">
               <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
-                Get Started -
-              </h2>
-              <h2 className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
-                It’s Free
+                Get Started -{" "}
+                <span className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
+                  It’s Free
+                </span>
               </h2>
             </div>
           </div>
@@ -75,14 +78,14 @@ const LoginView = () => {
               >
                 Email
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="w-full">
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="email"
                   id="email"
                   onChange={handleChanges}
                   placeholder="Enter your email here..."
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                  className="w-full rounded-lg bg-white px-3 py-2.5 text-sm text-neutral-700 focus:outline-none md:text-base"
                 />
               </div>
             </div>
@@ -91,17 +94,18 @@ const LoginView = () => {
               {/* Adjusted gap for responsiveness */}
               <label
                 htmlFor="password"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                className="text-sm font-normal text-white capitalize md:text-base"
               >
                 Password
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+
+              <div className="w-full">
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="password"
                   id="password"
                   placeholder="Enter your password here..."
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                  className="w-full rounded-lg bg-white px-3 py-2.5 text-sm text-neutral-700 focus:outline-none md:text-base"
                 />
               </div>
             </div>
@@ -135,16 +139,15 @@ const LoginView = () => {
 
           <h6 className="mx-auto flex items-center justify-center gap-2 text-center text-sm font-bold text-white">
             Don't have a account?{" "}
-            <Link className="font-bold" to="/register">
-              {" "}
-              Sign Up now{" "}
-            </Link>{" "}
+            <Link className="font-bold text-yellow-200" to="/auth/register">
+              Sign Up now
+            </Link>
           </h6>
           {/* Separator */}
           <div className="my-2 flex w-full items-center gap-2 md:my-4 md:gap-4">
             {/* Adjusted margin and gap for responsiveness */}
             <div className="h-px flex-1 bg-neutral-200"></div>
-            <span className="font-poppins text-sm text-neutral-200 md:text-base">
+            <span className="font-poppins text-sm text-yellow-200 md:text-base">
               {/* Smaller text for mobile/tablet */}
               Or Sign in with
             </span>
@@ -154,7 +157,7 @@ const LoginView = () => {
           {/* Social */}
           <div className="flex w-full flex-col gap-3 md:gap-4">
             {/* Adjusted gap for responsiveness */}
-            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
+            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               {/* Smaller height and padding for mobile/tablet */}
               <img
                 src="/New folder/google.svg"
@@ -166,7 +169,7 @@ const LoginView = () => {
                 Sign up With Google
               </span>
             </button>
-            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
+            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               {/* Smaller height and padding for mobile/tablet */}
               <img
                 src="/New folder/apple.svg"

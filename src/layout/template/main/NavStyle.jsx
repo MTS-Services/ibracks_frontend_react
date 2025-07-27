@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiUser, FiMenu, FiX } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { getCurrentUser } from "../../../featured/auth/authUtils";
-import { CartContext } from "../../../utils/CartContextDefinition";
+import { CartContext } from "../../../context/cart/CartContextDefinition";
 import { useContext } from "react";
 
 // Navigation Links Data
 const navLinks = [
+  { label: "Home", path: "/" },
   { label: "About", path: "/about" },
   { label: "Tracks", path: "/tracks" },
   { label: "Video", path: "/video" },
   { label: "Services", path: "/services" },
   { label: "Contact", path: "/contact" },
-  { label: "Admin", path: "/admin" },
 ];
 
 const NavStyle = () => {
@@ -21,8 +21,8 @@ const NavStyle = () => {
   const user = getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-20 bg-black text-white">
-      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6 lg:px-0">
+    <nav className="sticky top-0 z-20 bg-black text-white">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6 lg:px-0">
         {/* Logo */}
         <Link to="/">
           <img className="w-[100px]" src="/image/ibracks_logo.png" alt="Logo" />
@@ -52,7 +52,7 @@ const NavStyle = () => {
             )}
 
             <Link
-              to="/login"
+              to="/auth/login"
               className="text-base font-medium text-zinc-300 transition-colors hover:text-gray-400"
             >
               Log In
@@ -73,7 +73,7 @@ const NavStyle = () => {
             )}
           </button>
         </div>
-      </nav>
+      </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
@@ -101,7 +101,7 @@ const NavStyle = () => {
               )}
             </div>
             <Link
-              to="/login"
+              to="/auth/login"
               className="text-base font-medium text-zinc-300 transition-colors hover:text-gray-400"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -110,7 +110,7 @@ const NavStyle = () => {
           </div>
         </div>
       )}
-    </header>
+    </nav>
   );
 };
 
