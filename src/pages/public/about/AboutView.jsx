@@ -1,19 +1,14 @@
-import React from "react";
-import DiscographyDisplay from "../../../components/About/AboutDiscography";
-import AboutWhatSets from "../../../components/About/AboutWhatSets";
-import AboutMainSection from "../../../components/About/AboutMainSection";
+import HeroSection from "./components/sections/HeroSection";
+import ApartSection from "./components/sections/ApartSection";
+import DiscographySection from "./components/sections/DiscographySection";
 
 const AboutView = () => {
   return (
-    <div
-      style={{
-        background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
-      }}
-    >
-      <AboutMainSection></AboutMainSection>
-      <AboutWhatSets></AboutWhatSets>
-      <DiscographyDisplay></DiscographyDisplay>
-    </div>
+    <>
+      <HeroSection />
+      <ApartSection />
+      <DiscographySection />
+    </>
   );
 };
 

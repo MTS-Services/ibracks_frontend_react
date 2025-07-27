@@ -1,71 +1,100 @@
-import React from "react";
-import { FiMenu, FiSearch, FiUser } from "react-icons/fi";
+import React, { useState } from "react";
+import { FiMenu, FiSearch, FiUser, FiX } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+const navLinks = [
+  { label: "About", path: "/about" },
+  { label: "Contact", path: "/contact-view" },
+  { label: "Services", path: "/services" },
+  { label: "Login", path: "/login" },
+  { label: "Signup", path: "/signup" },
+  { label: "Shopping Cart", path: "/shopping-cart" },
+  { label: "CheckOut", path: "/check-out" },
+  { label: "Video", path: "/video" },
+  { label: "TracksView", path: "/tracks" },
+  { label: "Products", path: "/products" },
+];
+
 const NavStyle = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
   return (
-    <header className="bg-black">
-      <nav className="mx-auto flex w-full max-w-[1440px] items-center justify-between py-4 lg:px-32">
+    <header className="bg-black text-zinc-300">
+      <nav className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-6 py-4 lg:px-32">
         {/* Logo */}
-        <img
-          className="h-[63px] w-[90px]"
-          src="/image/ibracks_logo.png"
-          alt="Logo"
-        />
+        <Link to="/">
+          <img
+            className="h-[63px] w-[90px]"
+            src="/image/ibracks_logo.png"
+            alt="Logo"
+          />
+        </Link>
 
-        {/* Navigation Links */}
-        <div className="flex items-center gap-[40px]">
-          {/* Menu Items */}
-          <ul className="flex items-center gap-6 text-base text-zinc-300 capitalize">
-            <li className="cursor-pointer hover:text-white">About</li>
-            <Link
-              to="/contact-view"
-              className="cursor-pointer hover:text-white"
-            >
-              contact{" "}
-            </Link>
-            <Link to="/services" className="cursor-pointer hover:text-white">
-              Services
-            </Link>
-            <Link to="/about" className="cursor-pointer hover:text-white">
-              About
-            </Link>
-            <Link to="/login" className="cursor-pointer hover:text-white">
-              Login
-            </Link>
-            <Link to="/signup" className="cursor-pointer hover:text-white">
-              Signup
-            </Link>
-            <Link
-              to="/shopping-cart"
-              className="cursor-pointer hover:text-white"
-            >
-              Shopping Cart
-            </Link>
-            <Link to="/check-out" className="cursor-pointer hover:text-white">
-              CheckOut
-            </Link>
-            <Link to="/video" className="cursor-pointer hover:text-white">
-              Video
-            </Link>
-            <Link to="/tracks" className="cursor-pointer hover:text-white">
-              TracksView
-            </Link>
-            <Link to="/products" className="cursor-pointer hover:text-white">
-              Products
-            </Link>
-          </ul>
+        {/* Desktop Menu */}
+        <ul className="hidden items-center gap-6 text-base capitalize lg:flex">
+          {navLinks.map((link) => (
+            <li key={link.label}>
+              <Link
+                to={link.path}
+                className="transition duration-200 hover:text-white"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-          {/* Icons + Login */}
-          <div className="flex items-center gap-6 text-zinc-300">
-            <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
-            <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
-            <div className="flex cursor-pointer items-center gap-2 hover:text-white">
-              <span className="text-base capitalize">Log In</span>
-            </div>
+        {/* Icons */}
+        <div className="hidden items-center gap-6 lg:flex">
+          <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
+          <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
+          <div className="flex cursor-pointer items-center gap-2 hover:text-white">
+            <span className="text-base capitalize">Log In</span>
           </div>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="text-zinc-300 lg:hidden"
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? (
+            <FiX className="h-6 w-6" />
+          ) : (
+            <FiMenu className="h-6 w-6" />
+          )}
+        </button>
       </nav>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="bg-black px-6 pb-4 lg:hidden">
+          <ul className="flex flex-col gap-4 text-base capitalize">
+            {navLinks.map((link) => (
+              <li key={link.label}>
+                <Link
+                  to={link.path}
+                  className="block w-full py-1 hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-4 flex gap-4">
+            <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
+            <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
+            <span className="cursor-pointer text-base capitalize hover:text-white">
+              Log In
+            </span>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

@@ -63,7 +63,7 @@ const RegisterView = () => {
               >
                 Name
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
                 {" "}
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
@@ -85,7 +85,7 @@ const RegisterView = () => {
               >
                 Phone Number
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
                 {" "}
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
@@ -106,7 +106,7 @@ const RegisterView = () => {
               >
                 Email
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
                 {" "}
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
@@ -127,7 +127,7 @@ const RegisterView = () => {
               >
                 Password
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
                 {" "}
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
@@ -148,7 +148,7 @@ const RegisterView = () => {
               >
                 Confirm Password
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
                 {" "}
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
