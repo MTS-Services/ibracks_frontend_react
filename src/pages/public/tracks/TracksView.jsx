@@ -2,12 +2,36 @@
 import { useState, useContext } from "react"; // useContext import করুন
 import { FaShareAlt } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiPlay } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 
 import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 import { CartContext } from "../../../utils/CartContextDefinition";
-
+import CustomSwiper from "./components/common/swiper/CustomSwiper";
+const songs = [
+  // ... your song data
+  {
+    title: "Red (Taylor’s Version)",
+    artist: "Taylor Swift",
+    image: "/image/home/music1.png",
+  },
+  {
+    title: "Need To Know",
+    artist: "Doja Cat",
+    image: "/image/home/music2.png",
+  },
+  {
+    title: "Save Your Tear",
+    artist: "The Weeknd",
+    image: "/image/home/music3.png",
+  },
+  {
+    title: "HIT MACHINE",
+    artist: "Soundwave",
+    image: "/image/home/music4.png",
+  },
+  // ... more songs
+];
 // প্রতিটি ট্র্যাকের একটি 'price' প্রপার্টি থাকা জরুরি
 const tracks = [
   {
@@ -64,6 +88,34 @@ const TracksView = () => {
   const [isGenresDropdownOpen, setIsGenresDropdownOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
+
+  // Prepare slides data (can be JSX or image URLs)
+  const slides = songs.map((song) => (
+    <div key={song.title} className="flex flex-col items-center p-2">
+      {/* Added padding */}
+      <div className="group relative w-full">
+        {" "}
+        {/* Added w-full for image container */}
+        <img
+          src={song.image}
+          alt={song.title}
+          className="h-auto w-full rounded border border-gray-800 object-cover transition-transform duration-300 group-hover:scale-105" // Adjusted w-full, h-auto
+        />
+        <div className="bg-opacity-40 absolute inset-0 flex items-center justify-center rounded bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <FiPlay className="h-8 w-8 text-white" />
+        </div>
+      </div>
+      <div className="mt-3 text-center">
+        {/* Added text-center for alignment */}
+        <p className="truncate text-base font-semibold text-neutral-200">
+          {song.title}
+        </p>
+        <p className="truncate text-sm font-normal text-zinc-400">
+          {song.artist}
+        </p>
+      </div>
+    </div>
+  ));
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -124,16 +176,15 @@ const TracksView = () => {
   });
 
   return (
-    <div
-      className="min-h-screen bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
+    <section
+      className="bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <div className="">
-        <TracksPageHeroSection />
-      </div>
-      <div className="">
+      <TracksPageHeroSection />
+
+      <header className="">
         <div className="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:text-4xl">
           Tracks
         </div>
@@ -205,6 +256,7 @@ const TracksView = () => {
                 )}
               </div>
             </div>
+
             {/* Moods Dropdown */}
             <div className="relative">
               <select
@@ -246,6 +298,7 @@ const TracksView = () => {
                 )}
               </div>
             </div>
+
             {/* Genres Dropdown (first dropdown you highlighted) */}
             <div className="relative">
               <select
@@ -355,12 +408,13 @@ const TracksView = () => {
               </div>
             </div>
           </div>
+
           <div className="mx-auto flex items-center justify-center px-2">
             <div className="inline-flex w-full max-w-[880px] items-center justify-between rounded-lg bg-white px-3 py-1 md:px-4 md:py-2">
               <input
                 type="text"
                 placeholder="What type of track are you looking for?"
-                class="w-full bg-transparent text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
+                className="w-full bg-transparent text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
               />
               <div
                 className="ml-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-neutral-200 p-1.5 md:ml-3 md:h-9 md:w-9 md:p-2.5"
@@ -371,14 +425,16 @@ const TracksView = () => {
             </div>
           </div>
         </div>
-      </div>
+      </header>
+
       {/* table part */}
-      <section className="sm:p-6 lg:p-8">
+      <main className="sm:p-6 lg:p-8">
         {" "}
         <div className="mx-auto w-full max-w-7xl">
           <div className="overflow-x-auto border-b border-gray-500">
             <table className="min-w-full text-left text-xs text-white sm:text-sm md:text-base">
               <thead className="text-sm text-orange-300 sm:text-base md:text-xl">
+                {/* Added the missing <tr> tag here */}
                 <tr>
                   <th
                     className="px-2 py-3 text-center font-medium sm:px-4 sm:py-4"
@@ -388,12 +444,14 @@ const TracksView = () => {
                   </th>
                   <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">
                     Time
-                  </th>{" "}
-                  <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">BPM</th>{" "}
-                  <th className="py-3 font-medium md:px-4">Tags</th>{" "}
-                  <th className="py-3 font-medium md:px-4 md:py-4"></th>{" "}
+                  </th>
+                  <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">BPM</th>
+                  <th className="py-3 font-medium md:px-4">Tags</th>
+                  {/* Consider adding a label for the Actions column, or remove if intentionally empty */}
+                  <th className="py-3 font-medium md:px-4 md:py-4">Actions</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-gray-500">
                 {filteredTracks.length > 0 ? (
                   filteredTracks.map((track) => (
@@ -403,7 +461,7 @@ const TracksView = () => {
                         <div className="flex items-center gap-2 sm:gap-4">
                           <img
                             src={track.thumbnail}
-                            alt="Album"
+                            alt={`${track.title} cover`} // Improved alt text
                             className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
                           />
                           <span className="pr-3 text-[10px] text-neutral-300 sm:text-sm md:text-base">
@@ -414,17 +472,17 @@ const TracksView = () => {
                       {/* Time */}
                       <td className="px-4 py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-2">
                         {track.time}
-                      </td>{" "}
+                      </td>
                       {/* BPM */}
-                      <td className="text- py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
+                      <td className="py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
                         {track.bpm}
-                      </td>{" "}
+                      </td>
                       {/* Tags */}
                       <td className="py-2 sm:px-4 sm:py-4">
                         <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
                           {track.tags.map((tag, i) => (
                             <span
-                              key={i}
+                              key={`${track.id}-${i}`} // Improved key for better React reconciliation
                               className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
                             >
                               {tag}
@@ -435,16 +493,20 @@ const TracksView = () => {
                       {/* Actions */}
                       <td className="py-2 sm:py-4">
                         <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2">
-                            <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />{" "}
+                          <button
+                            className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
+                            aria-label={`Share ${track.title}`} // Added aria-label for accessibility
+                          >
+                            <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
                           </button>
                           {/* "Add to Cart" button - onClick handler যোগ করা হয়েছে */}
                           <button
                             onClick={() => handleAddToCart(track)} // এখানে addToCart ফাংশন কল করা হয়েছে
                             className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
+                            aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`} // Added aria-label for accessibility
                           >
-                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />{" "}
-                            <span>${track.price.toFixed(2)}</span>{" "}
+                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
+                            <span>${track.price.toFixed(2)}</span>
                             {/* পণ্যের মূল্য দেখানো হয়েছে */}
                           </button>
                         </div>
@@ -465,8 +527,8 @@ const TracksView = () => {
             </table>
           </div>
         </div>
-      </section>
-    </div>
+      </main>
+    </section>
   );
 };
 
