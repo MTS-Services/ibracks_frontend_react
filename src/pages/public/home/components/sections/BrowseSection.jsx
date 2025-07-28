@@ -1,5 +1,5 @@
 import React from "react";
-import { FaShare, FaShareAlt, FaThumbsUp } from "react-icons/fa";
+import { FaShareAlt } from "react-icons/fa";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineArrowOutward } from "react-icons/md";
 
@@ -8,6 +8,7 @@ const TrackList = ({ songs }) => {
   const handleAddToCart = (track) => {
     alert(`${track} added to cart!`);
   };
+
   return (
     <section className="bg-gradient-to-b from-[#100418] to-[#150618] lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">

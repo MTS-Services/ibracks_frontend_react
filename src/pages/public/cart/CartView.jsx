@@ -1,11 +1,12 @@
 // src/pages/CartView.jsx
 import { useState, useContext } from "react";
-import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
-import { IoIosArrowBack } from "react-icons/io";
-import PurchaseSuccessModal from "../../../components/PurchaseSuccessModal";
 import { Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { IoIosArrowBack } from "react-icons/io";
+import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
+
 import { CartContext } from "../../../context/cart/CartContext";
-import toast, { Toaster } from "react-hot-toast"; // react-hot-toast import করুন
+import PurchaseSuccessModal from "../../../components/common/PurchaseSuccessModal";
 
 function CartView() {
   const { cartItems, removeFromCart, subtotal, total } =
@@ -14,7 +15,6 @@ function CartView() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleCheckout = () => {
-    console.log("Proceeding to checkout with items:", cartItems);
     setShowSuccessModal(true);
   };
 
@@ -51,7 +51,7 @@ function CartView() {
         </div>
       ),
       {
-        duration: Infinity, // Keep the toast open until user interacts
+        duration: Infinity,
         position: "top-center",
         style: {
           background: "#fff",
@@ -66,7 +66,6 @@ function CartView() {
 
   return (
     <div>
-      <Toaster /> {/* Toaster কম্পোনেন্ট যোগ করুন */}
       <div
         className={`m-auto flex min-h-screen items-center justify-center bg-neutral-900 px-2 py-10 sm:px-6 lg:px-8`}
         style={{
@@ -76,7 +75,6 @@ function CartView() {
         <div className="flex w-full max-w-6xl flex-col gap-8 rounded-2xl p-6 md:p-10 lg:flex-row">
           {/* Left Section: Shopping Cart */}
           <div className="flex flex-1 flex-col gap-6">
-            {/* Shopping Continue Button - Link ব্যবহার করা হয়েছে */}
             <Link to="/tracks" className="flex items-center gap-2">
               <IoIosArrowBack className="h-6 w-6 cursor-pointer font-[600] text-white" />{" "}
               <span className="text-lg font-[600] text-white">

@@ -131,7 +131,6 @@ const AboutDiscography = ({ album }) => {
 
 // Main Discography Display Component
 const DiscographySection = ({ songs }) => {
-  console.log(songs);
   return (
     <div className="bg-[#2B0232] pb-20 sm:py-8 md:py-16 lg:pb-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">
@@ -139,8 +138,8 @@ const DiscographySection = ({ songs }) => {
           Discography
         </h1>
         <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
-          {songs.map((album) => (
-            <AboutDiscography key={album.id} album={album} />
+          {songs.map((item) => (
+            <AboutDiscography key={item.id} album={item} />
           ))}
         </div>
       </div>

@@ -4,13 +4,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { Provider } from "react-redux";
+import { store } from "./featured/store/store";
 import CartProvider from "./context/cart/CartProvider";
 
 const App = () => {
   return (
-    <CartProvider>
-      <RouterProvider router={AppRoutes} />
-    </CartProvider>
+    <Provider store={store}>
+      <CartProvider>
+        <RouterProvider router={AppRoutes} />
+      </CartProvider>
+    </Provider>
   );
 };
 

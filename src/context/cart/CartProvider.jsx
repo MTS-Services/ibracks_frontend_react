@@ -12,8 +12,7 @@ const CartProvider = ({ children }) => {
       return [];
     }
   });
-  console.log(cartItems);
-  // cartItems পরিবর্তন হলে, localStorage এ সেভ করো
+
   useEffect(() => {
     try {
       localStorage.setItem("shoppingCart", JSON.stringify(cartItems));
@@ -22,10 +21,13 @@ const CartProvider = ({ children }) => {
     }
   }, [cartItems]);
 
-  // নতুন আইটেম যোগ করার ফাংশন
   const addToCart = (itemToAdd) => {
+    console.log(itemToAdd);
+
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === itemToAdd.id); //
+
+      console.log(existingItem);
 
       if (existingItem) {
         return prevItems.map((item) =>

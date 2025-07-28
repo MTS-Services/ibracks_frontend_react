@@ -69,7 +69,7 @@ const HeroSection = () => {
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {musicCards.map((item) => (
-              <div>
+              <div key={item.id}>
                 <div className="inline-flex flex-col items-start justify-start gap-2.5">
                   <img
                     className="h-44 w-44 rounded"

@@ -28,7 +28,6 @@ function CheckOutView() {
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const shipping = 4.0;
-  // Figma-তে দেওয়া "Total (Tax incl.) $86.00" হুবহু ব্যবহার করা হয়েছে, কারণ এটি একটি নির্দিষ্ট মান।
   const total = 86.0;
 
   return (
@@ -83,7 +82,6 @@ function CheckOutView() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  {" "}
                   {/* Price, Ellipsis, and Trash Icon */}
                   <div className="text-right text-sm font-[500] text-[#393939]">
                     ${item.price.toFixed(2)}
@@ -232,7 +230,7 @@ function CheckOutView() {
           </div>
 
           {/* Checkout Button */}
-          <button className="mt-4 flex items-center justify-between rounded-xl bg-[#DAA520] px-6 py-4 transition-colors duration-200 hover:bg-yellow-600">
+          <button className="mt-4 flex cursor-pointer items-center justify-between rounded-xl bg-[#DAA520] px-6 py-4 transition-colors duration-200 hover:bg-yellow-600">
             <span className="text-base font-[500] text-white">
               ${total.toFixed(2)}
             </span>

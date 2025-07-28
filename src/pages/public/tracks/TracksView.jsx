@@ -1,15 +1,17 @@
-// src/pages/TracksPage.jsx
-import { useState, useContext, useEffect } from "react"; // useContext import করুন
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { HiOutlineShoppingBag } from "react-icons/hi";
 import { FaShareAlt } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
-import { FiChevronDown, FiChevronUp, FiPlay } from "react-icons/fi";
-import { HiOutlineShoppingBag } from "react-icons/hi";
 
-import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
+import HeroSection from "./components/sections/HeroSection";
 import { getAllSongs } from "../../../featured/song/trackService";
-import { CartContext } from "../../../context/cart/CartContext";
+import { addItem } from "../../../featured/cart/cartSlice";
 
 const TracksView = () => {
+  const dispatch = useDispatch();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Category");
   const [selectedBpm, setSelectedBpm] = useState("All Bpm");
@@ -24,9 +26,14 @@ const TracksView = () => {
   const [isGenresDropdownOpen, setIsGenresDropdownOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
-  const { addToCart } = useContext(CartContext);
+
+  const cartItems = useSelector((state) => state.cart.items);
+  console.log(cartItems);
   const [songs, setSongs] = useState([]);
 
+  // ==================================
+  // API Call - for all songs
+  // ==================================
   useEffect(() => {
     (async () => {
       try {
@@ -39,26 +46,46 @@ const TracksView = () => {
     })();
   }, []);
 
+  // ==================================
+  // Handle Add to Cart - for all songs
+  // ==================================
+  // Enhanced handleAddToCart function
+  const handleAddToCart = (song) => {
+    dispatch(addItem(song));
+    alert(`${song.title}: added to cart!`);
+  };
+
+  // Check if item is already in cart
+  const isItemInCart = (trackId) => {
+    return cartItems.some((item) => item.id === trackId);
+  };
+
+  // ==================================
+  // Handle Search Change - for Filter
+  // ==================================
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
+  // ==================================
+  // Handle Search - for Filter
+  // ==================================
   const handleSearchClick = () => {
     console.log("Searching for: ", searchTerm);
   };
 
+  // ==================================
+  // Handle Change Dropdown - Filter
+  // ==================================
   const handleDropdownChange = (e, setSelectedValue) => {
     setSelectedValue(e.target.value);
   };
 
+  // ==================================
+  // Handle Dropdown - for Filter
+  // ==================================
   const toggleDropdown = (setDropdownOpenState) => {
     setDropdownOpenState((prevState) => !prevState);
-  };
-
-  // Add to Cart handler
-  const handleAddToCart = (track) => {
-    alert(`${track} added to cart!`);
-    addToCart(track);
   };
 
   const filteredTracks = songs.filter((track) => {
@@ -101,7 +128,7 @@ const TracksView = () => {
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <TracksPageHeroSection />
+      <HeroSection songs={songs} />
 
       <header className="">
         <h2 className="flex justify-center py-4 text-2xl font-[600] text-white capitalize md:py-10 md:text-3xl lg:text-4xl">
@@ -349,7 +376,6 @@ const TracksView = () => {
 
       {/* table part */}
       <main className="sm:p-6 lg:py-14">
-        {" "}
         <div className="mx-auto w-full max-w-7xl">
           <div className="overflow-x-auto border-b border-gray-500">
             <table className="min-w-full text-left text-xs text-white sm:text-sm md:text-base">
@@ -408,6 +434,7 @@ const TracksView = () => {
                           ))}
                         </div>
                       </td>
+
                       {/* Actions */}
                       <td className="py-2 sm:py-4">
                         <div className="flex justify-end gap-1 md:gap-2">
@@ -419,13 +446,35 @@ const TracksView = () => {
                             <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
                           </button>
                           {/* Cart button */}
-                          <button
-                            onClick={() => addToCart(track.id)}
+                          {/* <button
+                            onClick={() => handleAddToCart(track)}
                             className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
                             aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`}
                           >
                             <HiOutlineShoppingBag className="text-xs sm:text-sm" />
                             <span>${track.price.toFixed(2)}</span>
+                          </button> */}
+                          {/* Cart button - now disabled if item exists */}
+                          <button
+                            onClick={() => handleAddToCart(track)}
+                            disabled={isItemInCart(track.id)}
+                            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
+                              isItemInCart(track.id)
+                                ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                                : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
+                            }`}
+                            aria-label={
+                              isItemInCart(track.id)
+                                ? `${track.title} already in cart`
+                                : `Add ${track.title} to cart for $${track.price.toFixed(2)}`
+                            }
+                          >
+                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
+                            <span>
+                              {isItemInCart(track.id)
+                                ? "Added"
+                                : `$${track.price.toFixed(2)}`}
+                            </span>
                           </button>
                         </div>
                       </td>

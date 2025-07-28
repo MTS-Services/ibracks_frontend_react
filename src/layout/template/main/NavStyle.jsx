@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FiSearch, FiUser, FiMenu, FiX } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { getCurrentUser } from "../../../featured/auth/authUtils";
+import { useSelector } from "react-redux";
+import CartDropdown from "../../../components/common/CartDropdown";
 
 // Navigation Links Data
 const navLinks = [
@@ -16,7 +18,33 @@ const navLinks = [
 ];
 
 const NavStyle = () => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { items, totalQuantity } = useSelector((state) => state.cart);
+
+  const dropdownRef = useRef(null);
+
+  //=============================
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsCartOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  //=============================
   const user = getCurrentUser();
   const location = useLocation();
 
@@ -54,9 +82,20 @@ const NavStyle = () => {
           {/* Icons + Login */}
           <div className="flex items-center gap-5 text-zinc-300">
             <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
-            <Link to="/check-out" className="cursor-pointer hover:text-white">
+            <button
+              // to="/shoping-cart"
+              onClick={toggleCart}
+              className="relative cursor-pointer hover:text-white"
+            >
+              {/* Quantity Badge */}
+              {totalQuantity > 0 && (
+                <span className="absolute -top-2 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  {totalQuantity}
+                </span>
+              )}
               <HiOutlineShoppingBag className="h-5 w-5 text-white" />
-            </Link>
+            </button>
+
             {!user && (
               <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
             )}
@@ -109,8 +148,9 @@ const NavStyle = () => {
           <div className="flex items-center justify-between border-t border-gray-700 px-4 py-3">
             <div className="flex items-center gap-4 text-zinc-300">
               <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
+              <h1>{totalQuantity}</h1>
               <Link
-                to="/check-out"
+                to="/shoping-cart"
                 className="h-5 w-5 cursor-pointer hover:text-white"
               >
                 <HiOutlineShoppingBag className="h-5 w-5 text-white" />
@@ -127,6 +167,13 @@ const NavStyle = () => {
               Log In
             </Link>
           </div>
+        </div>
+      )}
+
+      {/* Cart Dropdown */}
+      {isCartOpen && (
+        <div className="absolute right-80 z-50 w-96" ref={dropdownRef}>
+          <CartDropdown onClose={() => setIsCartOpen(false)} />
         </div>
       )}
     </nav>

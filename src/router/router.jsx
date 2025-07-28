@@ -20,6 +20,7 @@ import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
 import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
 import NotFoundView from "../pages/error/NotFoundView";
+import CartTestView from "../pages/public/cart/CartTestView";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -34,7 +35,6 @@ const AppRoutes = createBrowserRouter([
         path: "/about",
         element: <AboutView />,
       },
-
       {
         path: "/contact",
         element: <ContactView />,
@@ -45,8 +45,12 @@ const AppRoutes = createBrowserRouter([
       },
 
       {
-        path: "/shop-cart",
+        path: "/shoping-cart",
         element: <CartView />,
+      },
+      {
+        path: "/test-cart",
+        element: <CartTestView />,
       },
       {
         path: "/check-out",
