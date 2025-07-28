@@ -17,7 +17,6 @@ const LoginView = () => {
 
   const handleChanges = (e) => {
     const { name } = e.target.value;
-    console.log(name);
   };
 
   const handleSubmit = (e) => {

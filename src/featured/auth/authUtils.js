@@ -5,6 +5,7 @@ export const getCurrentUser = () => {
     email: "nayem@gmail.com",
     password: "123456",
     phone: "+880 1777-941513",
+    role: "USRE",
   };
 
   return user || null;

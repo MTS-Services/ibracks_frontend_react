@@ -6,6 +6,8 @@
     "bpm": "103",
     "tags": ["Afrobeat", "Happy"],
     "thumbnail": "/shoppingcart/cart5.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 30.0
   },
   {
@@ -15,6 +17,8 @@
     "bpm": "120",
     "tags": ["Electronic", "Energetic"],
     "thumbnail": "/shoppingcart/cart6.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 25.0
   },
   {
@@ -24,6 +28,8 @@
     "bpm": "90",
     "tags": ["Jazz", "Chill"],
     "thumbnail": "/shoppingcart/cart7.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 35.0
   },
   {
@@ -33,6 +39,8 @@
     "bpm": "110",
     "tags": ["Hip-hop", "Inspiring"],
     "thumbnail": "/shoppingcart/cart1.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 28.0
   },
   {
@@ -42,6 +50,8 @@
     "bpm": "95",
     "tags": ["Hip-hop", "Smooth"],
     "thumbnail": "/shoppingcart/default.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 32.5
   },
   {
@@ -51,6 +61,8 @@
     "bpm": "80",
     "tags": ["Ambient", "Relaxing"],
     "thumbnail": "/shoppingcart/default.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 40.0
   },
   {
@@ -60,6 +72,8 @@
     "bpm": "128",
     "tags": ["Electronic", "Upbeat"],
     "thumbnail": "/shoppingcart/default.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 27.0
   },
   {
@@ -69,6 +83,8 @@
     "bpm": "75",
     "tags": ["Soul", "Melancholy"],
     "thumbnail": "/shoppingcart/default.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 38.0
   },
   {
@@ -78,6 +94,8 @@
     "bpm": "135",
     "tags": ["Electronic", "Intense"],
     "thumbnail": "/shoppingcart/default.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 29.99
   },
   {
@@ -87,6 +105,8 @@
     "bpm": "68",
     "tags": ["Acoustic", "Calm"],
     "thumbnail": "/shoppingcart/default.jpg",
+    "plays": 234567,
+    "likes": 298,
     "price": 31.0
   }
 ]
