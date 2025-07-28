@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
@@ -9,84 +9,84 @@ import "swiper/css/pagination";
 import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 import { IoMdArrowDroprightCircle } from "react-icons/io";
 
+// Define a constant for your default image path
+// Make sure this path is correct relative to your public directory
+const DEFAULT_COVER_IMAGE = "/treacks/cart2.png";
+// If you're using the one you mentioned:
+// const DEFAULT_COVER_IMAGE = "/treacks/cart2.png";
+// Ensure cart2.png is inside public/treacks/
+
 const TracksPageHeroSection = () => {
-  const releases = [
-    {
-      title: "Red (Taylor's Version)",
-      artist: "Taylor Swift",
-      image: "/treacks/cart1.png",
-    },
-    {
-      title: "Need To Know",
-      artist: "Doja Cat",
-      image: "/treacks/cart2.png",
-    },
-    {
-      title: "Save Your Tear",
-      artist: "The Weeknd",
-      image: "/treacks/cart3.png",
-    },
-    {
-      title: "Need To Know",
-      artist: "Doja Cat",
-      image: "/treacks/cart2.png",
-    },
-    {
-      title: "Save Your Tear",
-      artist: "The Weeknd",
-      image: "/treacks/cart3.png",
-    },
-    {
-      title: "Need To Know",
-      artist: "Doja Cat",
-      image: "/treacks/cart2.png",
-    },
-    {
-      title: "Save Your Tear",
-      artist: "The Weeknd",
-      image: "/treacks/cart3.png",
-    },
-    {
-      title: "Need To Know",
-      artist: "Doja Cat",
-      image: "/treacks/cart2.png",
-    },
-    {
-      title: "Save Your Tear",
-      artist: "The Weeknd",
-      image: "/treacks/cart3.png",
-    },
-    {
-      title: "Need To Know",
-      artist: "Doja Cat",
-      image: "/treacks/cart2.png",
-    },
-    {
-      title: "Save Your Tear",
-      artist: "The Weeknd",
-      image: "/treacks/cart3.png",
-    },
-    {
-      title: "HIT MACHINE",
-      artist: "Soundwave",
-      image: "/treacks/cart4.png",
-    },
-    {
-      title: "Blinding Lights",
-      artist: "The Weeknd",
-      image: "/treacks/cart5.png",
-    },
-    {
-      title: "Red (Taylor's Version)",
-      artist: "Ca sĩ",
-      image: "/treacks/cart1.png",
-    },
-    {
-      title: "Save Your Tears",
-      artist: "Weeknd",
-      image: "/treacks/cart3.png",
-    },
-  ];
+  const [newReleases, setNewReleases] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchNewReleases = async () => {
+      try {
+        const url =
+          "https://backend-ibracks.mtscorporate.com/api/songs/new-releases";
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const formattedReleases = data.data.map((item) => {
+          // --- IMPROVED DEFAULT IMAGE LOGIC ---
+          let imageUrl = item.coverImage;
+          // Check if coverImage is null, undefined, or an empty string
+          if (!imageUrl || imageUrl.trim() === "") {
+            imageUrl = DEFAULT_COVER_IMAGE;
+          }
+          // --- END IMPROVED LOGIC ---
+
+          return {
+            id: item.id,
+            title: item.title,
+            artist: item.user ? item.user.name : "Unknown Artist",
+            image: imageUrl,
+          };
+        });
+        setNewReleases(formattedReleases);
+      } catch (err) {
+        console.error("Failed to fetch new releases:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNewReleases();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-48 items-center justify-center">
+        <div className="text-lg text-white">Loading new releases...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-48 items-center justify-center">
+        <div className="text-lg text-red-500">
+          Error loading releases: {error}
+        </div>
+      </div>
+    );
+  }
+
+  if (newReleases.length === 0) {
+    return (
+      <div className="flex h-48 items-center justify-center">
+        <div className="text-lg text-white">No new releases found.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex max-w-7xl items-center justify-center md:px-6 lg:px-8">
@@ -100,7 +100,7 @@ const TracksPageHeroSection = () => {
       {/* Main Area */}
       <div className="w-full lg:w-[1200px]">
         <div className="mx-auto flex h-auto min-h-[288px] flex-col items-start justify-start gap-5 overflow-hidden rounded-lg bg-white/10 py-4 pr-2 font-sans md:min-h-[300px] md:pl-6 lg:min-h-72">
-          <div className="inline-flex items-center justify-start gap-3 self-stretch">
+          <div className="inline-flex items-center justify-start gap-3 self-stretch px-3 md:px-0">
             <div className="-mt-2 text-xl font-semibold text-white md:text-2xl">
               New Releases
             </div>
@@ -113,11 +113,17 @@ const TracksPageHeroSection = () => {
             breakpoints={{
               320: { slidesPerView: 2, spaceBetween: 10 },
               768: { slidesPerView: 3, spaceBetween: 15 },
-              1024: { slidesPerView: 6, spaceBetween: 20 },
-              1280: { slidesPerView: 6, spaceBetween: 20 },
+              1024: {
+                slidesPerView: Math.min(newReleases.length, 6),
+                spaceBetween: 20,
+              },
+              1280: {
+                slidesPerView: Math.min(newReleases.length, 6),
+                spaceBetween: 20,
+              },
             }}
-            loop={false} // 🔒 loop off
-            watchOverflow={true} // ✅ auto disables arrows if not scrollable
+            loop={false}
+            watchOverflow={true}
             centeredSlides={false}
             navigation={{
               nextEl: ".swiper-button-next-custom",
@@ -129,16 +135,22 @@ const TracksPageHeroSection = () => {
             }}
             className="relative w-full flex-1"
           >
-            {releases.map((release, index) => (
+            {newReleases.map((release) => (
               <SwiperSlide
-                key={index}
+                key={release.id}
                 className="flex !h-auto !w-auto flex-col items-start justify-start gap-2.5"
               >
-                <img
-                  className="h-auto max-h-[176px] w-full max-w-[176px] rounded object-cover"
-                  src={release.image}
-                  alt={release.title}
-                />
+                <div className="h-[176px] w-[176px] overflow-hidden rounded">
+                  <img
+                    className="h-full w-full object-cover object-center"
+                    src={release.image}
+                    alt={release.title}
+                    // Add onError to catch broken image links from API and fall back to default
+                    onError={(e) => {
+                      e.target.src = DEFAULT_COVER_IMAGE;
+                    }}
+                  />
+                </div>
                 <div className="flex w-full flex-col items-start justify-start gap-0.5 py-1">
                   <div className="self-stretch truncate text-sm font-semibold text-neutral-200 sm:text-base">
                     {release.title}
@@ -152,18 +164,15 @@ const TracksPageHeroSection = () => {
           </Swiper>
         </div>
 
-        {/* Pagination Dots */}
         <div className="swiper-pagination-custom mt-4 flex justify-center pb-2"></div>
       </div>
 
-      {/* Right Navigation */}
       <div className="hidden lg:block">
         <div className="swiper-button-next-custom cursor-pointer rounded-full bg-black/50 p-2 transition-colors hover:bg-black/70">
           <FiArrowRightCircle className="h-6 w-6 font-bold text-white" />
         </div>
       </div>
 
-      {/* Custom Styles */}
       <style jsx="true">{`
         .swiper-pagination-bullet {
           width: 10px !important;

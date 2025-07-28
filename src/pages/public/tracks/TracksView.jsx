@@ -128,7 +128,7 @@ const TracksPage = () => {
 
   return (
     <div
-      className="min-h-screen bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
+      className="min-h-screen bg-neutral-900 px-[11px] py-10 sm:px-6 lg:px-8"
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}

@@ -20,6 +20,7 @@ import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
 import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
 import ServicesView from "../pages/public/Services/ServicesView";
+import Account from "../pages/private/Account/Account";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -55,10 +56,16 @@ const AppRoutes = createBrowserRouter([
         path: "/shop-cart",
         element: <CartView />,
       },
+
       {
         path: "/check-out",
         element: <CheckOutView />,
       },
+      {
+        path: "/account",
+        element: <Account />,
+      },
+
       {
         path: "/tracks",
         element: <TracksView />,
