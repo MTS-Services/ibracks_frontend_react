@@ -8,31 +8,6 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 import { getAllSongs } from "../../../featured/song/trackService";
 
-const songs = [
-  // ... your song data
-  {
-    title: "Red (Taylor’s Version)",
-    artist: "Taylor Swift",
-    image: "/image/home/music1.png",
-  },
-  {
-    title: "Need To Know",
-    artist: "Doja Cat",
-    image: "/image/home/music2.png",
-  },
-  {
-    title: "Save Your Tear",
-    artist: "The Weeknd",
-    image: "/image/home/music3.png",
-  },
-  {
-    title: "HIT MACHINE",
-    artist: "Soundwave",
-    image: "/image/home/music4.png",
-  },
-  // ... more songs
-];
-
 const TracksView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Category");
