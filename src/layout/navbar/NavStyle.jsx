@@ -4,7 +4,7 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 import { getCurrentUser } from "../../../featured/auth/authUtils";
 import { CartContext } from "../../../utils/CartContextDefinition";
 import { useContext } from "react";
-
+// ssss
 const navLinks = [
   { label: "About", path: "/about" },
   { label: "Tracks", path: "/tracks" },
