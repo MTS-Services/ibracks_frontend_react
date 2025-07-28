@@ -4,7 +4,7 @@ import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import PurchaseSuccessModal from "../../../components/PurchaseSuccessModal";
 import { Link } from "react-router-dom";
-import { CartContext } from "../../../context/cart/CartContextDefinition";
+import { CartContext } from "../../../context/cart/CartContext";
 import toast, { Toaster } from "react-hot-toast"; // react-hot-toast import করুন
 
 function CartView() {
@@ -26,7 +26,7 @@ function CartView() {
     toast(
       (t) => (
         <div className="flex flex-col items-center">
-          <p className="font-['Poppins'] text-base font-semibold text-gray-800">
+          <p className="text-base font-semibold text-gray-800">
             Are you sure you want to remove{" "}
             <strong className="capitalize">{itemTitle}</strong>?
           </p>
@@ -79,7 +79,7 @@ function CartView() {
             {/* Shopping Continue Button - Link ব্যবহার করা হয়েছে */}
             <Link to="/tracks" className="flex items-center gap-2">
               <IoIosArrowBack className="h-6 w-6 cursor-pointer font-[600] text-white" />{" "}
-              <span className="font-['Poppins'] text-lg font-[600] text-white">
+              <span className="text-lg font-[600] text-white">
                 Shopping Continue
               </span>
             </Link>
@@ -117,17 +117,17 @@ function CartView() {
                       alt={item.title}
                     />
                     <div className="flex flex-1 flex-col gap-1">
-                      <div className="font-['Poppins'] text-base font-[600] text-[#3B3B3B] capitalize sm:text-lg">
+                      <div className="text-base font-[600] text-[#3B3B3B] capitalize sm:text-lg">
                         {item.title}
                       </div>
-                      <div className="font-['Poppins'] text-sm font-[400] text-neutral-700 capitalize sm:text-base">
+                      <div className="text-sm font-[400] text-neutral-700 capitalize sm:text-base">
                         {item.tags && item.tags.length > 0
                           ? item.tags[0]
                           : "N/A"}
                       </div>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-4">
-                      <div className="text-right font-['Poppins'] text-xs font-[500] text-[#393939] sm:text-sm">
+                      <div className="text-right text-xs font-[500] text-[#393939] sm:text-sm">
                         ${(item.price * item.quantity).toFixed(2)}{" "}
                       </div>
                       <FaEllipsisV className="cursor-pointer text-sm text-[#393939] sm:text-base" />
@@ -233,7 +233,7 @@ function CartView() {
                   type="text"
                   id="expirationDate"
                   defaultValue="mm/yy"
-                  className="mt-1 h-10 w-full rounded-md bg-white p-3 font-['Poppins'] text-xs font-medium text-stone-300 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.25)] focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                  className="mt-1 h-10 w-full rounded-md bg-white p-3 text-xs font-medium text-stone-300 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.25)] focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                 />
               </div>
               <div>
@@ -247,7 +247,7 @@ function CartView() {
                   type="text"
                   id="cvv"
                   defaultValue="123"
-                  className="mt-1 h-10 w-full rounded-md bg-white p-3 font-['Poppins'] text-xs font-medium text-stone-300 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.25)] focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                  className="mt-1 h-10 w-full rounded-md bg-white p-3 text-xs font-medium text-stone-300 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.25)] focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                 />
               </div>
             </div>

@@ -7,6 +7,7 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 
 import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 import { getAllSongs } from "../../../featured/song/trackService";
+import { CartContext } from "../../../context/cart/CartContext";
 
 const TracksView = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,7 +24,7 @@ const TracksView = () => {
   const [isGenresDropdownOpen, setIsGenresDropdownOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
-
+  const { addToCart } = useContext(CartContext);
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
@@ -57,6 +58,7 @@ const TracksView = () => {
   // Add to Cart handler
   const handleAddToCart = (track) => {
     alert(`${track} added to cart!`);
+    addToCart(track);
   };
 
   const filteredTracks = songs.filter((track) => {
@@ -418,7 +420,7 @@ const TracksView = () => {
                           </button>
                           {/* Cart button */}
                           <button
-                            onClick={() => handleAddToCart(track.id)}
+                            onClick={() => addToCart(track.id)}
                             className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
                             aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`}
                           >

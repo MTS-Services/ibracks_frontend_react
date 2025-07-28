@@ -83,7 +83,7 @@ const TotalSongs = () => {
             </div>
             <div className="flex items-center gap-2 text-neutral-200">
               <IoMdTime className="rounded-full text-xl" />
-              <span>{song.duration}</span>
+              <span>{song.time}</span>
             </div>
             <div className="flex items-center justify-end gap-6 text-neutral-200">
               <div className="flex items-center gap-2">

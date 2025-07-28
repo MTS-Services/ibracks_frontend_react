@@ -1,74 +1,6 @@
 import { FaShareAlt, FaThumbsUp } from "react-icons/fa";
 
-const Availabestems = () => {
-  const tracks = [
-    {
-      id: 1,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    {
-      id: 2,
-      title: "NOLSTAGIA",
-      time: "02:59",
-      bpm: "103",
-      tags: ["Afrobeat", "Inspiring"],
-      thumbnail: "/products/cart9.png",
-    },
-    // Repeat or map your tracks as needed...
-  ];
-
+const Availabestems = ({ songs }) => {
   return (
     <section className="">
       <div className="mx-auto w-full max-w-7xl py-16">
@@ -95,7 +27,7 @@ const Availabestems = () => {
 
         {/* Track List */}
         <div className="space-y-4">
-          {tracks.map((track) => (
+          {songs.map((track) => (
             <div
               key={track.id}
               className="grid grid-cols-6 items-center gap-6 border-b border-gray-600 p-4"
