@@ -1,32 +1,72 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../featured/auth/AuthContext";
+import ForgotPasswordModal from "../ForgotPasswordModal";
 
 const LoginView = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
+    useState(false); // New state for modal
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+  const {
+    login,
+    loading: authLoading,
+    error: authError,
+    success: authSuccess,
+    setError: setAuthError,
+    setSuccess: setAuthSuccess,
+  } = useContext(AuthContext);
 
-  const handleChanges = (e) => {
-    const { name } = e.target.value;
-  };
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    console.log("Submit");
+
+    setAuthError(null);
+    setAuthSuccess(null);
+
+    // --- Client-side Validation ---
+    if (!email || !password) {
+      setAuthError("Please enter your email and password.");
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setAuthError("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      const result = await login(email, password, rememberMe);
+
+      if (result.success) {
+        setEmail("");
+        setPassword("");
+        setRememberMe(false);
+
+        navigate("/");
+      } else {
+        // Error already set by AuthContext
+      }
+    } catch (err) {
+      console.error("Login error in LoginView:", err);
+    } finally {
+      // Any cleanup if needed
+    }
+  };
+
+  const openForgotPasswordModal = () => {
+    setIsForgotPasswordModalOpen(true);
+  };
+
+  const closeForgotPasswordModal = () => {
+    setIsForgotPasswordModalOpen(false);
   };
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
+    <div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
+      {/* Background Image Container - Hidden on md (tablet) and smaller screens */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden md:hidden lg:flex">
         <div
           className="relative flex items-center justify-end"
@@ -36,16 +76,17 @@ const LoginView = () => {
           }}
         >
           <img
-            src="/log/loginbg.png"
+            src="/log/loginbg.png" // Ensure this path is correct relative to your public directory
             alt="Background"
             className="h-full w-full object-cover"
           />
         </div>
       </div>
 
+      {/* Content Overlay - This will contain your form and left/right sections */}
       <div className="relative z-10 flex h-full w-full items-center justify-center">
         <div
-          className="bg z-30 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 px-8 py-6 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
+          className="bg z-30 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-y-auto px-8 py-6 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
           style={{
             backgroundColor: "rgba(243, 243, 243, 0.10)",
           }}
@@ -77,62 +118,77 @@ const LoginView = () => {
               >
                 Email
               </label>
-              <div className="w-full">
-                {/* Smaller height and padding for mobile/tablet */}
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
                 <input
                   type="email"
                   id="email"
-                  onChange={handleChanges}
                   placeholder="Enter your email here..."
-                  className="w-full rounded-lg bg-white px-3 py-2.5 text-sm text-neutral-700 focus:outline-none md:text-base"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
                 />
               </div>
             </div>
             {/* Password */}
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
-              {/* Adjusted gap for responsiveness */}
               <label
                 htmlFor="password"
                 className="text-sm font-normal text-white capitalize md:text-base"
               >
                 Password
               </label>
-
-              <div className="w-full">
-                {/* Smaller height and padding for mobile/tablet */}
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
                 <input
                   type="password"
                   id="password"
                   placeholder="Enter your password here..."
-                  className="w-full rounded-lg bg-white px-3 py-2.5 text-sm text-neutral-700 focus:outline-none md:text-base"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
                 />
               </div>
             </div>
             {/* Remember / Forgot */}
             <div className="font-poppins flex w-full items-center justify-between text-sm md:text-base">
-              {/* Smaller text for mobile/tablet */}
               <label className="flex cursor-pointer items-center gap-2 rounded p-2">
                 <input
                   type="checkbox"
                   className="h-4 w-4 rounded-2xl checked:bg-red-500"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <span className="font-poppins text-sm font-normal text-white capitalize md:text-base">
-                  {/* Smaller text for mobile/tablet */}
                   Remember me
                 </span>
               </label>
-              <div className="font-poppins justify-start text-sm font-normal text-white capitalize md:text-base">
-                {/* Smaller text for mobile/tablet */}
+              <button
+                type="button" // Important: use type="button" to prevent form submission
+                onClick={openForgotPasswordModal} // Open the modal on click
+                className="font-poppins justify-start text-sm font-normal text-white capitalize hover:underline focus:outline-none md:text-base"
+              >
                 Forget Password?
-              </div>
+              </button>
             </div>
+
+            {/* Error and Success messages from AuthProvider */}
+            {authError && (
+              <p className="font-poppins self-stretch text-center text-sm text-red-500">
+                {authError}
+              </p>
+            )}
+            {authSuccess && (
+              <p className="font-poppins self-stretch text-center text-sm text-green-500">
+                {authSuccess}
+              </p>
+            )}
+
             {/* Sign In Button */}
             <button
               type="submit"
               className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
+              disabled={authLoading}
             >
-              {/* Smaller height and text for mobile/tablet */}
-              Sign In
+              {authLoading ? "Signing In..." : "Sign In"}
             </button>
           </form>
 
@@ -144,40 +200,33 @@ const LoginView = () => {
           </h6>
           {/* Separator */}
           <div className="my-2 flex w-full items-center gap-2 md:my-4 md:gap-4">
-            {/* Adjusted margin and gap for responsiveness */}
             <div className="h-px flex-1 bg-neutral-200"></div>
-            <span className="font-poppins text-sm text-yellow-200 md:text-base">
-              {/* Smaller text for mobile/tablet */}
+            <span className="font-poppins text-sm text-neutral-200 md:text-base">
               Or Sign in with
             </span>
             <div className="h-px flex-1 bg-neutral-200"></div>
           </div>
 
-          {/* Social */}
+          {/* Social Login Buttons */}
           <div className="flex w-full flex-col gap-3 md:gap-4">
-            {/* Adjusted gap for responsiveness */}
-            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
-              {/* Smaller height and padding for mobile/tablet */}
+            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               <img
-                src="/New folder/google.svg"
-                className="h-5 w-5 md:h-6 md:w-6" // Smaller icon for mobile/tablet
+                src="/New folder/google.svg" // Ensure this path is correct
+                className="h-5 w-5 md:h-6 md:w-6"
                 alt="Google"
               />
               <span className="font-poppins text-sm text-neutral-700 md:text-base">
-                {/* Smaller text for mobile/tablet */}
-                Sign up With Google
+                Sign in With Google
               </span>
             </button>
-            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
-              {/* Smaller height and padding for mobile/tablet */}
+            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               <img
-                src="/New folder/apple.svg"
-                className="h-5 w-5 md:h-6 md:w-6" // Smaller icon for mobile/tablet
+                src="/New folder/apple.svg" // Ensure this path is correct
+                className="h-5 w-5 w-6 md:h-6"
                 alt="Apple"
               />
               <span className="font-poppins text-sm text-neutral-700 md:text-base">
-                {/* Smaller text for mobile/tablet */}
-                Sign up With Apple
+                Sign in With Apple
               </span>
             </button>
           </div>
@@ -185,6 +234,12 @@ const LoginView = () => {
         {/* Right Part - Hidden on md (tablet) and smaller screens */}
         <div className="hidden w-1/2 lg:block"></div>
       </div>
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={isForgotPasswordModalOpen}
+        onClose={closeForgotPasswordModal}
+      />
     </div>
   );
 };
