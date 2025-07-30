@@ -75,9 +75,7 @@ const LoginView = () => {
   };
 
   return (
-    // Changed h-screen to min-h-screen to allow content to extend beyond viewport
     <div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
-      {/* Background Image Container - Hidden on md (tablet) and smaller screens */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden md:hidden lg:flex">
         <div
           className="relative flex items-center justify-end"
@@ -87,18 +85,16 @@ const LoginView = () => {
           }}
         >
           <img
-            src="/log/loginbg.png" // Ensure this path is correct relative to your public directory
+            src="/log/loginbg.png"
             alt="Background"
             className="h-full w-full object-cover"
           />
         </div>
       </div>
 
-      {/* Content Overlay - This will contain your form and left/right sections */}
-      {/* Added overflow-y-auto to enable vertical scrolling for this section */}
       <div className="relative z-10 flex h-full w-full items-center justify-center">
         <div
-          className="bg z-30 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-y-auto px-8 py-6 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16" // Added overflow-y-auto
+          className="bg z-30 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-y-auto px-8 py-6 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
           style={{
             backgroundColor: "rgba(243, 243, 243, 0.10)",
           }}

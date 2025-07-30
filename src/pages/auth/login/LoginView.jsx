@@ -1,11 +1,15 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../featured/auth/AuthContext";
+import ForgotPasswordModal from "../ForgotPasswordModal";
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
+    useState(false); // New state for modal
+
   const {
     login,
     loading: authLoading,
@@ -43,13 +47,21 @@ const LoginView = () => {
 
         navigate("/");
       } else {
-        //
+        // Error already set by AuthContext
       }
     } catch (err) {
       console.error("Login error in LoginView:", err);
     } finally {
-      //
+      // Any cleanup if needed
     }
+  };
+
+  const openForgotPasswordModal = () => {
+    setIsForgotPasswordModalOpen(true);
+  };
+
+  const closeForgotPasswordModal = () => {
+    setIsForgotPasswordModalOpen(false);
   };
 
   return (
@@ -146,9 +158,13 @@ const LoginView = () => {
                   Remember me
                 </span>
               </label>
-              <div className="font-poppins justify-start text-sm font-normal text-white capitalize md:text-base">
+              <button
+                type="button" // Important: use type="button" to prevent form submission
+                onClick={openForgotPasswordModal} // Open the modal on click
+                className="font-poppins justify-start text-sm font-normal text-white capitalize hover:underline focus:outline-none md:text-base"
+              >
                 Forget Password?
-              </div>
+              </button>
             </div>
 
             {/* Error and Success messages from AuthProvider */}
@@ -167,7 +183,7 @@ const LoginView = () => {
             <button
               type="submit"
               className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
-              disabled={authLoading} // AuthProvider এর loading স্টেট ব্যবহার করুন
+              disabled={authLoading}
             >
               {authLoading ? "Signing In..." : "Sign In"}
             </button>
@@ -204,7 +220,7 @@ const LoginView = () => {
             <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               <img
                 src="/New folder/apple.svg" // Ensure this path is correct
-                className="h-5 w-5 md:h-6 md:w-6"
+                className="h-5 w-5 w-6 md:h-6"
                 alt="Apple"
               />
               <span className="font-poppins text-sm text-neutral-700 md:text-base">
@@ -216,6 +232,12 @@ const LoginView = () => {
         {/* Right Part - Hidden on md (tablet) and smaller screens */}
         <div className="hidden w-1/2 lg:block"></div>
       </div>
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={isForgotPasswordModalOpen}
+        onClose={closeForgotPasswordModal}
+      />
     </div>
   );
 };

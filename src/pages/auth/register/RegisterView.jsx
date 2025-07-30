@@ -100,7 +100,7 @@ const RegisterView = () => {
             backgroundColor: "rgba(243, 243, 243, 0.10)",
           }}
         >
-          <div className="mx-auto flex justify-center">
+          <div className="mx-auto flex justify-center pt-8 sm:pt-1">
             <div className="">
               <div className="flex items-center">
                 <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">

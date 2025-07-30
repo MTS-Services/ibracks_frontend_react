@@ -1,6 +1,5 @@
 import { BsMusicNoteList } from "react-icons/bs";
 import {
-  FaHeart,
   FaRandom,
   FaStepBackward,
   FaStepForward,

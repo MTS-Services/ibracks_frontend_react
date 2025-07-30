@@ -6,6 +6,10 @@ import { HiMiniArrowLeftStartOnRectangle } from "react-icons/hi2";
 
 import { CartContext } from "../../../utils/CartContextDefinition";
 import { AuthContext } from "../../../featured/auth/AuthContext";
+import { FaUserTie } from "react-icons/fa6";
+import { FaShoppingBag } from "react-icons/fa";
+import { GrProductHunt } from "react-icons/gr";
+import { RiCustomerService2Fill, RiProductHuntLine } from "react-icons/ri";
 
 const navLinks = [
   { label: "About", path: "/about" },
@@ -97,7 +101,7 @@ const NavStyle = () => {
                 />
                 {/* Profile Dropdown Menu */}
                 <div
-                  className={`absolute right-0 z-30 mt-2 w-52 origin-top-right rounded-lg border border-[rgba(239,166,69,0.2)] bg-[#16021A] py-1 shadow-lg transition-all duration-300 ease-out ${isProfileMenuOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"}`}
+                  className={`absolute right-0 z-30 mt-2 w-52 origin-top-right rounded-lg border border-[rgba(239,166,69,0.2)] bg-[#16021A] p-2 py-1 shadow-xl transition-all duration-300 ease-out ${isProfileMenuOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"}`}
                 >
                   {/* User Info Section */}
                   <div className="border-b border-[rgba(239,166,69,0.3)] px-4 py-3 text-white">
@@ -110,39 +114,43 @@ const NavStyle = () => {
                   {/* Navigation Links in Dropdown */}
                   <Link
                     to="/account"
-                    className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:bg-purple-800"
+                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
                     onClick={() => setIsProfileMenuOpen(false)}
                   >
-                    View Profile
+                    <FaUserTie className="h-5 w-5 text-[#EFA645]" />
+                    View Accunt
                   </Link>
 
                   <Link
-                    to="/my-classes"
-                    className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:bg-purple-800"
+                    to="/shop-cart"
+                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
                     onClick={() => setIsProfileMenuOpen(false)}
                   >
-                    My Classes
+                    {" "}
+                    <FaShoppingBag className="h-4 w-4 text-[#EFA645]" />
+                    My Cart
                   </Link>
                   <Link
-                    to="/bookmark"
-                    className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:bg-purple-800"
+                    to="/products"
+                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
                     onClick={() => setIsProfileMenuOpen(false)}
                   >
-                    Bookmark
+                    <RiProductHuntLine className="h-5 w-5 text-[#EFA645]" /> All
+                    Porducts
                   </Link>
-
                   <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:bg-purple-800"
+                    to="/service"
+                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
                     onClick={() => setIsProfileMenuOpen(false)}
                   >
-                    Settings
+                    <RiCustomerService2Fill className="h-4 w-4 text-[#EFA645]" />{" "}
+                    Services
                   </Link>
 
                   {/* Logout Button */}
                   <button
                     onClick={handleLogout}
-                    className="block w-full items-center border-t border-[rgba(239,166,69,0.3)] px-4 py-2 text-left text-sm text-red-400 transition-colors duration-200 hover:bg-purple-800"
+                    className="block w-full items-center border-t border-[rgba(239,166,69,0.3)] px-4 py-2 text-left text-sm font-[600] text-red-400 transition-colors duration-200 hover:bg-purple-800"
                   >
                     <p className="flex items-center gap-1 text-base font-bold text-[#EFA645]">
                       Logout{" "}
