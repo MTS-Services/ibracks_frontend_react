@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { HiOutlineShoppingBag, HiTrash, HiX } from "react-icons/hi";
 import { removeItem, clearCart } from "../../featured/cart/cartSlice";
+import { Link } from "react-router-dom";
 
 const CartDropdown = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -9,6 +10,7 @@ const CartDropdown = ({ onClose }) => {
     (state) => state.cart,
   );
   console.log(items);
+  console.log(totalPrice);
   const handleRemoveItem = (itemId) => {
     dispatch(removeItem(itemId));
     alert("removed id " + itemId);
@@ -56,18 +58,18 @@ const CartDropdown = ({ onClose }) => {
                 <div key={item.id} className="p-2 hover:bg-gray-50">
                   <div className="flex items-center gap-3">
                     <img
-                      src={item.thumbnail}
+                      src={item.songThumbnail}
                       alt=""
                       className="w-12 rounded-lg"
                     />
                     <div className="min-w-0 flex-1">
                       <h4 className="truncate text-sm font-medium text-gray-900">
-                        {item.name}
+                        {item.songTitle} ({item.planTier} licens)
                       </h4>
 
                       <div className="mt-1 flex items-center justify-between">
                         <p className="text-sm font-semibold text-gray-900">
-                          ${item.totalPrice.toFixed(2)}
+                          ${item.totalPrice}
                         </p>
                       </div>
                     </div>
@@ -89,7 +91,7 @@ const CartDropdown = ({ onClose }) => {
               <div className="mb-2 flex items-center justify-between">
                 <span className="font-semibold text-gray-900">Total:</span>
                 <span className="text-lg font-bold text-orange-600">
-                  ${totalPrice.toFixed(2)}
+                  ${totalPrice}
                 </span>
               </div>
 
@@ -100,12 +102,13 @@ const CartDropdown = ({ onClose }) => {
                 >
                   Clear
                 </button>
-                <button
+                <Link
+                  to="/check-out"
                   onClick={handleCheckout}
-                  className="flex-1 rounded-lg bg-gradient-to-r from-orange-300 to-yellow-500 px-3 py-2 text-xs font-medium text-white transition-colors hover:from-orange-600 hover:to-yellow-600"
+                  className="flex-1 rounded-lg bg-gradient-to-r from-orange-300 to-yellow-500 px-3 py-2 text-center text-xs font-medium text-white transition-colors hover:from-orange-600 hover:to-yellow-600"
                 >
                   Checkout
-                </button>
+                </Link>
               </div>
             </div>
           </>

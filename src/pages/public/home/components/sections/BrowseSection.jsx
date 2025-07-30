@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
 import { FaShareAlt } from "react-icons/fa";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineArrowOutward } from "react-icons/md";
 
-const TrackList = ({ songs }) => {
-  // Add to Cart handler
-  const handleAddToCart = (track) => {
-    alert(`${track} added to cart!`);
+import Modal from "../../../../../components/ui/Modal";
+import LicensPlan from "../../../../../components/common/LicensPlan";
+
+const BrowseSection = ({ songs, plans }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+  const cartItems = useSelector((state) => state.cart.items);
+
+  // ========================================================
+  // ✅ Check if ANY license for this song is in the cart
+  // Uses `songId` field (not composite ID)
+  // ========================================================
+  const isSongInCart = (songId) => {
+    return cartItems.some((item) => item.songId === songId);
+  };
+
+  // ==================================
+  // Open License Modal
+  // ==================================
+  const handleToggle = (track) => {
+    setSelectedSong(track);
+    setIsOpen(true);
   };
 
   return (
@@ -50,10 +71,8 @@ const TrackList = ({ songs }) => {
 
                   {/* Time */}
                   <td className="px-4 py-4 text-neutral-400">{track.time}</td>
-
                   {/* BPM */}
                   <td className="px-4 py-4 text-neutral-400">{track.bpm}</td>
-
                   {/* Tags */}
                   <td className="px-4 py-4">
                     <div className="flex flex-wrap gap-2">
@@ -71,15 +90,40 @@ const TrackList = ({ songs }) => {
                   {/* Actions */}
                   <td className="px-4 py-4">
                     <div className="flex justify-end gap-2">
+                      {/* ================ Modal ===================== */}
+                      <Modal
+                        isOpen={isOpen && selectedSong?.id === track.id}
+                        onClose={() => setIsOpen(false)}
+                        title="Choose Your License"
+                        size="lg"
+                      >
+                        <LicensPlan selectedSong={selectedSong} plans={plans} />
+                      </Modal>
+                      {/* ================ End ===================== */}
                       <button className="rounded-md bg-zinc-800 p-2 transition hover:bg-zinc-700">
                         <FaShareAlt className="text-base text-white" />
                       </button>
+
                       <button
-                        onClick={() => handleAddToCart(track.id)}
-                        className="flex items-center gap-2 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-3 py-2 text-sm font-semibold text-black"
+                        onClick={() => handleToggle(track)}
+                        disabled={isSongInCart(track.id)}
+                        className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
+                          isSongInCart(track.id)
+                            ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                            : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
+                        }`}
+                        aria-label={
+                          isSongInCart(track.id)
+                            ? `${track.title} already in cart`
+                            : `Add ${track.title} to cart for $${track.price.toFixed(2)}`
+                        }
                       >
-                        <HiOutlineShoppingBag />
-                        <span>$30.00</span>
+                        <HiOutlineShoppingBag className="text-xs sm:text-sm" />
+                        <span>
+                          {isSongInCart(track.id)
+                            ? "Added"
+                            : `$${track.price.toFixed(2)}`}
+                        </span>
                       </button>
                     </div>
                   </td>
@@ -131,13 +175,28 @@ const TrackList = ({ songs }) => {
                     <button className="rounded-md bg-zinc-800 p-2 transition hover:bg-zinc-700">
                       <FaShareAlt className="text-base text-white" />
                     </button>
-                    {/* Cart button */}
+
+                    {/* License Selection Button */}
                     <button
-                      onClick={() => handleAddToCart(track.id)}
-                      className="flex items-center gap-2 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-3 py-2 text-sm font-semibold text-black"
+                      onClick={() => handleToggle(track)}
+                      disabled={isSongInCart(track.id)}
+                      className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
+                        isSongInCart(track.id)
+                          ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                          : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
+                      }`}
+                      aria-label={
+                        isSongInCart(track.id)
+                          ? `${track.title} already in cart`
+                          : `Add ${track.title} to cart for $${track.price.toFixed(2)}`
+                      }
                     >
-                      <HiOutlineShoppingBag className="text-sm" />
-                      <span>$30.00</span>
+                      <HiOutlineShoppingBag className="text-xs sm:text-sm" />
+                      <span>
+                        {isSongInCart(track.id)
+                          ? "Added"
+                          : `$${track.price.toFixed(2)}`}
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -148,14 +207,17 @@ const TrackList = ({ songs }) => {
 
         {/* Browse All Button */}
         <div className="mt-10 flex justify-center">
-          <button className="flex items-center gap-2 rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-6 py-3 font-medium text-black">
+          <Link
+            to="/tracks"
+            className="flex items-center gap-2 rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-6 py-3 font-medium text-black"
+          >
             Browse All Tracks
             <MdOutlineArrowOutward size={20} />
-          </button>
+          </Link>
         </div>
       </div>
     </section>
   );
 };
 
-export default TrackList;
+export default BrowseSection;

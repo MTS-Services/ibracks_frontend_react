@@ -15,25 +15,17 @@ const cartSlice = createSlice({
       console.log(newItem);
       const existingItem = state.items.find((item) => item.id === newItem.id);
 
-      state.totalQuantity++;
+      state.totalQuantity += newItem.quantity;
 
       if (!existingItem) {
-        // Add new item to cart
-        state.items.push({
-          id: newItem.id,
-          name: newItem.title,
-          price: newItem.price,
-          thumbnail: newItem.thumbnail,
-          quantity: 1,
-          totalPrice: newItem.price,
-        });
+        state.items.push({ ...newItem });
       } else {
-        // Increase quantity of existing item
-        existingItem.quantity++;
-        existingItem.totalPrice += newItem.price;
+        // If already in cart, increase quantity
+        existingItem.quantity += newItem.quantity;
+        existingItem.totalPrice += newItem.totalPrice; // or newItem.price * newItem.quantity
       }
 
-      state.totalPrice += newItem.price;
+      state.totalPrice += newItem.price * newItem.quantity;
     },
 
     removeItem: (state, action) => {

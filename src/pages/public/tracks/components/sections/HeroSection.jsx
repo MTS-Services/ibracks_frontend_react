@@ -6,7 +6,6 @@ import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 import { IoMdArrowDroprightCircle } from "react-icons/io";
 
 const HeroSection = ({ songs }) => {
-  console.log(songs);
   return (
     <div className="mx-auto flex max-w-7xl items-center justify-center md:px-6 lg:px-8">
       {/* Left Navigation */}

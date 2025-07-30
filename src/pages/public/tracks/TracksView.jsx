@@ -8,6 +8,9 @@ import { LuSearch } from "react-icons/lu";
 import HeroSection from "./components/sections/HeroSection";
 import { getAllSongs } from "../../../featured/song/trackService";
 import { addItem } from "../../../featured/cart/cartSlice";
+import LicensPlan from "../../../components/common/LicensPlan";
+import Modal from "../../../components/ui/Modal";
+import { getAllPlans } from "../../../featured/plans/planService";
 
 const TracksView = () => {
   const dispatch = useDispatch();
@@ -27,9 +30,13 @@ const TracksView = () => {
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
 
-  const cartItems = useSelector((state) => state.cart.items);
-  console.log(cartItems);
   const [songs, setSongs] = useState([]);
+  const [plans, setPlans] = useState([]);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+
+  const cartItems = useSelector((state) => state.cart.items);
 
   // ==================================
   // API Call - for all songs
@@ -40,6 +47,9 @@ const TracksView = () => {
         const data = await getAllSongs();
         const limitedData = data.slice(0, 10);
         setSongs(limitedData);
+
+        const plans = await getAllPlans();
+        setPlans(plans);
       } catch (err) {
         console.error(err, "Could not load songs");
       }
@@ -47,17 +57,17 @@ const TracksView = () => {
   }, []);
 
   // ==================================
-  // Handle Add to Cart - for all songs
+  // Open License Modal
   // ==================================
-  // Enhanced handleAddToCart function
-  const handleAddToCart = (song) => {
-    dispatch(addItem(song));
-    alert(`${song.title}: added to cart!`);
+  const handleToggle = (track) => {
+    setSelectedSong(track);
+    setIsOpen(true);
+    console.log(track);
   };
 
   // Check if item is already in cart
-  const isItemInCart = (trackId) => {
-    return cartItems.some((item) => item.id === trackId);
+  const isSongInCart = (songId) => {
+    return cartItems.some((item) => item.songId === songId);
   };
 
   // ==================================
@@ -66,21 +76,18 @@ const TracksView = () => {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
-
   // ==================================
   // Handle Search - for Filter
   // ==================================
   const handleSearchClick = () => {
     console.log("Searching for: ", searchTerm);
   };
-
   // ==================================
   // Handle Change Dropdown - Filter
   // ==================================
   const handleDropdownChange = (e, setSelectedValue) => {
     setSelectedValue(e.target.value);
   };
-
   // ==================================
   // Handle Dropdown - for Filter
   // ==================================
@@ -438,6 +445,17 @@ const TracksView = () => {
                       {/* Actions */}
                       <td className="py-2 sm:py-4">
                         <div className="flex justify-end gap-1 md:gap-2">
+                          <Modal
+                            isOpen={isOpen && selectedSong?.id === track.id}
+                            onClose={() => setIsOpen(false)}
+                            title="Choose Your License"
+                            size="lg"
+                          >
+                            <LicensPlan
+                              selectedSong={selectedSong}
+                              plans={plans}
+                            />
+                          </Modal>
                           {/* Share button */}
                           <button
                             className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
@@ -446,32 +464,24 @@ const TracksView = () => {
                             <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
                           </button>
                           {/* Cart button */}
-                          {/* <button
-                            onClick={() => handleAddToCart(track)}
-                            className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
-                            aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`}
-                          >
-                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
-                            <span>${track.price.toFixed(2)}</span>
-                          </button> */}
-                          {/* Cart button - now disabled if item exists */}
+
                           <button
-                            onClick={() => handleAddToCart(track)}
-                            disabled={isItemInCart(track.id)}
+                            onClick={() => handleToggle(track)}
+                            disabled={isSongInCart(track.id)}
                             className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
-                              isItemInCart(track.id)
+                              isSongInCart(track.id)
                                 ? "cursor-not-allowed bg-gray-300 text-gray-500"
                                 : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
                             }`}
                             aria-label={
-                              isItemInCart(track.id)
+                              isSongInCart(track.id)
                                 ? `${track.title} already in cart`
                                 : `Add ${track.title} to cart for $${track.price.toFixed(2)}`
                             }
                           >
                             <HiOutlineShoppingBag className="text-xs sm:text-sm" />
                             <span>
-                              {isItemInCart(track.id)
+                              {isSongInCart(track.id)
                                 ? "Added"
                                 : `$${track.price.toFixed(2)}`}
                             </span>

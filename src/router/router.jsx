@@ -5,7 +5,6 @@ import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
 import ServicesView from "../pages/public/services/ServicesView";
 import CartView from "../pages/public/cart/CartView";
-import CheckOutView from "../pages/public/checkout/CheckOut";
 import TracksView from "../pages/public/tracks/TracksView";
 import ProductsView from "../pages/public/products/ProductsView";
 import VideosView from "../pages/public/videos/VideosView";
@@ -21,6 +20,7 @@ import TotalSongs from "../pages/private/songs/TotalSongs";
 import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
 import NotFoundView from "../pages/error/NotFoundView";
 import CartTestView from "../pages/public/cart/CartTestView";
+import CheckoutView from "../pages/public/checkout/CheckoutView";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -54,7 +54,7 @@ const AppRoutes = createBrowserRouter([
       },
       {
         path: "/check-out",
-        element: <CheckOutView />,
+        element: <CheckoutView />,
       },
       {
         path: "/tracks",

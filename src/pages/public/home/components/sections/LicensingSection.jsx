@@ -1,7 +1,6 @@
 import { FaCheck } from "react-icons/fa";
-import planData from "/public/data/plan";
 
-const LicensingSection = () => {
+const LicensingSection = ({ plans }) => {
   return (
     <section className="bg-gradient-to-b from-[#150618] to-[#150620] px-4 py-16">
       <div className="mx-auto max-w-7xl">
@@ -12,7 +11,7 @@ const LicensingSection = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {planData.map((plan) => (
+          {plans.map((plan) => (
             <div
               key={plan.id}
               className="flex h-full flex-col justify-between rounded-2xl border border-gray-500 bg-[#0A030B] p-5 text-white sm:p-6"

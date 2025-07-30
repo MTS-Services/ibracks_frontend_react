@@ -1,6 +1,5 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
-import ReleasesSection from "./ReleasesSection";
 
 const HeroSection = () => {
   return (
