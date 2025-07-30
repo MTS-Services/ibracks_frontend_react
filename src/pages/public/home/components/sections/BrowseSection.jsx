@@ -59,31 +59,34 @@ const BrowseSection = ({ songs, plans }) => {
                   <td className="py-4" colSpan={2}>
                     <div className="flex items-center gap-4">
                       <img
-                        src={track.thumbnail}
+                        src={track.coverImage}
                         alt="Album"
                         className="h-16 w-16 rounded-sm object-cover"
                       />
                       <span className="text-base text-neutral-300">
-                        {track.title}
+                        {track.description}
                       </span>
                     </div>
                   </td>
 
                   {/* Time */}
-                  <td className="px-4 py-4 text-neutral-400">{track.time}</td>
+                  <td className="px-4 py-4 text-neutral-400">
+                    {track.duration}
+                  </td>
                   {/* BPM */}
                   <td className="px-4 py-4 text-neutral-400">{track.bpm}</td>
                   {/* Tags */}
                   <td className="px-4 py-4">
                     <div className="flex flex-wrap gap-2">
-                      {track.tags.map((tag, i) => (
+                      {track.musicTag}
+                      {/* {track.musicTag.map((tag, i) => (
                         <span
                           key={i}
                           className="inline-block rounded-full bg-black/20 px-3 py-1 text-xs text-gray-400 capitalize"
                         >
                           {tag}
                         </span>
-                      ))}
+                      ))} */}
                     </div>
                   </td>
 
@@ -115,14 +118,14 @@ const BrowseSection = ({ songs, plans }) => {
                         aria-label={
                           isSongInCart(track.id)
                             ? `${track.title} already in cart`
-                            : `Add ${track.title} to cart for $${track.price.toFixed(2)}`
+                            : `Add ${track.title} to cart for $${track.pricing.toFixed(2)}`
                         }
                       >
                         <HiOutlineShoppingBag className="text-xs sm:text-sm" />
                         <span>
                           {isSongInCart(track.id)
                             ? "Added"
-                            : `$${track.price.toFixed(2)}`}
+                            : `$${track.pricing.toFixed(2)}`}
                         </span>
                       </button>
                     </div>
@@ -143,7 +146,7 @@ const BrowseSection = ({ songs, plans }) => {
               <div className="flex items-start gap-4">
                 {/* Left: Image */}
                 <img
-                  src={track.thumbnail}
+                  src={track.coverImage}
                   alt="Album"
                   className="h-40 w-40 flex-shrink-0 rounded-sm object-cover"
                 />
@@ -151,22 +154,22 @@ const BrowseSection = ({ songs, plans }) => {
                 {/* Right: Content */}
                 <div className="min-w-0 flex-1">
                   <h3 className="truncate text-sm font-medium text-white">
-                    {track.title}
+                    {track.description}
                   </h3>
 
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {track.tags.map((tag, i) => (
+                    {/* {track.tags.map((tag, i) => (
                       <span
                         key={i}
                         className="inline-block rounded-full bg-black/30 px-2 py-1 text-xs text-gray-300 capitalize"
                       >
                         {tag}
                       </span>
-                    ))}
+                    ))} */}
                   </div>
 
                   <div className="mt-3 flex gap-4 text-sm text-neutral-400">
-                    <span>⏱ {track.time}</span>
+                    <span>⏱ {track.duration}</span>
                     <span>.bpm {track.bpm}</span>
                   </div>
 
@@ -188,14 +191,14 @@ const BrowseSection = ({ songs, plans }) => {
                       aria-label={
                         isSongInCart(track.id)
                           ? `${track.title} already in cart`
-                          : `Add ${track.title} to cart for $${track.price.toFixed(2)}`
+                          : `Add ${track.title} to cart for $${track.pricing.toFixed(2)}`
                       }
                     >
                       <HiOutlineShoppingBag className="text-xs sm:text-sm" />
                       <span>
                         {isSongInCart(track.id)
                           ? "Added"
-                          : `$${track.price.toFixed(2)}`}
+                          : `$${track.pricing.toFixed(2)}`}
                       </span>
                     </button>
                   </div>

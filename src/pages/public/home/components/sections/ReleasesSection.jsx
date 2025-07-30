@@ -4,12 +4,12 @@ import { FaPause, FaPlay } from "react-icons/fa";
 import { FiPlay } from "react-icons/fi";
 import {
   togglePlayback,
-  pausePlayback,
   stopPlayback,
 } from "../../../../../featured/song/playingSlice";
 
 const ReleasesSection = ({ songs }) => {
   const dispatch = useDispatch();
+
   const { currentlyPlaying, isPlaying } = useSelector(
     (state) => state.audioPlayer,
   );
@@ -67,7 +67,7 @@ const ReleasesSection = ({ songs }) => {
               <div key={songId} className="flex flex-col">
                 <div className="group relative">
                   <img
-                    src={song.thumbnail}
+                    src={song.coverImage}
                     alt={song.title}
                     className="aspect-square w-full rounded border border-gray-800 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -84,7 +84,7 @@ const ReleasesSection = ({ songs }) => {
                   {/* Audio element for each song */}
                   <audio
                     ref={(el) => (audioRefs.current[songId] = el)}
-                    src={song.src}
+                    src={song.audioFile}
                     onEnded={() => handleAudioEnded(songId)}
                     onPause={() => {
                       // Don't dispatch pause if it's intentional

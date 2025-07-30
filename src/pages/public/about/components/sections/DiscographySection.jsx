@@ -2,103 +2,28 @@ import { FiPlusCircle } from "react-icons/fi";
 import { MdPlayArrow } from "react-icons/md";
 import { RxBorderDotted } from "react-icons/rx";
 
-const albumsData = [
-  {
-    id: 1,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#833F00",
-    previewColor: "#581E00",
-  },
-  {
-    id: 2,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#103870",
-    previewColor: "#0B2E66",
-  },
-  {
-    id: 3,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#932A31",
-    previewColor: "#5C191D",
-  },
-  {
-    id: 4,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#930077",
-    previewColor: "#61004E",
-  },
-  {
-    id: 5,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#535353",
-    previewColor: "#3B3B3B",
-  },
-  {
-    id: 6,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#9F0000",
-    previewColor: "#570202",
-  },
-  {
-    id: 7,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#005970",
-    previewColor: "#00597D",
-  },
-  {
-    id: 8,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#922D20",
-    previewColor: "#581E00",
-  },
-  {
-    id: 9,
-    artist: "Atele",
-    title: "Lasmid",
-    imageUrl: "/aboutpage/cart1.png",
-    backgroundColor: "#003058",
-    previewColor: "#004C8B",
-  },
-];
-
 const AboutDiscography = ({ album }) => {
-  const { artist, title, thumbnail, backgroundColor, previewColor } = album;
+  const { title, coverImage, backgroundColor, previewColor } = album;
 
   return (
     <div
-      className="flex h-28 w-full overflow-hidden rounded-[10px] shadow-lg sm:max-w-sm md:max-w-xs lg:max-w-sm xl:max-w-md"
+      className="flex h-28 w-full overflow-hidden rounded-[10px] border shadow-lg sm:max-w-sm md:max-w-xs lg:max-w-sm xl:max-w-md"
       style={{ backgroundColor: backgroundColor }}
     >
       {/* Image Section */}
       <div className="flex-shrink-0 px-2 pt-2">
         <img
           className="h-20 w-20 rounded object-cover sm:h-24 sm:w-24"
-          src={thumbnail}
-          alt={`${artist}`}
+          src={coverImage}
+          alt={`${title}`}
         />
       </div>
 
-      {/* Content Section (Artist, Title, Preview, Icons) */}
+      {/* Content Section (title, Title, Preview, Icons) */}
       <div className="flex flex-grow flex-col p-3 pl-0">
         <div>
           <h1 className="truncate pr-2 text-base font-bold text-white capitalize">
-            {artist}
+            {title}
           </h1>
           <div className="truncate pr-2 text-sm font-normal text-white">
             {title}

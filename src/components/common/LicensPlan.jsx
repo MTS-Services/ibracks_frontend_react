@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../../featured/cart/cartSlice";
 import { HiOutlineShoppingBag, HiCheck } from "react-icons/hi";
+import { FaCheck } from "react-icons/fa";
 
 const LicensPlan = ({ selectedSong, plans }) => {
   const dispatch = useDispatch();
@@ -36,9 +37,9 @@ const LicensPlan = ({ selectedSong, plans }) => {
       id: `${selectedSong.id}-license-${plan.id}`,
       songId: selectedSong.id,
       songTitle: selectedSong.title,
-      songThumbnail: selectedSong.thumbnail,
+      songThumbnail: selectedSong.coverImage,
       planId: plan.id,
-      planTier: plan.tier,
+      planTier: plan.name,
       planDescription: plan.description,
       price,
       quantity: 1,
@@ -48,7 +49,7 @@ const LicensPlan = ({ selectedSong, plans }) => {
     dispatch(addItem(cartItem));
     setSelectedPlanId(planId);
 
-    alert(`✅ Added: ${selectedSong.title} (${plan.tier})`);
+    alert(`✅ Added: ${selectedSong.title} (${plan.name})`);
   };
 
   if (!selectedSong || !plans?.length) {
@@ -88,6 +89,7 @@ const LicensPlan = ({ selectedSong, plans }) => {
                 Added
               </div>
             )}
+
             {plan.popular && !isAdded && (
               <div className="absolute top-4 right-4 rounded-full bg-yellow-500 px-3 py-1 text-xs font-bold text-black">
                 Popular
@@ -96,15 +98,24 @@ const LicensPlan = ({ selectedSong, plans }) => {
 
             {/* Tier */}
             <h3
-              className={`mb-2 text-xl font-bold ${isAdded ? "text-green-100" : isSelected ? "text-yellow-100" : "text-white"} `}
+              className={`mb-2 text-xl font-bold text-yellow-500 capitalize ${isAdded ? "text-green-100" : isSelected ? "text-yellow-100" : "text-white"} `}
             >
-              {plan.tier}
+              {plan.name}
             </h3>
 
             {/* Description */}
-            <p className="mb-5 text-sm leading-relaxed text-gray-300">
+            <p className="mb-5 text-sm leading-relaxed text-gray-400">
               {plan.description}
             </p>
+
+            <div className="mb-4 flex flex-col gap-2 text-sm text-neutral-400">
+              {plan.features.map((feature, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <FaCheck className="min-w-[1.2rem] flex-shrink-0 text-[#A1A1A1]" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
 
             {/* Price */}
             <div

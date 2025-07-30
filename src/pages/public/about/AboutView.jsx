@@ -1,22 +1,25 @@
+import { useEffect, useState } from "react";
+
 import HeroSection from "./components/sections/HeroSection";
 import ApartSection from "./components/sections/ApartSection";
 import DiscographySection from "./components/sections/DiscographySection";
-import { useEffect, useState } from "react";
-import { getAllSongs } from "../../../featured/song/trackService";
+
+import axios from "../../../utils/axiosInstance";
 
 const AboutView = () => {
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllSongs();
-        const limitedData = data.slice(0, 6);
-        setSongs(limitedData);
-      } catch (err) {
-        console.error(err, "Could not load songs");
+        const res = await axios.get("/songs/published?limit=6");
+
+        setSongs(res.data.data);
+      } catch (error) {
+        console.log(error);
       }
-    })();
+    };
+    fetchData();
   }, []);
 
   return (

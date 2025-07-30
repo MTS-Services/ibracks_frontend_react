@@ -1,8 +1,10 @@
-import { FaTrashAlt, FaEllipsisV, FaArrowRight } from "react-icons/fa";
+import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
+import { FaTrashAlt, FaArrowRight } from "react-icons/fa";
 import { clearCart, removeItem } from "../../../featured/cart/cartSlice";
-import { useState } from "react";
+
+import axios from "../../../utils/axiosInstance";
 
 function CheckoutView() {
   const dispatch = useDispatch();
@@ -21,10 +23,10 @@ function CheckoutView() {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-  const shipping = items.length > 0 ? 4.0 : 0;
+  const shipping = items.length > 0 ? 0.0 : 0;
   const total = subtotal + shipping;
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (items.length === 0) {
       alert("Your cart is empty. Add some licenses first.");
       return;
@@ -35,29 +37,29 @@ function CheckoutView() {
       return;
     }
 
-    // Extract songId and licenseId from item IDs like "1-license-2"
+    // ✅ Extract songId and licenseId (supports alphanumeric or UUID)
     const orderDetails = items.map((item) => {
-      const match = item.id.match(/^(\d+)-license-(\d+)$/);
+      const match = item.id.match(/^(.+)-license-(.+)$/);
       if (!match) {
         throw new Error(`Invalid item ID format: ${item.id}`);
       }
-      const songId = match[1]; // e.g., "1"
-      const licenseId = match[2]; // e.g., "2"
+      const songId = match[1];
+      const licenseId = match[2];
       return { songId, licenseId };
     });
 
-    // Generate a transaction ID (in real app, this comes from Stripe/etc.)
+    // 🧾 Generate a fake transaction ID for demo/testing
     const transactionId = `txn_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
 
-    // Build the API-compatible order payload
+    // 📨 Final payload to send to backend
     const apiOrderPayload = {
       orderDetails,
       paymentMethod: "CREDIT_CARD",
       transactionId,
       metadata: {
-        gateway: "stripe", // or whatever you're using
+        gateway: "stripe", // mock or real gateway
         currency: "USD",
-        cardLast4: cardNumber.slice(-4), // Optional: useful for records
+        cardLast4: cardNumber.slice(-4),
         cardExpiry: expiry,
         cardholderName: cardName,
         totalAmount: total,
@@ -65,9 +67,18 @@ function CheckoutView() {
       },
     };
 
-    alert(`✅ Order placed successfully!\nTotal: $${total.toFixed(2)}`);
-    console.log("Order confirmed:", apiOrderPayload);
-    dispatch(clearCart()); // Clear cart after success
+    try {
+      const response = await axios.post("/payments/orders", apiOrderPayload);
+      console.log("✅ Order submitted:", response.data);
+      alert(`🎉 Order placed successfully!\nTotal: $${total.toFixed(2)}`);
+      dispatch(clearCart());
+    } catch (error) {
+      console.error(
+        "❌ Failed to place order:",
+        error?.response?.data || error.message,
+      );
+      alert("Something went wrong while placing the order.");
+    }
   };
 
   // Handlers
@@ -148,7 +159,7 @@ function CheckoutView() {
                     {item.songTitle}
                   </div>
                   <div className="text-base font-normal text-neutral-700 capitalize">
-                    {item.planTier} License
+                    {item.planTier}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -290,14 +301,6 @@ function CheckoutView() {
             <div className="flex justify-between text-sm">
               <span className="text-white">Subtotal</span>
               <span className="text-white">${subtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-white">Shipping</span>
-              <span className="text-white">${shipping.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between font-semibold">
-              <span className="text-white">Total (Tax incl.)</span>
-              <span className="text-white">${total.toFixed(2)}</span>
             </div>
           </div>
 

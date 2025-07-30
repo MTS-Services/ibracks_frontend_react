@@ -9,8 +9,7 @@ const CartDropdown = ({ onClose }) => {
   const { items, totalQuantity, totalPrice } = useSelector(
     (state) => state.cart,
   );
-  console.log(items);
-  console.log(totalPrice);
+
   const handleRemoveItem = (itemId) => {
     dispatch(removeItem(itemId));
     alert("removed id " + itemId);
@@ -60,11 +59,11 @@ const CartDropdown = ({ onClose }) => {
                     <img
                       src={item.songThumbnail}
                       alt=""
-                      className="w-12 rounded-lg"
+                      className="h-12 w-12 rounded-lg object-cover"
                     />
                     <div className="min-w-0 flex-1">
                       <h4 className="truncate text-sm font-medium text-gray-900">
-                        {item.songTitle} ({item.planTier} licens)
+                        {item.songTitle} ({item.planTier})
                       </h4>
 
                       <div className="mt-1 flex items-center justify-between">

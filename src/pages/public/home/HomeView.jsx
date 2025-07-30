@@ -9,6 +9,8 @@ import {
   ServiceSection,
 } from "./components/sections/index";
 
+import axios from "../../../utils/axiosInstance";
+
 import { getAllSongs } from "../../../featured/song/trackService";
 import { getAllPlans } from "../../../featured/plans/planService";
 
@@ -20,19 +22,20 @@ const HomeView = () => {
   // console.log("Plans: ", plans);
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const songs = await getAllSongs();
-        const limitedData = songs.slice(0, 6);
+        const res = await axios.get("/songs/published?limit=6");
+        console.log(res.data.data);
+        setSongs(res.data.data);
 
-        setSongs(limitedData);
-
-        const plans = await getAllPlans();
-        setPlans(plans);
-      } catch (err) {
-        console.error(err, "Could not load songs");
+        const ress = await axios.get("/licenses");
+        console.log(ress.data.data);
+        setPlans(ress.data.data);
+      } catch (error) {
+        console.log(error);
       }
-    })();
+    };
+    fetchData();
   }, []);
 
   return (

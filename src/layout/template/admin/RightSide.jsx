@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaCrown } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
-const recentUploadsData = [
+const recentData = [
   {
     title: "Perfect",
     artist: "Ed Sheeran",
@@ -46,9 +46,25 @@ const recentUploadsData = [
   },
 ];
 
+import axios from "../../../utils/axiosInstance";
+
 const RightSide = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [recentUploadsData, setRecentUploadsData] = useState([]);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("/songs/published?limit=6");
+        console.log(res.data.data);
+        setRecentUploadsData(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -112,10 +128,10 @@ const RightSide = () => {
         </div>
         <div className="space-y-4">
           {recentUploadsData.map((song) => (
-            <div key={song.title} className="flex items-center justify-between">
+            <div key={song.id} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img
-                  src={song.albumArt}
+                  src={song.coverImage}
                   alt={song.title}
                   className="h-11 w-11 rounded-lg"
                 />

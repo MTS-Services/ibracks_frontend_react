@@ -11,6 +11,7 @@ import { addItem } from "../../../featured/cart/cartSlice";
 import LicensPlan from "../../../components/common/LicensPlan";
 import Modal from "../../../components/ui/Modal";
 import { getAllPlans } from "../../../featured/plans/planService";
+import axios from "../../../utils/axiosInstance";
 
 const TracksView = () => {
   const dispatch = useDispatch();
@@ -42,18 +43,20 @@ const TracksView = () => {
   // API Call - for all songs
   // ==================================
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllSongs();
-        const limitedData = data.slice(0, 10);
-        setSongs(limitedData);
+        const res = await axios.get("/songs/published?limit=6");
+        console.log(res.data.data);
+        setSongs(res.data.data);
 
-        const plans = await getAllPlans();
-        setPlans(plans);
-      } catch (err) {
-        console.error(err, "Could not load songs");
+        const ress = await axios.get("/licenses");
+        console.log(ress.data.data);
+        setPlans(ress.data.data);
+      } catch (error) {
+        console.log(error);
       }
-    })();
+    };
+    fetchData();
   }, []);
 
   // ==================================
@@ -411,7 +414,7 @@ const TracksView = () => {
                       <td className="py-2 sm:py-4" colSpan={2}>
                         <div className="flex items-center gap-2 sm:gap-4">
                           <img
-                            src={track.thumbnail}
+                            src={track.coverImage}
                             alt={`${track.title} cover`}
                             className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
                           />
@@ -422,7 +425,7 @@ const TracksView = () => {
                       </td>
                       {/* Time */}
                       <td className="px-4 py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-2">
-                        {track.time}
+                        {track.duration}
                       </td>
                       {/* BPM */}
                       <td className="py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
@@ -431,14 +434,15 @@ const TracksView = () => {
                       {/* Tags */}
                       <td className="py-2 sm:px-4 sm:py-4">
                         <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
-                          {track.tags.map((tag, i) => (
+                          {track.tags}
+                          {/* {track.tags.map((tag, i) => (
                             <span
                               key={`${track.id}-${i}`}
                               className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
                             >
                               {tag}
                             </span>
-                          ))}
+                          ))} */}
                         </div>
                       </td>
 
@@ -476,14 +480,14 @@ const TracksView = () => {
                             aria-label={
                               isSongInCart(track.id)
                                 ? `${track.title} already in cart`
-                                : `Add ${track.title} to cart for $${track.price.toFixed(2)}`
+                                : `Add ${track.title} to cart for $${track.pricing.toFixed(2)}`
                             }
                           >
                             <HiOutlineShoppingBag className="text-xs sm:text-sm" />
                             <span>
                               {isSongInCart(track.id)
                                 ? "Added"
-                                : `$${track.price.toFixed(2)}`}
+                                : `$${track.pricing.toFixed(2)}`}
                             </span>
                           </button>
                         </div>

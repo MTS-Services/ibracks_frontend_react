@@ -41,7 +41,7 @@ const HeroSection = ({ songs }) => {
               1280: { slidesPerView: 6, spaceBetween: 20 },
             }}
             loop={false} // 🔒 loop off
-            watchOverflow={true} // ✅ auto disables arrows if not scrollable
+            watchOverflow={true}
             centeredSlides={false}
             navigation={{
               nextEl: ".swiper-button-next-custom",
@@ -60,7 +60,7 @@ const HeroSection = ({ songs }) => {
               >
                 <img
                   className="h-auto max-h-[176px] w-full max-w-[176px] rounded object-cover"
-                  src={release.thumbnail}
+                  src={release.coverImage}
                   alt={release.title}
                 />
                 <div className="flex w-full flex-col items-start justify-start gap-0.5 py-1">
@@ -77,7 +77,7 @@ const HeroSection = ({ songs }) => {
         </div>
 
         {/* Pagination Dots */}
-        <div className="swiper-pagination-custom mt-4 flex justify-center pb-2"></div>
+        <div className="swiper-pagination-custom mt-4 flex justify-center pb-2" />
       </div>
 
       {/* Right Navigation */}

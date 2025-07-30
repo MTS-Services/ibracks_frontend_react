@@ -3,7 +3,7 @@ import axiosInstance from "../../utils/axiosInstance";
 // ✅ All plans
 export const getAllPlans = async (query = {}) => {
   try {
-    const res = await axiosInstance.get("plan.json", {
+    const res = await axiosInstance.get("/licenses", {
       params: query, // ⬅️ this automatically adds ?key=value to URL
     });
     return res.data;
