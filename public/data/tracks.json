@@ -7,6 +7,7 @@
     "bpm": 128,
     "tags": ["Electronic", "Retro"],
     "thumbnail": "https://picsum.photos/300/300?random=1",
+    "src": "/audios/child.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 29.99
@@ -19,6 +20,7 @@
     "bpm": 110,
     "tags": ["Synthwave", "Chill"],
     "thumbnail": "https://picsum.photos/300/300?random=2",
+    "src": "/audios/police.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.99
@@ -31,6 +33,7 @@
     "bpm": 95,
     "tags": ["Acoustic", "Relaxing"],
     "thumbnail": "https://picsum.photos/300/300?random=3",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 19.99
@@ -43,6 +46,7 @@
     "bpm": 140,
     "tags": ["Hip-Hop", "Bass"],
     "thumbnail": "https://picsum.photos/300/300?random=4",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 27.5
@@ -55,6 +59,7 @@
     "bpm": 105,
     "tags": ["Pop", "Dreamy"],
     "thumbnail": "https://picsum.photos/300/300?random=5",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.99
@@ -67,6 +72,7 @@
     "bpm": 118,
     "tags": ["World", "Mystical"],
     "thumbnail": "https://picsum.photos/300/300?random=6",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 21.5
@@ -79,6 +85,7 @@
     "bpm": 132,
     "tags": ["EDM", "Futuristic"],
     "thumbnail": "https://picsum.photos/300/300?random=7",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.75
@@ -91,6 +98,7 @@
     "bpm": 88,
     "tags": ["Ambient", "Calm"],
     "thumbnail": "https://picsum.photos/300/300?random=8",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 18.99
@@ -103,6 +111,7 @@
     "bpm": 100,
     "tags": ["Country", "Acoustic"],
     "thumbnail": "https://picsum.photos/300/300?random=9",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 20.25
@@ -116,6 +125,7 @@
     "bpm": 75,
     "tags": ["Darkwave", "Moody"],
     "thumbnail": "https://picsum.photos/300/300?random=10",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.99
@@ -128,6 +138,7 @@
     "bpm": 115,
     "tags": ["Pop", "Happy"],
     "thumbnail": "https://picsum.photos/300/300?random=11",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 25.5
@@ -140,6 +151,7 @@
     "bpm": 125,
     "tags": ["Techno", "Cyberpunk"],
     "thumbnail": "https://picsum.photos/300/300?random=12",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 28.99
@@ -152,6 +164,7 @@
     "bpm": 92,
     "tags": ["Folk", "Inspirational"],
     "thumbnail": "https://picsum.photos/300/300?random=13",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 19.75
@@ -164,6 +177,7 @@
     "bpm": 112,
     "tags": ["Pop", "Urban"],
     "thumbnail": "https://picsum.photos/300/300?random=14",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.25
@@ -176,6 +190,7 @@
     "bpm": 85,
     "tags": ["Ambient", "Space"],
     "thumbnail": "https://picsum.photos/300/300?random=15",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.5
@@ -188,6 +203,7 @@
     "bpm": 98,
     "tags": ["Indie", "Warm"],
     "thumbnail": "https://picsum.photos/300/300?random=16",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 21.99
@@ -200,6 +216,7 @@
     "bpm": 122,
     "tags": ["Synthwave", "80s"],
     "thumbnail": "https://picsum.photos/300/300?random=17",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 27.25
@@ -212,6 +229,7 @@
     "bpm": 78,
     "tags": ["Ambient", "Cinematic"],
     "thumbnail": "https://picsum.photos/300/300?random=18",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 20.99
@@ -224,6 +242,7 @@
     "bpm": 135,
     "tags": ["Rock", "Intense"],
     "thumbnail": "https://picsum.photos/300/300?random=19",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.5
@@ -236,6 +255,7 @@
     "bpm": 105,
     "tags": ["Reggae", "Summer"],
     "thumbnail": "https://picsum.photos/300/300?random=20",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.75
@@ -249,6 +269,7 @@
     "bpm": 122,
     "tags": ["Electronic", "Dance"],
     "thumbnail": "https://picsum.photos/300/300?random=21",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 19.99
@@ -261,6 +282,7 @@
     "bpm": 95,
     "tags": ["Country", "Acoustic"],
     "thumbnail": "https://picsum.photos/300/300?random=22",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 18.49
@@ -273,6 +295,7 @@
     "bpm": 130,
     "tags": ["Synthwave", "Retro"],
     "thumbnail": "https://picsum.photos/300/300?random=23",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 20.0
@@ -285,6 +308,7 @@
     "bpm": 89,
     "tags": ["Ambient", "Chill"],
     "thumbnail": "https://picsum.photos/300/300?random=24",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 21.5
@@ -297,6 +321,7 @@
     "bpm": 142,
     "tags": ["Dubstep", "Bass"],
     "thumbnail": "https://picsum.photos/300/300?random=25",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.75
@@ -309,6 +334,7 @@
     "bpm": 105,
     "tags": ["World", "Instrumental"],
     "thumbnail": "https://picsum.photos/300/300?random=26",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 19.95
@@ -321,6 +347,7 @@
     "bpm": 78,
     "tags": ["Experimental", "Psychedelic"],
     "thumbnail": "https://picsum.photos/300/300?random=27",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.0
@@ -333,6 +360,7 @@
     "bpm": 150,
     "tags": ["Hardcore", "Techno"],
     "thumbnail": "https://picsum.photos/300/300?random=28",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.0
@@ -345,6 +373,7 @@
     "bpm": 97,
     "tags": ["New Age", "Relax"],
     "thumbnail": "https://picsum.photos/300/300?random=29",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.75
@@ -357,6 +386,7 @@
     "bpm": 92,
     "tags": ["R&B", "Sensual"],
     "thumbnail": "https://picsum.photos/300/300?random=30",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.99
@@ -369,6 +399,7 @@
     "bpm": 128,
     "tags": ["Synthwave", "Electronic"],
     "thumbnail": "https://picsum.photos/300/300?random=31",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.0
@@ -381,6 +412,7 @@
     "bpm": 105,
     "tags": ["Chill", "Ambient"],
     "thumbnail": "https://picsum.photos/300/300?random=32",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.5
@@ -393,6 +425,7 @@
     "bpm": 145,
     "tags": ["Rock", "Drive"],
     "thumbnail": "https://picsum.photos/300/300?random=33",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.0
@@ -405,6 +438,7 @@
     "bpm": 87,
     "tags": ["Space", "Dreamy"],
     "thumbnail": "https://picsum.photos/300/300?random=34",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.25
@@ -417,6 +451,7 @@
     "bpm": 98,
     "tags": ["Indie", "Acoustic"],
     "thumbnail": "https://picsum.photos/300/300?random=35",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 21.75
@@ -429,6 +464,7 @@
     "bpm": 160,
     "tags": ["Techno", "Hardcore"],
     "thumbnail": "https://picsum.photos/300/300?random=36",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 27.0
@@ -441,6 +477,7 @@
     "bpm": 90,
     "tags": ["New Age", "Instrumental"],
     "thumbnail": "https://picsum.photos/300/300?random=37",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 25.99
@@ -453,6 +490,7 @@
     "bpm": 110,
     "tags": ["Hip-Hop", "Urban"],
     "thumbnail": "https://picsum.photos/300/300?random=38",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.95
@@ -465,6 +503,7 @@
     "bpm": 76,
     "tags": ["Cinematic", "Slow"],
     "thumbnail": "https://picsum.photos/300/300?random=39",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.75
@@ -477,6 +516,7 @@
     "bpm": 85,
     "tags": ["Cinematic", "Epic"],
     "thumbnail": "https://picsum.photos/300/300?random=40",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 25.99
@@ -489,6 +529,7 @@
     "bpm": 118,
     "tags": ["Chiptune", "Retro"],
     "thumbnail": "https://picsum.photos/300/300?random=41",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 21.49
@@ -501,6 +542,7 @@
     "bpm": 100,
     "tags": ["Jazz", "Smooth"],
     "thumbnail": "https://picsum.photos/300/300?random=42",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.0
@@ -513,6 +555,7 @@
     "bpm": 90,
     "tags": ["Ambient", "Experimental"],
     "thumbnail": "https://picsum.photos/300/300?random=43",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.75
@@ -525,6 +568,7 @@
     "bpm": 132,
     "tags": ["Tribal", "EDM"],
     "thumbnail": "https://picsum.photos/300/300?random=44",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.5
@@ -537,6 +581,7 @@
     "bpm": 110,
     "tags": ["Synth", "Alt Pop"],
     "thumbnail": "https://picsum.photos/300/300?random=45",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.25
@@ -549,6 +594,7 @@
     "bpm": 128,
     "tags": ["Science", "Techno"],
     "thumbnail": "https://picsum.photos/300/300?random=46",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 27.0
@@ -561,6 +607,7 @@
     "bpm": 94,
     "tags": ["Lo-fi", "Chill"],
     "thumbnail": "https://picsum.photos/300/300?random=47",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.99
@@ -573,6 +620,7 @@
     "bpm": 140,
     "tags": ["Trap", "Space"],
     "thumbnail": "https://picsum.photos/300/300?random=48",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 25.49
@@ -585,6 +633,7 @@
     "bpm": 102,
     "tags": ["Indie", "Soft Pop"],
     "thumbnail": "https://picsum.photos/300/300?random=49",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.75
@@ -597,6 +646,7 @@
     "bpm": 125,
     "tags": ["Upbeat", "Dream Pop"],
     "thumbnail": "https://picsum.photos/300/300?random=50",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.95
@@ -610,6 +660,7 @@
     "bpm": 128,
     "tags": ["Synthwave", "Ambient"],
     "thumbnail": "https://picsum.photos/300/300?random=51",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.99
@@ -622,6 +673,7 @@
     "bpm": 122,
     "tags": ["Electro", "House"],
     "thumbnail": "https://picsum.photos/300/300?random=52",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.5
@@ -634,6 +686,7 @@
     "bpm": 90,
     "tags": ["Jazz", "World"],
     "thumbnail": "https://picsum.photos/300/300?random=53",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.75
@@ -646,6 +699,7 @@
     "bpm": 108,
     "tags": ["Pop", "EDM"],
     "thumbnail": "https://picsum.photos/300/300?random=54",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 21.99
@@ -658,6 +712,7 @@
     "bpm": 95,
     "tags": ["Ambient", "Instrumental"],
     "thumbnail": "https://picsum.photos/300/300?random=55",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.5
@@ -670,6 +725,7 @@
     "bpm": 130,
     "tags": ["Dance", "Pop"],
     "thumbnail": "https://picsum.photos/300/300?random=56",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 25.99
@@ -682,6 +738,7 @@
     "bpm": 140,
     "tags": ["Trap", "Hard"],
     "thumbnail": "https://picsum.photos/300/300?random=57",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 27.0
@@ -694,6 +751,7 @@
     "bpm": 105,
     "tags": ["Lo-fi", "Relax"],
     "thumbnail": "https://picsum.photos/300/300?random=58",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.25
@@ -706,6 +764,7 @@
     "bpm": 150,
     "tags": ["Trap", "Bass"],
     "thumbnail": "https://picsum.photos/300/300?random=59",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.3
@@ -718,6 +777,7 @@
     "bpm": 128,
     "tags": ["Disco", "House"],
     "thumbnail": "https://picsum.photos/300/300?random=60",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.8
@@ -730,6 +790,7 @@
     "bpm": 118,
     "tags": ["Techno", "Deep"],
     "thumbnail": "https://picsum.photos/300/300?random=61",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 25.49
@@ -742,6 +803,7 @@
     "bpm": 110,
     "tags": ["Cinematic", "Nature"],
     "thumbnail": "https://picsum.photos/300/300?random=62",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 23.0
@@ -754,6 +816,7 @@
     "bpm": 100,
     "tags": ["Chillhop", "Future Bass"],
     "thumbnail": "https://picsum.photos/300/300?random=63",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 22.95
@@ -766,6 +829,7 @@
     "bpm": 125,
     "tags": ["Vaporwave", "Nostalgia"],
     "thumbnail": "https://picsum.photos/300/300?random=64",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 26.75
@@ -778,6 +842,7 @@
     "bpm": 132,
     "tags": ["Funk", "Retro"],
     "thumbnail": "https://picsum.photos/300/300?random=65",
+    "src": "/audios/rain.mp3",
     "plays": 234567,
     "likes": 298,
     "price": 24.4

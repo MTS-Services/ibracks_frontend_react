@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { IoPlay, IoPause, IoHeadsetSharp } from "react-icons/io5";
 import { IoMdTime } from "react-icons/io";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 import { PiDotsThreeOutline } from "react-icons/pi";
 import BottomPlayer from "./components/BottomPlayer";
 import { getAllSongs } from "../../../featured/song/trackService";
+import axios from "../../../utils/axiosInstance";
 
 // Expanded dummy songs data (20+ items)
 
@@ -15,16 +16,16 @@ const TotalSongs = () => {
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllSongs();
-        const limitedData = data.slice(0, 30);
-        console.log(limitedData);
-        setSongs(limitedData);
-      } catch (err) {
-        console.error(err, "Could not load songs");
+        const res = await axios.get("/songs/published?limit=6");
+        console.log(res.data.data);
+        setSongs(res.data.data);
+      } catch (error) {
+        console.log(error);
       }
-    })();
+    };
+    fetchData();
   }, []);
 
   const handlePlayPause = (song) => {
@@ -71,7 +72,7 @@ const TotalSongs = () => {
             </div>
             <div className="flex items-center gap-4">
               <img
-                src={song.thumbnail}
+                src={song.coverImage}
                 alt={song.title}
                 className="h-14 w-14 rounded-lg"
               />
@@ -79,7 +80,7 @@ const TotalSongs = () => {
             </div>
             <div className="flex items-center gap-3 text-neutral-200">
               <IoHeadsetSharp className="text-xl" />
-              <span>{song.plays.toLocaleString()}</span>
+              <span>{song.playCount}</span>
             </div>
             <div className="flex items-center gap-2 text-neutral-200">
               <IoMdTime className="rounded-full text-xl" />
@@ -90,7 +91,7 @@ const TotalSongs = () => {
                 <p className="text-white">
                   <FaRegHeart />
                 </p>
-                <span className="w-20 text-sm">{song.likes} Likes</span>
+                <span className="w-20 text-sm">{song.likeCount} Likes</span>
               </div>
               <button className="hover:text-white">
                 <PiDotsThreeOutline className="text-2xl" />
@@ -100,7 +101,7 @@ const TotalSongs = () => {
         ))}
       </div>
 
-      <div className="">
+      <div className="fixed bottom-0 left-0 w-full">
         <BottomPlayer />
       </div>
     </section>

@@ -1,14 +1,21 @@
-// src/pages/TracksPage.jsx
-import { useState, useContext, useEffect } from "react"; // useContext import করুন
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { HiOutlineShoppingBag } from "react-icons/hi";
 import { FaShareAlt } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
-import { FiChevronDown, FiChevronUp, FiPlay } from "react-icons/fi";
-import { HiOutlineShoppingBag } from "react-icons/hi";
 
-import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
+import HeroSection from "./components/sections/HeroSection";
 import { getAllSongs } from "../../../featured/song/trackService";
+import { addItem } from "../../../featured/cart/cartSlice";
+import LicensPlan from "../../../components/common/LicensPlan";
+import Modal from "../../../components/ui/Modal";
+import { getAllPlans } from "../../../featured/plans/planService";
+import axios from "../../../utils/axiosInstance";
 
 const TracksView = () => {
+  const dispatch = useDispatch();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Category");
   const [selectedBpm, setSelectedBpm] = useState("All Bpm");
@@ -25,38 +32,70 @@ const TracksView = () => {
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
 
   const [songs, setSongs] = useState([]);
+  const [plans, setPlans] = useState([]);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+
+  const cartItems = useSelector((state) => state.cart.items);
+
+  // ==================================
+  // API Call - for all songs
+  // ==================================
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllSongs();
-        const limitedData = data.slice(0, 10);
-        setSongs(limitedData);
-      } catch (err) {
-        console.error(err, "Could not load songs");
+        const res = await axios.get("/songs/published?limit=6");
+        console.log(res.data.data);
+        setSongs(res.data.data);
+
+        const ress = await axios.get("/licenses");
+        console.log(ress.data.data);
+        setPlans(ress.data.data);
+      } catch (error) {
+        console.log(error);
       }
-    })();
+    };
+    fetchData();
   }, []);
 
+  // ==================================
+  // Open License Modal
+  // ==================================
+  const handleToggle = (track) => {
+    setSelectedSong(track);
+    setIsOpen(true);
+    console.log(track);
+  };
+
+  // Check if item is already in cart
+  const isSongInCart = (songId) => {
+    return cartItems.some((item) => item.songId === songId);
+  };
+
+  // ==================================
+  // Handle Search Change - for Filter
+  // ==================================
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
-
+  // ==================================
+  // Handle Search - for Filter
+  // ==================================
   const handleSearchClick = () => {
     console.log("Searching for: ", searchTerm);
   };
-
+  // ==================================
+  // Handle Change Dropdown - Filter
+  // ==================================
   const handleDropdownChange = (e, setSelectedValue) => {
     setSelectedValue(e.target.value);
   };
-
+  // ==================================
+  // Handle Dropdown - for Filter
+  // ==================================
   const toggleDropdown = (setDropdownOpenState) => {
     setDropdownOpenState((prevState) => !prevState);
-  };
-
-  // Add to Cart handler
-  const handleAddToCart = (track) => {
-    alert(`${track} added to cart!`);
   };
 
   const filteredTracks = songs.filter((track) => {
@@ -99,7 +138,7 @@ const TracksView = () => {
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <TracksPageHeroSection />
+      <HeroSection songs={songs} />
 
       <header className="">
         <h2 className="flex justify-center py-4 text-2xl font-[600] text-white capitalize md:py-10 md:text-3xl lg:text-4xl">
@@ -347,7 +386,6 @@ const TracksView = () => {
 
       {/* table part */}
       <main className="sm:p-6 lg:py-14">
-        {" "}
         <div className="mx-auto w-full max-w-7xl">
           <div className="overflow-x-auto border-b border-gray-500">
             <table className="min-w-full text-left text-xs text-white sm:text-sm md:text-base">
@@ -376,7 +414,7 @@ const TracksView = () => {
                       <td className="py-2 sm:py-4" colSpan={2}>
                         <div className="flex items-center gap-2 sm:gap-4">
                           <img
-                            src={track.thumbnail}
+                            src={track.coverImage}
                             alt={`${track.title} cover`}
                             className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
                           />
@@ -387,7 +425,7 @@ const TracksView = () => {
                       </td>
                       {/* Time */}
                       <td className="px-4 py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-2">
-                        {track.time}
+                        {track.duration}
                       </td>
                       {/* BPM */}
                       <td className="py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
@@ -396,19 +434,32 @@ const TracksView = () => {
                       {/* Tags */}
                       <td className="py-2 sm:px-4 sm:py-4">
                         <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
-                          {track.tags.map((tag, i) => (
+                          {track.tags}
+                          {/* {track.tags.map((tag, i) => (
                             <span
                               key={`${track.id}-${i}`}
                               className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
                             >
                               {tag}
                             </span>
-                          ))}
+                          ))} */}
                         </div>
                       </td>
+
                       {/* Actions */}
                       <td className="py-2 sm:py-4">
                         <div className="flex justify-end gap-1 md:gap-2">
+                          <Modal
+                            isOpen={isOpen && selectedSong?.id === track.id}
+                            onClose={() => setIsOpen(false)}
+                            title="Choose Your License"
+                            size="lg"
+                          >
+                            <LicensPlan
+                              selectedSong={selectedSong}
+                              plans={plans}
+                            />
+                          </Modal>
                           {/* Share button */}
                           <button
                             className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
@@ -417,13 +468,27 @@ const TracksView = () => {
                             <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
                           </button>
                           {/* Cart button */}
+
                           <button
-                            onClick={() => handleAddToCart(track.id)}
-                            className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
-                            aria-label={`Add ${track.title} to cart for $${track.price.toFixed(2)}`}
+                            onClick={() => handleToggle(track)}
+                            disabled={isSongInCart(track.id)}
+                            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
+                              isSongInCart(track.id)
+                                ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                                : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
+                            }`}
+                            aria-label={
+                              isSongInCart(track.id)
+                                ? `${track.title} already in cart`
+                                : `Add ${track.title} to cart for $${track.pricing.toFixed(2)}`
+                            }
                           >
                             <HiOutlineShoppingBag className="text-xs sm:text-sm" />
-                            <span>${track.price.toFixed(2)}</span>
+                            <span>
+                              {isSongInCart(track.id)
+                                ? "Added"
+                                : `$${track.pricing.toFixed(2)}`}
+                            </span>
                           </button>
                         </div>
                       </td>

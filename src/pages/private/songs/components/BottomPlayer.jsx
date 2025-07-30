@@ -6,7 +6,6 @@ import {
   FaStepForward,
   FaRedoAlt,
   FaVolumeUp,
-  FaFilter,
 } from "react-icons/fa";
 import { FaPause } from "react-icons/fa6";
 

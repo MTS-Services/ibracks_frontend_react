@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { FiSearch, FiUser, FiMenu, FiX } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { getCurrentUser } from "../../../featured/auth/authUtils";
-import { CartContext } from "../../../context/cart/CartContextDefinition";
-import { useContext } from "react";
+import { useSelector } from "react-redux";
+import CartDropdown from "../../../components/common/CartDropdown";
 
 // Navigation Links Data
 const navLinks = [
@@ -13,12 +13,44 @@ const navLinks = [
   { label: "Tracks", path: "/tracks" },
   { label: "Video", path: "/video" },
   { label: "Services", path: "/services" },
+  { label: "Products", path: "/products" },
   { label: "Contact", path: "/contact" },
 ];
 
 const NavStyle = () => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { items, totalQuantity } = useSelector((state) => state.cart);
+
+  const dropdownRef = useRef(null);
+
+  //=============================
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsCartOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  //=============================
   const user = getCurrentUser();
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   return (
     <nav className="sticky top-0 z-20 bg-black text-white">
@@ -30,12 +62,16 @@ const NavStyle = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-[40px] md:flex">
-          <ul className="flex items-center gap-6 text-base text-zinc-300 capitalize">
+          <ul className="flex items-center gap-6 text-base capitalize">
             {navLinks.map(({ label, path }) => (
               <li key={label}>
                 <Link
                   to={path}
-                  className="font-medium text-zinc-300 transition-colors hover:text-gray-400"
+                  className={`font-medium transition-colors ${
+                    isActive(path)
+                      ? "text-white underline underline-offset-4"
+                      : "text-zinc-300 hover:text-gray-400"
+                  }`}
                 >
                   {label}
                 </Link>
@@ -45,15 +81,28 @@ const NavStyle = () => {
 
           {/* Icons + Login */}
           <div className="flex items-center gap-5 text-zinc-300">
-            <FiSearch className="h-5 w-5 cursor-pointer transition-colors hover:text-white" />
-            <HiOutlineShoppingBag className="h-5 w-5 cursor-pointer transition-colors hover:text-white" />
+            <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
+            <button
+              // to="/shoping-cart"
+              onClick={toggleCart}
+              className="relative cursor-pointer hover:text-white"
+            >
+              {/* Quantity Badge */}
+              {totalQuantity > 0 && (
+                <span className="absolute -top-2 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  {totalQuantity}
+                </span>
+              )}
+              <HiOutlineShoppingBag className="h-5 w-5 text-white" />
+            </button>
+
             {!user && (
-              <FiUser className="h-5 w-5 cursor-pointer transition-colors hover:text-white" />
+              <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
             )}
 
             <Link
               to="/auth/login"
-              className="text-base font-medium text-zinc-300 transition-colors hover:text-gray-400"
+              className="text-base font-medium text-white transition-colors hover:text-gray-400"
             >
               Log In
             </Link>
@@ -77,14 +126,18 @@ const NavStyle = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="bg-black px-4 pb-4 md:hidden">
-          <ul className="space-y-3 border-t border-gray-700 py-2">
+        <div className="bg-black md:hidden">
+          <ul className="border-t border-gray-700 px-4 py-2">
             {navLinks.map(({ label, path }) => (
               <li key={label}>
                 <Link
                   to={path}
-                  className="block py-2 text-base font-medium text-zinc-300 transition-colors hover:text-gray-400"
                   onClick={() => setIsMenuOpen(false)}
+                  className={`block py-2 text-base font-medium transition-colors ${
+                    isActive(path)
+                      ? "text-white underline underline-offset-4"
+                      : "text-zinc-300 hover:text-gray-400"
+                  }`}
                 >
                   {label}
                 </Link>
@@ -92,22 +145,35 @@ const NavStyle = () => {
             ))}
           </ul>
 
-          <div className="flex items-center justify-between border-t border-gray-700 pt-3">
+          <div className="flex items-center justify-between border-t border-gray-700 px-4 py-3">
             <div className="flex items-center gap-4 text-zinc-300">
               <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
-              <HiOutlineShoppingBag className="h-5 w-5 cursor-pointer hover:text-white" />
+              <h1>{totalQuantity}</h1>
+              <Link
+                to="/shoping-cart"
+                className="h-5 w-5 cursor-pointer hover:text-white"
+              >
+                <HiOutlineShoppingBag className="h-5 w-5 text-white" />
+              </Link>
               {!user && (
                 <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
               )}
             </div>
             <Link
               to="/auth/login"
-              className="text-base font-medium text-zinc-300 transition-colors hover:text-gray-400"
               onClick={() => setIsMenuOpen(false)}
+              className="text-base font-medium text-zinc-300 transition-colors hover:text-gray-400"
             >
               Log In
             </Link>
           </div>
+        </div>
+      )}
+
+      {/* Cart Dropdown */}
+      {isCartOpen && (
+        <div className="absolute right-80 z-50 w-96" ref={dropdownRef}>
+          <CartDropdown onClose={() => setIsCartOpen(false)} />
         </div>
       )}
     </nav>

@@ -3,7 +3,7 @@ import axiosInstance from "../../utils/axiosInstance";
 // ✅ All songs
 export const getAllSongs = async (query = {}) => {
   try {
-    const res = await axiosInstance.get("tracks.json", {
+    const res = await axiosInstance.get("/songs/published", {
       params: query, // ⬅️ this automatically adds ?key=value to URL
     });
     return res.data;

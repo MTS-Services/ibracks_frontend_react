@@ -1,7 +1,6 @@
 import { FaCheck } from "react-icons/fa";
-import planData from "/public/data/plan";
 
-const LicensingSection = () => {
+const LicensingSection = ({ plans }) => {
   return (
     <section className="bg-gradient-to-b from-[#150618] to-[#150620] px-4 py-16">
       <div className="mx-auto max-w-7xl">
@@ -11,18 +10,22 @@ const LicensingSection = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {planData.map((plan) => (
+        <div className="grid grid-cols-1 items-center justify-center gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {plans.map((plan) => (
             <div
               key={plan.id}
-              className="flex h-full flex-col justify-between rounded-2xl border border-gray-500 bg-[#0A030B] p-5 text-white sm:p-6"
+              className={`flex h-full flex-col justify-between rounded-2xl border p-5 text-white sm:p-6 ${
+                plan.tier === "Premium License"
+                  ? "border-yellow-500 bg-gradient-to-b from-[#0A030B] to-[#1A081B] shadow-lg shadow-yellow-500/10"
+                  : "border-gray-500 bg-[#0A030B]"
+              }`}
             >
-              {/* Top content container */}
+              {/* Top content */}
               <div className="flex flex-grow flex-col gap-6 sm:gap-8">
-                {/* Tier Badge & Description */}
-                <div className="w-fit rounded-md bg-black/20 bg-gradient-to-b from-yellow-700 to-yellow-300 px-3 py-1.5">
+                {/* Tier Badge */}
+                <div className="w-fit rounded-md bg-gradient-to-b from-yellow-700 to-yellow-300 px-3 py-1.5">
                   <h3 className="text-center text-sm font-semibold text-white">
-                    {plan.tier}
+                    {plan.name}
                   </h3>
                 </div>
 
@@ -32,8 +35,9 @@ const LicensingSection = () => {
 
                 <div className="h-px w-full bg-gray-200 opacity-30" />
 
+                {/* Price */}
                 <div className="text-5xl leading-tight font-semibold sm:text-6xl md:text-7xl">
-                  {plan.price}
+                  ${plan.price.toFixed(2)}
                 </div>
                 <p className="text-sm font-semibold text-[#A1A1A1]">
                   {plan.note}
@@ -41,7 +45,7 @@ const LicensingSection = () => {
 
                 <div className="h-px w-full bg-neutral-500 opacity-30" />
 
-                {/* Features List */}
+                {/* Features */}
                 <div className="flex flex-col gap-3 text-sm text-neutral-400">
                   {plan.features.map((feature, index) => (
                     <div key={index} className="flex items-start gap-3">
@@ -52,9 +56,11 @@ const LicensingSection = () => {
                 </div>
               </div>
 
-              {/* Bottom CTA Button */}
+              {/* CTA Button */}
               <button className="mt-8 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-4 py-3 font-medium text-black transition-all hover:opacity-90">
-                Read License
+                {plan.tier === "Premium License"
+                  ? "✨ Choose Premium"
+                  : "Choose Basic"}
               </button>
             </div>
           ))}

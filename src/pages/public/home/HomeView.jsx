@@ -9,32 +9,48 @@ import {
   ServiceSection,
 } from "./components/sections/index";
 
+import axios from "../../../utils/axiosInstance";
+
 import { getAllSongs } from "../../../featured/song/trackService";
+import { getAllPlans } from "../../../featured/plans/planService";
 
 const HomeView = () => {
   const [songs, setSongs] = useState([]);
+  const [plans, setPlans] = useState([]);
+
+  // console.log("Songs: ", songs);
+  // console.log("Plans: ", plans);
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllSongs();
-        const limitedData = data.slice(0, 6);
-        setSongs(limitedData);
-      } catch (err) {
-        console.error(err, "Could not load songs");
+        const res = await axios.get("/songs/published?limit=6");
+        console.log(res.data.data);
+        setSongs(res.data.data);
+
+        const ress = await axios.get("/licenses");
+        console.log(ress.data.data);
+        setPlans(ress.data.data);
+      } catch (error) {
+        console.log(error);
       }
-    })();
+    };
+    fetchData();
   }, []);
 
   return (
     <>
       <HeroSection />
       <ReleasesSection songs={songs} />
-      <BrowseSection songs={songs} />
-      <LicensingSection />
+      <BrowseSection songs={songs} plans={plans} />
+      <LicensingSection plans={plans} />
       <SoundSection />
       <GetInTouch />
       <ServiceSection />
+
+      {/* =================== shakil munshi ================== */}
+
+      {/* =================== shakil munshi ================== */}
     </>
   );
 };
