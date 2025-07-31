@@ -17,8 +17,8 @@ const userRolesData = [
 
 const navLinksData = [
   // { name: "dashboard", icon: <FiHome />, path: "/admin" },
-  { name: "tracks", icon: <FiMusic />, path: "/admin/songs" },
-  { name: "Sales", icon: <GrLineChart />, path: "/admin/salse" },
+  { name: "Total Songs Uploaded", icon: <FiMusic />, path: "/admin/songs" },
+  { name: "Total Sales (Amount)", icon: <GrLineChart />, path: "/admin/salse" },
   // { name: "videos", icon: <FiVideo />, path: "/admin/videos" },
   // { name: "settings", icon: <FiSettings />, path: "/admin/settings" },
 ];

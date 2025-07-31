@@ -13,6 +13,7 @@ const DashboardLayout = () => {
         <NavbarStyle />
         <Outlet />
       </div>
+
       <div className="h-screen w-70 bg-[#212121]">
         <RightSide />
       </div>

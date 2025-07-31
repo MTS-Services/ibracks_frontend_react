@@ -1,51 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaCrown } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
-const recentData = [
-  {
-    title: "Perfect",
-    artist: "Ed Sheeran",
-    time: "2min ago",
-    albumArt: "https://placehold.co/44x44/3498DB/FFFFFF?text=P",
-  },
-  {
-    title: "Roman Picisan",
-    artist: "Hanin Dhiya",
-    time: "8min ago",
-    albumArt: "https://placehold.co/44x44/9B59B6/FFFFFF?text=RP",
-  },
-  {
-    title: "Tittle (Deluxe)",
-    artist: "Meghan Trainor",
-    time: "2hr ago",
-    albumArt: "https://placehold.co/44x44/E74C3C/FFFFFF?text=T",
-  },
-  {
-    title: "Shiver",
-    artist: "Ed Sheeran",
-    time: "6hr ago",
-    albumArt: "https://placehold.co/44x44/FFC107/000000?text=S",
-  },
-  {
-    title: "Feel Something",
-    artist: "Jaymes Young",
-    time: "11hr ago",
-    albumArt: "https://placehold.co/44x44/795548/FFFFFF?text=FS",
-  },
-  {
-    title: "Shape of You",
-    artist: "Ed Sheeran",
-    time: "1day ago",
-    albumArt: "https://placehold.co/44x44/2ECC71/FFFFFF?text=SOY",
-  },
-  {
-    title: "Bad Habits",
-    artist: "Ed Sheeran",
-    time: "1day ago",
-    albumArt: "https://placehold.co/44x44/F1C40F/000000?text=BH",
-  },
-];
-
 import axios from "../../../utils/axiosInstance";
 
 const RightSide = () => {
@@ -56,8 +11,7 @@ const RightSide = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/songs/published?limit=6");
-        console.log(res.data.data);
+        const res = await axios.get("/songs/new-releases?limit=7");
         setRecentUploadsData(res.data.data);
       } catch (error) {
         console.log(error);
@@ -77,6 +31,7 @@ const RightSide = () => {
 
   return (
     <aside className="w-70 flex-shrink-0 flex-col space-y-6 p-4 text-white lg:flex">
+      {/* User profile dropdown section */}
       <div className="relative" ref={dropdownRef}>
         <div
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -112,6 +67,7 @@ const RightSide = () => {
         )}
       </div>
 
+      {/* Upload Song section */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
         <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90">
@@ -119,6 +75,8 @@ const RightSide = () => {
           <p className="font-bold">Upload Here</p>
         </div>
       </div>
+
+      {/* Recent Uploads section */}
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-white">Recent Uploads</h2>
@@ -128,19 +86,25 @@ const RightSide = () => {
         </div>
         <div className="space-y-4">
           {recentUploadsData.map((song) => (
-            <div key={song.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <img
-                  src={song.coverImage}
-                  alt={song.title}
-                  className="h-11 w-11 rounded-lg"
-                />
-                <div>
-                  <p className="text-sm font-bold text-white">{song.title}</p>
-                  <p className="text-xs text-neutral-400">{song.artist}</p>
-                </div>
+            <div
+              key={song.id}
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
+            >
+              <img
+                src={song.coverImage}
+                alt={song.title}
+                className="h-11 w-11 rounded-lg"
+              />
+
+              <div>
+                <p className="text-sm font-bold text-white">{song.title}</p>
+                {song.musicTag && (
+                  <p className="text-xs text-neutral-400 capitalize">
+                    {song.musicTag}
+                  </p>
+                )}
               </div>
-              <p className="text-xs text-neutral-400">{song.time}</p>
+              <p className="text-xs text-neutral-400">{song.publishedAgo}</p>
             </div>
           ))}
         </div>

@@ -12,7 +12,7 @@ const AboutView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/songs/published?limit=6");
+        const res = await axios.get("/songs/published?limit=9");
 
         setSongs(res.data.data);
       } catch (error) {
