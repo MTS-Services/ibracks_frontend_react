@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiUser } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { getCurrentUser } from "../../../featured/auth/authUtils";
-import { CartContext } from "../../../utils/CartContextDefinition";
 import { useContext } from "react";
-// ssss
+import { CartContext } from "../../utils/CartContextDefinition";
+
 const navLinks = [
   { label: "About", path: "/about" },
   { label: "Tracks", path: "/tracks" },
@@ -101,10 +101,33 @@ const NavStyle = () => {
 
           <div className="mt-4 flex gap-4">
             <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
-            <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
-            <span className="cursor-pointer text-base capitalize hover:text-white">
-              Log In
-            </span>
+
+            <Link
+              to="/shop-cart"
+              className="relative flex items-center hover:text-gray-300"
+            >
+              <HiOutlineShoppingBag className="text-2xl" />
+
+              {cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white">
+                  {cartItems.length}
+                </span>
+              )}
+            </Link>
+
+            {user ? (
+              ""
+            ) : (
+              <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
+            )}
+
+            <div className="flex cursor-pointer items-center gap-2 hover:text-white">
+              <Link to="/login">
+                <span className="text-base text-zinc-300 capitalize hover:text-gray-500">
+                  Log In
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       )}
