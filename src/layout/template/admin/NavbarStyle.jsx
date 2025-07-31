@@ -13,6 +13,8 @@ const NavbarStyle = () => {
         <FaChevronRight className="text-neutral-500" />
       </div>
 
+      {/* Upload Button */}
+
       {/* Search Input (static) */}
       <div className="flex flex-1 justify-center px-4">
         <div className="relative w-full max-w-lg">

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaCrown } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
 import axios from "../../../utils/axiosInstance";
+import { Link } from "react-router-dom";
 
 const RightSide = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -71,8 +72,10 @@ const RightSide = () => {
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
         <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90">
-          <MdFileUpload className="text-5xl" />
-          <p className="font-bold">Upload Here</p>
+          <Link to="/admin/upload">
+            <MdFileUpload className="text-5xl" />
+            <p className="font-bold">Upload Here</p>
+          </Link>
         </div>
       </div>
 
