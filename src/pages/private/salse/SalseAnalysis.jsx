@@ -7,7 +7,6 @@ import { RiBarChartBoxLine } from "react-icons/ri";
 import { CiShoppingTag } from "react-icons/ci";
 
 const normalizeAnalyticsData = (apiResponseObject, filter) => {
-  // Main Part: This safer version prevents crashes
   const analytics = apiResponseObject?.analytics;
   const summary = {
     revenue: analytics?.summary?.totalRevenue ?? 0,
@@ -15,7 +14,6 @@ const normalizeAnalyticsData = (apiResponseObject, filter) => {
     revenueChange: analytics?.summary?.revenueChange ?? 0,
     purchasesChange: analytics?.summary?.purchasesChange ?? 0,
   };
-
   let chartData = [];
   const salesStat = analytics?.salesStatistic ?? [];
   const dailyBreakdown = analytics?.dailyBreakdown ?? [];
@@ -70,6 +68,14 @@ const formatChange = (value, periodLabel) => {
   return `${sign}${value}% from ${periodLabel}`;
 };
 
+const formatDate = (date) => {
+  if (!date) return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const SalseAnalysis = () => {
   const [activeFilter, setFilter] = useState("24 hours");
   const [salesData, setSalesData] = useState(null);
@@ -101,7 +107,6 @@ const SalseAnalysis = () => {
       try {
         let response;
         let normalizedData;
-        const formatDate = (date) => date.toISOString().split("T")[0];
 
         if (dateRange.start && dateRange.end) {
           const customEndpoint = `/payments/analytics/sales-custom-range?startDate=${formatDate(dateRange.start)}&endDate=${formatDate(dateRange.end)}`;

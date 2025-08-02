@@ -122,7 +122,7 @@ const TotalSongs = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [songs, setSongs] = useState([]);
 
-  const backendUrl = "https://backend-ibracks.mtscorporate.com";
+  const backendUrl = "https://backend-ibracks.mtscorporate.com/api";
 
   useEffect(() => {
     const fetchData = async () => {

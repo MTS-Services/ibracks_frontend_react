@@ -27,7 +27,7 @@ const SalesChart = ({ data }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false, // Custom manual legend
+        display: false,
       },
       title: { display: false },
     },
@@ -55,13 +55,13 @@ const SalesChart = ({ data }) => {
       {
         label: "Total revenue",
         data: data.map((d) => d.revenue),
-        backgroundColor: "#facc15", // Yellow
+        backgroundColor: "#facc15",
         barThickness: 20,
       },
       {
         label: "Total purchase",
         data: data.map((d) => d.purchase),
-        backgroundColor: "#8b5cf6", // Purple
+        backgroundColor: "#8b5cf6",
         barThickness: 20,
       },
     ],

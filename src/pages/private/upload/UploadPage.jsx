@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { PiUploadSimpleBold } from "react-icons/pi";
+import axios from "../../../utils/axiosInstance";
 
 const UploadPage = () => {
   const initialFormState = {
@@ -18,6 +19,7 @@ const UploadPage = () => {
   const [musicFileName, setMusicFileName] = useState(
     "Click to upload MP3, WAV, etc.",
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const coverImageRef = useRef(null);
   const musicFileRef = useRef(null);
@@ -51,11 +53,41 @@ const UploadPage = () => {
     if (musicFileRef.current) musicFileRef.current.value = "";
   };
 
-  const handlePublish = () => {
-    console.log("Publishing Data:", [formData]);
-    alert("Check the console for the published data!");
-    handleDiscard();
+  // This new function handles the actual API call
+  const handleSubmit = async (endpoint) => {
+    if (!formData.songName || !formData.musicFile || !formData.coverImage) {
+      alert(
+        "Please fill in the song name and upload both a cover image and music file.",
+      );
+      return;
+    }
+    setIsSubmitting(true);
+
+    const dataToSubmit = new FormData();
+    dataToSubmit.append("title", formData.songName);
+    dataToSubmit.append("description", formData.description);
+    dataToSubmit.append("musicTag", formData.musicTag);
+    dataToSubmit.append("price", formData.price);
+    dataToSubmit.append("duration", formData.duration);
+    dataToSubmit.append("bpm", formData.bpm);
+    dataToSubmit.append("coverImage", formData.coverImage);
+    dataToSubmit.append("music", formData.musicFile);
+
+    try {
+      const response = await axios.post(endpoint, dataToSubmit);
+      console.log("Server Response:", response.data);
+      alert("Song uploaded successfully!");
+      handleDiscard();
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed. Please check the console for details.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const handlePublish = () => handleSubmit("/songs");
+  const handleSchedule = () => handleSubmit("/songs/schedule"); // Assuming a different endpoint for scheduling
 
   return (
     <div className="mr-4 ml-4 space-y-6 p-8 text-white">
@@ -96,9 +128,8 @@ const UploadPage = () => {
           </div>
         </div>
 
-        {/* Right Column */}
+        {/* Right Column (Your original form fields are all here) */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
-          {/* Form fields... */}
           <div className="sm:col-span-2">
             <label className="mb-2 block text-base font-normal">
               Song Name/Title
@@ -199,22 +230,28 @@ const UploadPage = () => {
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons - These are updated */}
       <div className="ml-14 flex items-center justify-center gap-6 pt-4">
         <button
           onClick={handleDiscard}
-          className="rounded-lg border border-orange-200 px-10 py-2.5 font-semibold text-white transition-colors hover:bg-orange-200/10"
+          disabled={isSubmitting}
+          className="rounded-lg border border-orange-200 px-10 py-2.5 font-semibold text-white transition-colors hover:bg-orange-200/10 disabled:opacity-50"
         >
           Discard
         </button>
-        <button className="rounded-lg bg-neutral-200 px-10 py-2.5 font-semibold text-neutral-800 transition-colors hover:bg-neutral-300">
-          Schedule
+        <button
+          onClick={handleSchedule}
+          disabled={isSubmitting}
+          className="rounded-lg bg-neutral-200 px-10 py-2.5 font-semibold text-neutral-800 transition-colors hover:bg-neutral-300 disabled:opacity-50"
+        >
+          {isSubmitting ? "Scheduling..." : "Schedule"}
         </button>
         <button
           onClick={handlePublish}
-          className="rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-10 py-2.5 font-semibold text-black transition-opacity hover:opacity-90"
+          disabled={isSubmitting}
+          className="rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-10 py-2.5 font-semibold text-black transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          Publish
+          {isSubmitting ? "Publishing..." : "Publish"}
         </button>
       </div>
     </div>

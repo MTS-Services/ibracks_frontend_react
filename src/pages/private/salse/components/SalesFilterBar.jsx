@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"; // <-- 1. Import useRef
+import React, { useState, useRef } from "react";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt } from "react-icons/fa";
 import { MdFilterList } from "react-icons/md";
@@ -13,13 +13,11 @@ const SalesFilterBar = ({
 }) => {
   const [showPicker, setShowPicker] = useState(false);
 
-  // --- 3. Add these two lines to use the hook ---
-  const datePickerRef = useRef(null); // Create a ref
-  useClickOutside(datePickerRef, () => setShowPicker(false)); // Tell the hook to watch the ref
+  const datePickerRef = useRef(null);
+  useClickOutside(datePickerRef, () => setShowPicker(false));
 
   return (
     <div className="flex flex-wrap items-center justify-between rounded-lg text-white">
-      {/* Time period selection (this part remains the same) */}
       <div className="flex flex-wrap gap-8">
         {filters.map((label) => (
           <div key={label} className="inline-flex w-fit flex-col items-center">
@@ -46,17 +44,12 @@ const SalesFilterBar = ({
         ))}
       </div>
 
-      {/* Right side actions */}
       <div className="mt-2 flex items-center gap-4 sm:mt-0">
-        {/* Date Range Picker */}
-        {/* Add the ref to this container div */}
         <div className="relative z-20" ref={datePickerRef}>
-          {" "}
-          {/* <-- 4. Attach the ref here */}
           <button
             onClick={() => {
               setShowPicker(!showPicker);
-              setFilter(""); // Clear quick filter
+              setFilter("");
             }}
             className="flex items-center gap-2 rounded border border-gray-500 px-3 py-3 hover:bg-white/20"
           >
@@ -65,6 +58,7 @@ const SalesFilterBar = ({
             </span>
             <FaCalendarAlt className="text-[#979797]" size={16} />
           </button>
+
           {showPicker && (
             <div className="absolute right-0 mt-2 rounded-md p-0 shadow-lg">
               <DatePicker
@@ -84,7 +78,6 @@ const SalesFilterBar = ({
           )}
         </div>
 
-        {/* Filter Button (this part remains the same) */}
         <button className="flex items-center gap-2 rounded border border-gray-500 px-3 py-3 hover:bg-white/20">
           <MdFilterList className="text-[#979797]" />
           <span className="font-poppins text-xs text-white">Filters</span>
