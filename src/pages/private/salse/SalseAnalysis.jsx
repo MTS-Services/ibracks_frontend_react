@@ -7,43 +7,55 @@ import { RiBarChartBoxLine } from "react-icons/ri";
 import { CiShoppingTag } from "react-icons/ci";
 
 const normalizeAnalyticsData = (apiResponseObject, filter) => {
-  const analytics = apiResponseObject.analytics;
-
+  // Main Part: This safer version prevents crashes
+  const analytics = apiResponseObject?.analytics;
   const summary = {
-    revenue: analytics.summary.totalRevenue,
-    purchases: analytics.summary.totalPurchases,
-    revenueChange: analytics.summary.revenueChange,
-    purchasesChange: analytics.summary.purchasesChange,
+    revenue: analytics?.summary?.totalRevenue ?? 0,
+    purchases: analytics?.summary?.totalPurchases ?? 0,
+    revenueChange: analytics?.summary?.revenueChange ?? 0,
+    purchasesChange: analytics?.summary?.purchasesChange ?? 0,
   };
 
   let chartData = [];
+  const salesStat = analytics?.salesStatistic ?? [];
+  const dailyBreakdown = analytics?.dailyBreakdown ?? [];
+  const monthlyStats = analytics?.monthlyStats ?? [];
+
   switch (filter) {
     case "24 hours":
-      chartData = analytics.salesStatistic.map((item) => ({
-        label: item.timeLabel,
+    case "Single Day":
+      chartData = salesStat.map((item) => ({
+        label: item.timeLabel || item.dateLabel,
         revenue: item.totalRevenue,
         purchase: item.totalPurchase,
       }));
       break;
     case "7 days":
-      chartData = analytics.dailyBreakdown.map((item) => ({
+      chartData = dailyBreakdown.map((item) => ({
         label: item.dayName,
         revenue: item.revenue,
         purchase: item.sales,
       }));
       break;
     case "30 days":
-      chartData = analytics.salesStatistic.map((item) => ({
+      chartData = salesStat.map((item) => ({
         label: item.week,
         revenue: item.totalRevenue,
         purchase: item.totalPurchase,
       }));
       break;
     case "12 months":
-      chartData = analytics.monthlyStats.map((item) => ({
+      chartData = monthlyStats.map((item) => ({
         label: item.month,
         revenue: item.totalRevenue,
         purchase: item.totalPurchases,
+      }));
+      break;
+    case "Custom":
+      chartData = salesStat.map((item) => ({
+        label: item.dateLabel,
+        revenue: item.totalRevenue,
+        purchase: item.totalPurchase,
       }));
       break;
     default:
@@ -63,6 +75,7 @@ const SalseAnalysis = () => {
   const [salesData, setSalesData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dateRange, setDateRange] = useState({ start: null, end: null });
 
   useEffect(() => {
     const filterConfig = {
@@ -80,34 +93,52 @@ const SalseAnalysis = () => {
         label: "last year",
       },
     };
-    const currentConfig = filterConfig[activeFilter];
-    if (!currentConfig) return;
 
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       setSalesData(null);
       try {
-        const response = await axios.get(currentConfig.endpoint);
+        let response;
+        let normalizedData;
+        const formatDate = (date) => date.toISOString().split("T")[0];
 
-        const normalizedData = normalizeAnalyticsData(
-          response.data,
-          activeFilter,
-        );
-
-        normalizedData.summary.periodLabel = currentConfig.label;
+        if (dateRange.start && dateRange.end) {
+          const customEndpoint = `/payments/analytics/sales-custom-range?startDate=${formatDate(dateRange.start)}&endDate=${formatDate(dateRange.end)}`;
+          response = await axios.get(customEndpoint);
+          normalizedData = normalizeAnalyticsData(response.data, "Custom");
+          normalizedData.summary.periodLabel = "Selected Range";
+        } else if (dateRange.start && !dateRange.end) {
+          const singleDayEndpoint = `/payments/analytics/daily?date=${formatDate(dateRange.start)}`;
+          response = await axios.get(singleDayEndpoint);
+          normalizedData = normalizeAnalyticsData(response.data, "Single Day");
+          normalizedData.summary.periodLabel = "Selected Day";
+        } else if (activeFilter) {
+          const currentConfig = filterConfig[activeFilter];
+          response = await axios.get(currentConfig.endpoint);
+          normalizedData = normalizeAnalyticsData(response.data, activeFilter);
+          normalizedData.summary.periodLabel = currentConfig.label;
+        } else {
+          setLoading(false);
+          return;
+        }
         setSalesData(normalizedData);
       } catch (err) {
-        setError("Failed to process data.");
+        if (err.response && typeof err.response.data === "string") {
+          setError(err.response.data);
+        } else {
+          setError("Failed to process data.");
+        }
         console.error("API Error in SalseAnalysis:", err);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [activeFilter]);
+  }, [activeFilter, dateRange]);
 
   const filters = ["24 hours", "7 days", "30 days", "12 months"];
+
   const renderContent = () => {
     if (loading)
       return (
@@ -163,6 +194,8 @@ const SalseAnalysis = () => {
         activeFilter={activeFilter}
         filters={filters}
         setFilter={setFilter}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
       />
       {renderContent()}
     </section>

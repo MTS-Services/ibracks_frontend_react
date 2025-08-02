@@ -1,7 +1,8 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react"; // <-- 1. Import useRef
 import DatePicker from "react-datepicker";
-import { FaCalendarAlt, FaFilter } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import { MdFilterList } from "react-icons/md";
+import { useClickOutside } from "./useClickOutside";
 
 const SalesFilterBar = ({
   activeFilter,
@@ -12,9 +13,13 @@ const SalesFilterBar = ({
 }) => {
   const [showPicker, setShowPicker] = useState(false);
 
+  // --- 3. Add these two lines to use the hook ---
+  const datePickerRef = useRef(null); // Create a ref
+  useClickOutside(datePickerRef, () => setShowPicker(false)); // Tell the hook to watch the ref
+
   return (
     <div className="flex flex-wrap items-center justify-between rounded-lg text-white">
-      {/* Time period selection */}
+      {/* Time period selection (this part remains the same) */}
       <div className="flex flex-wrap gap-8">
         {filters.map((label) => (
           <div key={label} className="inline-flex w-fit flex-col items-center">
@@ -26,6 +31,7 @@ const SalesFilterBar = ({
               }`}
               onClick={() => {
                 setFilter(label);
+                setDateRange({ start: null, end: null });
                 setShowPicker(false);
               }}
             >
@@ -43,7 +49,10 @@ const SalesFilterBar = ({
       {/* Right side actions */}
       <div className="mt-2 flex items-center gap-4 sm:mt-0">
         {/* Date Range Picker */}
-        <div className="relative z-20">
+        {/* Add the ref to this container div */}
+        <div className="relative z-20" ref={datePickerRef}>
+          {" "}
+          {/* <-- 4. Attach the ref here */}
           <button
             onClick={() => {
               setShowPicker(!showPicker);
@@ -56,7 +65,6 @@ const SalesFilterBar = ({
             </span>
             <FaCalendarAlt className="text-[#979797]" size={16} />
           </button>
-
           {showPicker && (
             <div className="absolute right-0 mt-2 rounded-md p-0 shadow-lg">
               <DatePicker
@@ -66,6 +74,9 @@ const SalesFilterBar = ({
                 onChange={(update) => {
                   const [start, end] = update;
                   setDateRange({ start, end });
+                  if (start && end) {
+                    setShowPicker(false);
+                  }
                 }}
                 inline
               />
@@ -73,7 +84,7 @@ const SalesFilterBar = ({
           )}
         </div>
 
-        {/* Filter Button */}
+        {/* Filter Button (this part remains the same) */}
         <button className="flex items-center gap-2 rounded border border-gray-500 px-3 py-3 hover:bg-white/20">
           <MdFilterList className="text-[#979797]" />
           <span className="font-poppins text-xs text-white">Filters</span>

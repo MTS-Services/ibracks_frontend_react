@@ -13,6 +13,11 @@ const userRolesData = [
     status: "idle",
     email: "editor@ibracks.com",
   },
+  {
+    role: "viewer",
+    status: "idle",
+    email: "viewer@ibracks.com",
+  },
 ];
 
 const navLinksData = [
