@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaCrown } from "react-icons/fa6";
-import { MdFileUpload } from "react-icons/md";
+import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
 import { Link } from "react-router-dom";
 
@@ -69,14 +69,15 @@ const RightSide = () => {
       </div>
 
       {/* Upload Song section */}
-      <div className="space-y-4">
+      <div className="mt-6 space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
-        <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90">
-          <Link to="/admin/upload">
-            <MdFileUpload className="text-5xl" />
-            <p className="font-bold">Upload Here</p>
-          </Link>
-        </div>
+        <Link
+          to="/admin/upload"
+          className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90"
+        >
+          <PiUploadSimpleBold className="text-5xl" />
+          <h4 className="font-semibold">Upload Here</h4>
+        </Link>
       </div>
 
       {/* Recent Uploads section */}

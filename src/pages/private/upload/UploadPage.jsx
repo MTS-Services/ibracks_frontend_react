@@ -60,7 +60,7 @@ const UploadPage = () => {
   return (
     <div className="mr-4 ml-4 space-y-6 p-8 text-white">
       <div className="mb-12 text-center">
-        <h2 className="text-lg font-semibold text-white">Upload Song</h2>
+        <h2 className="mr-74 text-lg font-semibold text-white">Upload Song</h2>
       </div>
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Column */}
@@ -200,7 +200,7 @@ const UploadPage = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-4 pt-4">
+      <div className="ml-14 flex items-center justify-center gap-6 pt-4">
         <button
           onClick={handleDiscard}
           className="rounded-lg border border-orange-200 px-10 py-2.5 font-semibold text-white transition-colors hover:bg-orange-200/10"
