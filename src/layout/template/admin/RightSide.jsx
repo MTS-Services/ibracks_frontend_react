@@ -11,9 +11,6 @@ const RightSide = () => {
   const dropdownRef = useRef(null);
   const { uploadTrigger } = useSongStore();
 
-  // <<< CHANGE 1: Define your backend's URL here
-  const backendUrl = "https://backend-ibracks.mtscorporate.com";
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,7 +34,7 @@ const RightSide = () => {
 
   return (
     <aside className="w-70 flex-shrink-0 flex-col space-y-6 p-4 text-white lg:flex">
-      {/* User profile dropdown section */}
+      {/* User profile and Upload Song sections remain the same */}
       <div className="relative" ref={dropdownRef}>
         <div
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -71,8 +68,6 @@ const RightSide = () => {
           </div>
         )}
       </div>
-
-      {/* Upload Song section */}
       <div className="mt-6 space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
         <Link
@@ -98,12 +93,13 @@ const RightSide = () => {
               key={song.id}
               className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
             >
+              {/* <<< পরিবর্তন ২: এখন আমরা সরাসরি song.coverImage ব্যবহার করছি */}
               <img
-                // <<< CHANGE 2: Use the backendUrl to create the full image path
-                src={`${backendUrl}${song.coverImage}`}
+                src={song.coverImage}
                 alt={song.title}
                 className="h-11 w-11 rounded-lg object-cover"
               />
+
               <div>
                 <p className="text-sm font-bold text-white">{song.title}</p>
                 {song.musicTag && (

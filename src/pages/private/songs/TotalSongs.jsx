@@ -122,7 +122,8 @@ const TotalSongs = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [songs, setSongs] = useState([]);
 
-  const backendUrl = "https://backend-ibracks.mtscorporate.com/api";
+  // <<< পরিবর্তন: URL থেকে '/api' অংশটি মুছে ফেলা হয়েছে
+  // const backendUrl = "https://backend-ibracks.mtscorporate.com";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -151,7 +152,7 @@ const TotalSongs = () => {
       <div className="max-h-[650px] overflow-auto px-10">
         {songs.map((song, index) => {
           const fullImageUrl = song.coverImage
-            ? `${backendUrl}${song.coverImage}`
+            ? song.coverImage
             : "https://placehold.co/56x56/222/fff?text=No+Img";
 
           return (
