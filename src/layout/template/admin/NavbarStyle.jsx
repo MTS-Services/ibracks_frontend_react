@@ -3,7 +3,6 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { useSongStore } from "../../../pages/private/upload/components/songStore";
 
 const NavbarStyle = () => {
-  // Main Part: Get search state and setter from the global store
   const { searchQuery, setSearchQuery } = useSongStore();
 
   return (
@@ -25,14 +24,13 @@ const NavbarStyle = () => {
           <input
             type="search"
             placeholder="Search songs by title..."
-            // Connect the input to the global state
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-xl bg-neutral-800 py-4 pr-4 pl-10 text-white focus:ring-2 focus:ring-fuchsia-500 focus:outline-none"
           />
         </div>
       </div>
-      <div className="w-[88px]"></div> {/* Placeholder for spacing */}
+      <div className="w-[88px]"></div>
     </nav>
   );
 };
