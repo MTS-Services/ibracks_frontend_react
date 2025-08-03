@@ -6,16 +6,20 @@ import {
   SoundSection,
   GetInTouch,
   ServiceSection,
-  ReleasesSection,
 } from "./components/sections/index";
 import { FiPlay } from "react-icons/fi";
+import ReleasesSectionTest from "./components/ReleasesSection/ReleasesSectionTest";
 
 const HomeView = () => {
   return (
     <div className="">
       <HeroSection />
       <div className="relative z-10 mx-auto -mt-50 max-w-7xl">
-        <ReleasesSection />
+        {/* ==============================================
+                              main releasePart 
+          ====================================================== */}
+        {/* <ReleasesSection /> */}
+        <ReleasesSectionTest />
       </div>
       <BrowseSection />
       <LicensingSection />

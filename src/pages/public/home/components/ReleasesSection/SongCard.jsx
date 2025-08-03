@@ -6,7 +6,7 @@ const SongCard = ({ song, currentPlayingSong, isPlaying, handlePlaySong }) => {
   return (
     <div
       key={song.id || `${song.title}-${song.artist}`}
-      className="group relative w-48 max-w-[calc(50%-1rem)] sm:max-w-none"
+      className="group max-w-[calc(50%-1rem)]sm:max-w-none relative w-48"
     >
       <img
         src={song.image}

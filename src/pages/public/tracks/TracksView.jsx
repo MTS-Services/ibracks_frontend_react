@@ -8,7 +8,6 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 import { CartContext } from "../../../utils/CartContextDefinition";
 
-// প্রতিটি ট্র্যাকের একটি 'price' প্রপার্টি থাকা জরুরি
 const tracks = [
   {
     id: 1,
@@ -49,8 +48,7 @@ const tracks = [
   // আরও ট্র্যাক যোগ করুন
 ];
 
-const TracksPage = () => {
-  // CartContext থেকে addToCart ফাংশনটি নিন
+const TracksView = () => {
   const { addToCart } = useContext(CartContext);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,9 +76,6 @@ const TracksPage = () => {
 
   const handleDropdownChange = (e, setSelectedValue, setDropdownOpenState) => {
     setSelectedValue(e.target.value);
-    // Native select এর জন্য এটি প্রয়োজন নেই কারণ ব্রাউজার নিজে বন্ধ করে।
-    // কাস্টম ড্রপডাউন বানালে এটি ব্যবহার করতে পারেন।
-    // setDropdownOpenState(false);
   };
 
   const toggleDropdown = (setDropdownOpenState) => {
@@ -89,8 +84,8 @@ const TracksPage = () => {
 
   // Add to Cart handler
   const handleAddToCart = (track) => {
-    addToCart(track); // Context থেকে প্রাপ্ত addToCart ফাংশন কল করুন
-    alert(`${track.title} added to cart!`); // ইউজারকে জানানোর জন্য একটি simple alert
+    addToCart(track);
+    alert(`${track.title} added to cart!`);
   };
 
   const filteredTracks = tracks.filter((track) => {
@@ -474,4 +469,4 @@ const TracksPage = () => {
     </div>
   );
 };
-export default TracksPage;
+export default TracksView;

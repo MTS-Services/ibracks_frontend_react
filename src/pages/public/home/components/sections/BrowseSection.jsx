@@ -33,7 +33,7 @@ const TrackList = () => {
   ];
 
   return (
-    <section className="bg-gradient-to-b from-[#060207] to-[#150618] pt-60">
+    <section className="bg-gradient-to-b from-[#060207] to-[#150618]">
       <div className="mx-auto w-full max-w-7xl pt-40 pb-20">
         {/* Header */}
         <h2 className="mb-12 text-2xl font-semibold text-white capitalize sm:text-3xl md:text-4xl">

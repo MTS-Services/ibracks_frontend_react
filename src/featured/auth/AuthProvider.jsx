@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { AuthContext } from "./AuthContext";
-
-const BASE_URL = "https://backend-lbracks.mtscorporate.com/api"; //
+import axios from "../../utils/axiosInstance"; // your axios setup
 
 export const AuthProvider = ({ children }) => {
+  // ===============code_by_shakil_munshi===================
+  // Load user from localStorage, token from cookies
+  // =======================================================
+
   const [user, setUser] = useState(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -14,69 +18,119 @@ export const AuthProvider = ({ children }) => {
     }
   });
 
-  const [token, setToken] = useState(
-    () => localStorage.getItem("token") || null,
-  );
+  const [token, setToken] = useState(() => Cookies.get("token") || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // Update localStorage when user/token changes
+  // ===============code_by_shakil_munshi===================
+  // Sync user to localStorage
+  // =======================================================
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     } else {
       localStorage.removeItem("user");
     }
+  }, [user]);
 
+  // ===============code_by_shakil_munshi===================
+  // Sync token to cookies
+  // This useEffect runs whenever the 'token' state changes.
+  // It's responsible for setting or removing the cookie.
+  // =======================================================
+  useEffect(() => {
     if (token) {
-      localStorage.setItem("token", token);
+      // ===============code_by_shakil_munshi===================
+      // Set cookie for 7 days (adjust as needed)
+      // IMPORTANT:
+      // - `secure: true` means the cookie will ONLY be sent over HTTPS.
+      //   If you are developing on `http://localhost`, this cookie will NOT be set.
+      //   For development, you might need to temporarily remove `secure: true`
+      //   or use a tool like ngrok to get an HTTPS URL.
+      // - `sameSite: "strict"` helps prevent CSRF attacks but requires
+      //   that the request originates from the same site.
+      // =======================================================
+      Cookies.set("token", token, {
+        expires: 7, // Cookie expires in 7 days
+        secure: true, // Only send over HTTPS
+        sameSite: "strict", // Strict same-site policy
+      });
+      console.log("Cookie set with token:", token); // Added for debugging
     } else {
-      localStorage.removeItem("token");
+      Cookies.remove("token");
+      console.log("Cookie removed."); // Added for debugging
     }
-  }, [user, token]);
+  }, [token]);
 
+  // ===============code_by_shakil_munshi===================
+  // Set axios default header if token changes
+  // This ensures that all subsequent authenticated requests automatically include the token.
+  // =======================================================
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      console.log("Axios Authorization header set."); // Added for debugging
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+      console.log("Axios Authorization header removed."); // Added for debugging
+    }
+  }, [token]);
+
+  // ===============code_by_shakil_munshi===================
+  // -------------- LOGIN --------------------
+  // Handles user login by sending credentials to the backend.
+  // =======================================================
   const login = async (email, password, rememberMe) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     try {
-      // NOTE: This currently uses 'ibracks'. If BASE_URL is 'lbracks', update this too for consistency.
-      const response = await fetch(
-        "https://backend-ibracks.mtscorporate.com/api/users/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, rememberMe }),
-        },
-      );
+      // ===============code_by_shakil_munshi===================
+      // Proper axios.post usage: url, data, config
+      // =======================================================
+      const response = await axios.post("/users/login", {
+        email,
+        password,
+        rememberMe,
+      });
 
-      const data = await response.json();
+      // ===============code_by_shakil_munshi==================
+      // Assuming response.data = { data: { user, token }, message }
+      // Make sure your backend API sends the token in this structure.
+      // =======================================================
+      const data = response.data;
+      console.log("Login response data:", data); // Debugging: check what the server sends
 
-      if (response.ok) {
+      if (data.data && data.data.user && data.data.token) {
         setUser(data.data.user);
-        setToken(data.data.token);
+        setToken(data.data.token); // This will trigger the useEffect to set the cookie
         setSuccess(data.message || "Login successful!");
         return { success: true, message: data.message || "Login successful!" };
       } else {
-        setError(
-          data.message || "Login failed. Please check your credentials.",
-        );
-        return { success: false, message: data.message || "Login failed." };
+        const message = "Login failed: Unexpected response format.";
+        setError(message);
+        return { success: false, message };
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError("Network error or server unavailable.");
-      return {
-        success: false,
-        message: "Network error or server unavailable.",
-      };
+
+      const message =
+        err.response?.data?.message ||
+        "Login failed. Please check your credentials.";
+
+      setError(message);
+      return { success: false, message };
     } finally {
       setLoading(false);
     }
   };
 
+  // ===============code_by_shakil_munshi===================
+  // -------------- REGISTER --------------------
+  // Handles user registration, including image upload.
+  // =======================================================
   const register = async (
     name,
     phoneNumber,
@@ -107,147 +161,128 @@ export const AuthProvider = ({ children }) => {
       formData.append("phoneNumber", phoneNumber);
       formData.append("email", email);
       formData.append("password", password);
-      formData.append("role", "user");
+      formData.append("role", "user"); // Assuming a default role
+      // For `crypto.randomUUID()`, ensure you are in a secure context (HTTPS)
+      // or a browser environment that supports it.
+      // If not, you might need a polyfill or a different UUID generation method.
       formData.append("uid", crypto.randomUUID());
 
-      if (profileImage) {
-        formData.append("profileImage", profileImage);
-      }
+      if (profileImage) formData.append("profileImage", profileImage);
 
-      // NOTE: This currently uses 'ibracks'. If BASE_URL is 'lbracks', update this too for consistency.
-      const response = await fetch(
-        "https://backend-ibracks.mtscorporate.com/api/users/register",
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
+      const response = await axios.post("/users/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      const data = await response.json();
+      const data = response.data;
+      console.log("Register response data:", data); // Debugging: check what the server sends
 
-      if (response.ok) {
-        // ✅ Automatically login after successful registration
+      // Ensure that `data.data.user` and `data.data.token` exist in the response
+      if (data.data && data.data.user && data.data.token) {
         setUser(data.data.user);
-        setToken(data.data.token);
+        setToken(data.data.token); // This should trigger the useEffect to set the cookie
         setSuccess(data.message || "User registered and logged in!");
+
         return {
           success: true,
           message: data.message || "User registered and logged in!",
         };
       } else {
-        setError(data.message || "Registration failed. Please try again.");
-        return {
-          success: false,
-          message: data.message || "Registration failed.",
-        };
+        const message = "Registration failed: Unexpected response format.";
+        setError(message);
+        return { success: false, message };
       }
     } catch (err) {
       console.error("Registration error:", err);
-      setError("Network error or server unavailable.");
-      return {
-        success: false,
-        message: "Network error or server unavailable.",
-      };
+      const message =
+        err.response?.data?.message || "Registration failed. Please try again.";
+      setError(message);
+      return { success: false, message };
     } finally {
       setLoading(false);
     }
   };
 
+  // ===============code_by_shakil_munshi===================
+  // -------------- LOGOUT --------------------
+  // Clears user, token, localStorage, and cookies upon logout.
+  // =======================================================
   const logout = () => {
     setUser(null);
     setToken(null);
+    // Explicitly remove from localStorage and cookies immediately
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    Cookies.remove("token");
+    console.log("Logged out. User and token cleared."); // Added for debugging
   };
 
-  // >>>>>>>>>>>>>> `forgotPassword` function added here <<<<<<<<<<<<<<
+  // ===============code_by_shakil_munshi===================
+  // -------------- FORGOT PASSWORD --------------------
+  // Initiates password reset process.
+  // =======================================================
   const forgotPassword = async (email) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     try {
-      const response = await fetch(`${BASE_URL}/users/${userId}`, {
-        method: "POST", // Forgot password APIs usually use POST method
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }), // Send the email in the request body
-      });
+      const response = await axios.post("/users/forgot-password", { email });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // API call was successful (status 200-299)
-        setSuccess(data.message || "Password reset link sent to your email.");
-        return {
-          success: true,
-          message: data.message || "Password reset link sent.",
-        };
-      } else {
-        // API call failed (e.g., 4xx, 5xx status codes)
-        setError(data.message || "Failed to send password reset link.");
-        return {
-          success: false,
-          message: data.message || "Failed to send password reset link.",
-        };
-      }
-    } catch (err) {
-      // Network error (e.g., server not reachable, no internet)
-      console.error("Forgot password error:", err);
-      setError("Network error or server unavailable.");
+      const data = response.data;
+      setSuccess(data.message || "Password reset link sent to your email.");
       return {
-        success: false,
-        message: "Network error or server unavailable.",
+        success: true,
+        message: data.message || "Password reset link sent.",
       };
+    } catch (err) {
+      console.error("Forgot password error:", err);
+      const message =
+        err.response?.data?.message || "Failed to send password reset link.";
+      setError(message);
+      return { success: false, message };
     } finally {
-      setLoading(false); // Always stop loading regardless of success or failure
+      setLoading(false);
     }
   };
-  // >>>>>>>>>>>>>> End of `forgotPassword` function <<<<<<<<<<<<<<
 
+  // ===============code_by_shakil_munshi===================
+  // -------------- UPDATE PASSWORD --------------------
+  // Allows a logged-in user to update their password.
+  // =======================================================
   const updatePassword = async (userId, newPassword) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     try {
-      // Your updatePassword already uses 'backend-lbracks', which is good for consistency with my chosen BASE_URL.
-      // If you decide on 'ibracks' as the BASE_URL, remember to update this endpoint too.
-      const response = await fetch(`${BASE_URL}/users/${userId}`, {
-        method: "PUT", // Use PUT method as shown in your image
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // You might need an Authorization header here if your API requires authentication (e.g., Bearer token)
+      const response = await axios.put(
+        `/users/${userId}`,
+        { password: newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // already set globally but kept for clarity
+          },
         },
-        body: JSON.stringify({ password: newPassword }),
-      });
+      );
 
-      const data = await response.json();
+      const data = response.data;
 
-      if (response.ok) {
-        setSuccess(data.message || "Password updated successfully.");
-        return {
-          success: true,
-          message: data.message || "Password updated successfully.",
-        };
-      } else {
-        setError(data.message || "Failed to update password.");
-        return {
-          success: false,
-          message: data.message || "Failed to update password.",
-        };
-      }
+      setSuccess(data.message || "Password updated successfully.");
+      return {
+        success: true,
+        message: data.message || "Password updated successfully.",
+      };
     } catch (err) {
       console.error("Update password error:", err);
-      setError("Network error or server unavailable.");
-      return {
-        success: false,
-        message: "Network error or server unavailable.",
-      };
+      const message =
+        err.response?.data?.message || "Failed to update password.";
+      setError(message);
+      return { success: false, message };
     } finally {
       setLoading(false);
     }
   };
 
+  // Context value
   const authContextValue = {
     user,
     token,
@@ -257,10 +292,10 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    forgotPassword, // <<<<<< Add forgotPassword to the context value
+    forgotPassword,
     updatePassword,
-    setError,
-    setSuccess,
+    setError, // Allowing direct manipulation of error/success messages
+    setSuccess, // useful for clearing messages on route change etc.
   };
 
   return (

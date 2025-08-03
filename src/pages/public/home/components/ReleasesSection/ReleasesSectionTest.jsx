@@ -5,19 +5,12 @@ import { FiPlay } from "react-icons/fi"; // Only FiPlay needed for header icon
 import SongCard from "./SongCard";
 import PlayerControls from "./PlayerControls";
 import ProgressBar from "./ProgressBar";
-import PaginationControls from "./PaginationControls";
-import SearchAndFilter from "./SearchAndFilter";
 import { FaHeart } from "react-icons/fa";
 
-const ReleasesSection = () => {
+const ReleasesSectionTest = () => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(8);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalSongs, setTotalSongs] = useState(0);
 
   const [currentPlayingSong, setCurrentPlayingSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -297,7 +290,7 @@ const ReleasesSection = () => {
       setLoading(true);
       setError(null);
 
-      const url = `https://backend-ibracks.mtscorporate.com/api/songs/published?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`;
+      const url = `https://backend-ibracks.mtscorporate.com/api/songs/published`;
       console.log("Fetching URL:", url);
 
       try {
@@ -321,14 +314,6 @@ const ReleasesSection = () => {
             audioUrl: song.audioFile || null,
           }));
           setSongs(processedSongs);
-
-          if (responseData.pagination) {
-            setTotalPages(responseData.pagination.totalPages || 0);
-            setTotalSongs(responseData.pagination.totalSongs || 0);
-          } else {
-            setTotalPages(1);
-            setTotalSongs(processedSongs.length);
-          }
         } else {
           console.error(
             "API response structure is not as expected or responseData.data is not an array:",
@@ -347,7 +332,7 @@ const ReleasesSection = () => {
     };
 
     fetchData();
-  }, [page, limit, searchTerm]);
+  }, []);
 
   const togglePlayPause = () => {
     console.log("togglePlayPause clicked. Current state isPlaying:", isPlaying);
@@ -407,42 +392,11 @@ const ReleasesSection = () => {
     }
   };
 
-  const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage((prevPage) => prevPage + 1);
-      setCurrentPlayingSong(null); // Stop playback on page change
-      setIsPlaying(false);
-      console.log("Navigating to next page:", page + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (page > 1) {
-      setPage((prevPage) => Math.max(1, prevPage - 1));
-      setCurrentPlayingSong(null); // Stop playback on page change
-      setIsPlaying(false);
-      console.log("Navigating to previous page:", page - 1);
-    }
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    setPage(1); // Reset page to 1 on new search
-    setCurrentPlayingSong(null); // Stop playback on new search
-    setIsPlaying(false);
-    console.log("Search term changed to:", event.target.value);
-  };
-
-  const handleLimitChange = (event) => {
-    setLimit(Number(event.target.value));
-    setPage(1); // Reset page to 1 on limit change
-    setCurrentPlayingSong(null); // Stop playback on limit change
-    setIsPlaying(false);
-    console.log("Limit changed to:", Number(event.target.value));
-  };
+  // Slice the songs array to get only the first 6
+  const displayedSongs = songs.slice(0, 6);
 
   return (
-    <section className="relative min-h-screen w-full px-4 pb-36 sm:px-8">
+    <section className="relative min-h-screen w-full">
       <div className="mb-8 flex items-center gap-4">
         <h2 className="text-xl font-semibold text-white sm:text-2xl">
           New Releases
@@ -450,20 +404,13 @@ const ReleasesSection = () => {
         <FiPlay className="h-6 w-6 rounded-full bg-white p-1 text-black" />
       </div>
 
-      <SearchAndFilter
-        searchTerm={searchTerm}
-        handleSearchChange={handleSearchChange}
-        limit={limit}
-        handleLimitChange={handleLimitChange}
-      />
-
-      <div className="flex flex-wrap justify-center gap-6 py-10">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-6 lg:gap-6 xl:grid-cols-6">
         {loading ? (
           <p className="text-lg text-white">Loading new releases...</p>
         ) : error ? (
           <p className="text-lg text-red-500">{error}</p>
-        ) : Array.isArray(songs) && songs.length > 0 ? (
-          songs.map((song) => (
+        ) : Array.isArray(displayedSongs) && displayedSongs.length > 0 ? (
+          displayedSongs.map((song) => (
             <SongCard
               key={song.id || `${song.title}-${song.artist}`}
               song={song}
@@ -476,14 +423,6 @@ const ReleasesSection = () => {
           <p className="text-lg text-white">No new releases found.</p>
         )}
       </div>
-
-      <PaginationControls
-        page={page}
-        totalPages={totalPages}
-        totalSongs={totalSongs}
-        handlePrevPage={handlePrevPage}
-        handleNextPage={handleNextPage}
-      />
 
       {currentPlayingSong && (
         <div className="fixed right-0 bottom-0 left-0 z-50 flex h-28 flex-col overflow-hidden bg-neutral-900/80 shadow-2xl backdrop-blur-2xl">
@@ -546,4 +485,4 @@ const ReleasesSection = () => {
   );
 };
 
-export default ReleasesSection;
+export default ReleasesSectionTest;
