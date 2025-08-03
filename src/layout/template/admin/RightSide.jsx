@@ -3,11 +3,16 @@ import { FaChevronRight, FaCrown } from "react-icons/fa6";
 import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
 import { Link } from "react-router-dom";
+import { useSongStore } from "../../../pages/private/upload/components/songStore";
 
 const RightSide = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [recentUploadsData, setRecentUploadsData] = useState([]);
   const dropdownRef = useRef(null);
+  const { uploadTrigger } = useSongStore();
+
+  // <<< CHANGE 1: Define your backend's URL here
+  const backendUrl = "https://backend-ibracks.mtscorporate.com";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +24,7 @@ const RightSide = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [uploadTrigger]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,7 +60,6 @@ const RightSide = () => {
             className={`transition-transform ${isDropdownOpen ? "rotate-90" : ""}`}
           />
         </div>
-
         {isDropdownOpen && (
           <div className="absolute top-full right-0 z-20 mt-2 w-48 rounded-lg bg-neutral-700 shadow-lg">
             <button
@@ -95,11 +99,11 @@ const RightSide = () => {
               className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
             >
               <img
-                src={song.coverImage}
+                // <<< CHANGE 2: Use the backendUrl to create the full image path
+                src={`${backendUrl}${song.coverImage}`}
                 alt={song.title}
-                className="h-11 w-11 rounded-lg"
+                className="h-11 w-11 rounded-lg object-cover"
               />
-
               <div>
                 <p className="text-sm font-bold text-white">{song.title}</p>
                 {song.musicTag && (

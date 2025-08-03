@@ -2,6 +2,14 @@ import React, { useState, useRef } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
+import { useSongStore } from "./components/songStore";
+
+// Main Part: New helper function to format seconds into MM:SS
+const formatDuration = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+};
 
 const UploadPage = () => {
   const initialFormState = {
@@ -12,7 +20,7 @@ const UploadPage = () => {
     duration: "00:00",
     bpm: "",
     coverImage: null,
-    musicFile: null,
+    audioFile: null,
   };
   const [formData, setFormData] = useState(initialFormState);
   const [coverImagePreview, setCoverImagePreview] = useState(null);
@@ -20,6 +28,9 @@ const UploadPage = () => {
     "Click to upload MP3, WAV, etc.",
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Main Part: Get the signaling function from the store
+  const { songUploaded } = useSongStore();
 
   const coverImageRef = useRef(null);
   const musicFileRef = useRef(null);
@@ -35,8 +46,18 @@ const UploadPage = () => {
   const handleMusicFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, musicFile: file });
+      setFormData((prevData) => ({ ...prevData, musicFile: file }));
       setMusicFileName(file.name);
+
+      // Main Part: Logic to read the audio file duration
+      const audio = new Audio();
+      audio.src = URL.createObjectURL(file);
+      audio.onloadedmetadata = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          duration: formatDuration(audio.duration),
+        }));
+      };
     }
   };
 
@@ -53,7 +74,6 @@ const UploadPage = () => {
     if (musicFileRef.current) musicFileRef.current.value = "";
   };
 
-  // This new function handles the actual API call
   const handleSubmit = async (endpoint) => {
     if (!formData.songName || !formData.musicFile || !formData.coverImage) {
       alert(
@@ -71,12 +91,24 @@ const UploadPage = () => {
     dataToSubmit.append("duration", formData.duration);
     dataToSubmit.append("bpm", formData.bpm);
     dataToSubmit.append("coverImage", formData.coverImage);
-    dataToSubmit.append("music", formData.musicFile);
+    dataToSubmit.append("audioFile", formData.audioFile);
+
+    // Main Part: Log FormData entries to the console before sending
+    console.log("--- Request Body Content ---");
+    for (const pair of dataToSubmit.entries()) {
+      // pair[0] is the key (e.g., 'title'), pair[1] is the value
+      console.log(`${pair[0]}:`, pair[1]);
+    }
+    console.log("--------------------------");
 
     try {
       const response = await axios.post(endpoint, dataToSubmit);
       console.log("Server Response:", response.data);
       alert("Song uploaded successfully!");
+
+      // Main Part: Signal that a new song has been uploaded
+      songUploaded();
+
       handleDiscard();
     } catch (error) {
       console.error("Upload failed:", error);
@@ -87,7 +119,7 @@ const UploadPage = () => {
   };
 
   const handlePublish = () => handleSubmit("/songs");
-  const handleSchedule = () => handleSubmit("/songs/schedule"); // Assuming a different endpoint for scheduling
+  const handleSchedule = () => handleSubmit("/songs/schedule");
 
   return (
     <div className="mr-4 ml-4 space-y-6 p-8 text-white">
@@ -95,7 +127,6 @@ const UploadPage = () => {
         <h2 className="mr-74 text-lg font-semibold text-white">Upload Song</h2>
       </div>
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* Left Column */}
         <div className="lg:col-span-1">
           <p className="mb-2 flex items-center gap-2 text-base font-normal text-white">
             <HiOutlinePhotograph className="text-xl" /> Upload Cover Image
@@ -127,8 +158,6 @@ const UploadPage = () => {
             </div>
           </div>
         </div>
-
-        {/* Right Column (Your original form fields are all here) */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
           <div className="sm:col-span-2">
             <label className="mb-2 block text-base font-normal">
@@ -229,8 +258,6 @@ const UploadPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Action Buttons - These are updated */}
       <div className="ml-14 flex items-center justify-center gap-6 pt-4">
         <button
           onClick={handleDiscard}
