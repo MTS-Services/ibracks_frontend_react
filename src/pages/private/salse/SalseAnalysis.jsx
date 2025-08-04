@@ -6,6 +6,7 @@ import SalesChart from "./components/SalesChart";
 import { RiBarChartBoxLine } from "react-icons/ri";
 import { CiShoppingTag } from "react-icons/ci";
 
+// Helper to process API data safely
 const normalizeAnalyticsData = (apiResponseObject, filter) => {
   const analytics = apiResponseObject?.analytics;
   const summary = {
@@ -36,6 +37,7 @@ const normalizeAnalyticsData = (apiResponseObject, filter) => {
       }));
       break;
     case "30 days":
+    case "Monthly":
       chartData = salesStat.map((item) => ({
         label: item.week,
         revenue: item.totalRevenue,
@@ -62,12 +64,14 @@ const normalizeAnalyticsData = (apiResponseObject, filter) => {
   return { summary, chartData };
 };
 
+// Helper to format percentage change
 const formatChange = (value, periodLabel) => {
   if (typeof value !== "number") return "";
   const sign = value >= 0 ? "+" : "";
   return `${sign}${value}% from ${periodLabel}`;
 };
 
+// Helper to format dates without timezone issues
 const formatDate = (date) => {
   if (!date) return "";
   const year = date.getFullYear();
@@ -82,6 +86,7 @@ const SalseAnalysis = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
+  const [monthFilter, setMonthFilter] = useState({ year: null, month: null });
 
   useEffect(() => {
     const filterConfig = {
@@ -108,7 +113,16 @@ const SalseAnalysis = () => {
         let response;
         let normalizedData;
 
-        if (dateRange.start && dateRange.end) {
+        if (monthFilter.year && monthFilter.month) {
+          const monthlyEndpoint = `/payments/analytics/sales-monthly?year=${monthFilter.year}&month=${monthFilter.month}`;
+          response = await axios.get(monthlyEndpoint);
+          normalizedData = normalizeAnalyticsData(response.data, "Monthly");
+          const monthName = new Date(0, monthFilter.month - 1).toLocaleString(
+            "default",
+            { month: "long" },
+          );
+          normalizedData.summary.periodLabel = `${monthName} ${monthFilter.year}`;
+        } else if (dateRange.start && dateRange.end) {
           const customEndpoint = `/payments/analytics/sales-custom-range?startDate=${formatDate(dateRange.start)}&endDate=${formatDate(dateRange.end)}`;
           response = await axios.get(customEndpoint);
           normalizedData = normalizeAnalyticsData(response.data, "Custom");
@@ -140,7 +154,14 @@ const SalseAnalysis = () => {
       }
     };
     fetchData();
-  }, [activeFilter, dateRange]);
+  }, [activeFilter, dateRange, monthFilter]);
+
+  const handleMonthSelect = (month) => {
+    const year = new Date().getFullYear();
+    setMonthFilter({ year, month });
+    setFilter("");
+    setDateRange({ start: null, end: null });
+  };
 
   const filters = ["24 hours", "7 days", "30 days", "12 months"];
 
@@ -190,7 +211,7 @@ const SalseAnalysis = () => {
   return (
     <section
       className="space-y-4 bg-gradient-to-b from-[#050306] to-[#5D006D] p-4 sm:p-6 md:p-10"
-      aria-labelledby="sales-analysis-heading "
+      aria-labelledby="sales-analysis-heading"
     >
       <h1 id="sales-analysis-heading" className="text-xl font-bold text-white">
         Sales Analysis
@@ -201,6 +222,7 @@ const SalseAnalysis = () => {
         setFilter={setFilter}
         dateRange={dateRange}
         setDateRange={setDateRange}
+        onMonthSelect={handleMonthSelect}
       />
       {renderContent()}
     </section>
