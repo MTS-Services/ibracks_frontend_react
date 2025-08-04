@@ -189,8 +189,8 @@ const SalseAnalysis = () => {
 
   return (
     <section
-      className="space-y-4 p-4 sm:p-6 md:p-10"
-      aria-labelledby="sales-analysis-heading"
+      className="space-y-4 bg-gradient-to-b from-[#050306] to-[#5D006D] p-4 sm:p-6 md:p-10"
+      aria-labelledby="sales-analysis-heading "
     >
       <h1 id="sales-analysis-heading" className="text-xl font-bold text-white">
         Sales Analysis

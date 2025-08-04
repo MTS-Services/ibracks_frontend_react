@@ -9,7 +9,7 @@ const DashboardLayout = () => {
       <div className="h-screen w-70 bg-[#212121]">
         <LeftSide />
       </div>
-      <div className="w-full bg-gradient-to-br from-[#2e0c4f65] to-[#3f0c5854]">
+      <div className="w-full bg-gradient-to-b from-[#050306] via-[#5D006D] to-[#5D006D]">
         <NavbarStyle />
         <Outlet />
       </div>
