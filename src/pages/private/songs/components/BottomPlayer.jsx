@@ -1,11 +1,11 @@
 import { BsMusicNoteList } from "react-icons/bs";
 import {
-  FaHeart,
   FaRandom,
   FaStepBackward,
   FaStepForward,
   FaRedoAlt,
   FaVolumeUp,
+  FaHeart,
 } from "react-icons/fa";
 import { FaPause } from "react-icons/fa6";
 

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
   HeroSection,
-  ReleasesSection,
   BrowseSection,
   LicensingSection,
   SoundSection,
   GetInTouch,
   ServiceSection,
+  ReleasesSection,
 } from "./components/sections/index";
 
 import axios from "../../../utils/axiosInstance";

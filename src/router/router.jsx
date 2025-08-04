@@ -21,6 +21,7 @@ import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
 import NotFoundView from "../pages/error/NotFoundView";
 import CartTestView from "../pages/public/cart/CartTestView";
 import CheckoutView from "../pages/public/checkout/CheckoutView";
+import Account from "../pages/private/Account/Account";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ const AppRoutes = createBrowserRouter([
         path: "/shoping-cart",
         element: <CartView />,
       },
+
       {
         path: "/test-cart",
         element: <CartTestView />,
@@ -56,6 +58,11 @@ const AppRoutes = createBrowserRouter([
         path: "/check-out",
         element: <CheckoutView />,
       },
+      {
+        path: "/account",
+        element: <Account />,
+      },
+
       {
         path: "/tracks",
         element: <TracksView />,
