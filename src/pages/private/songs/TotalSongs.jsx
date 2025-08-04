@@ -15,7 +15,7 @@ const TotalSongs = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.5);
   const [isShuffle, setIsShuffle] = useState(false);
-  const [repeatMode, setRepeatMode] = useState("off"); // 'off', 'all', 'one'
+  const [repeatMode, setRepeatMode] = useState("off");
   const { searchQuery } = useSongStore();
 
   const audioRef = useRef(new Audio());
@@ -68,7 +68,7 @@ const TotalSongs = () => {
     };
   }, [repeatMode, handleNextSong]);
 
-  // Main Part: The play/pause logic is now handled directly here to fix playback
+  // The play/pause logic is now handled
   const handlePlayPause = (index) => {
     const audio = audioRef.current;
 
@@ -118,9 +118,9 @@ const TotalSongs = () => {
   );
 
   return (
-    <section className="h-full w-full">
+    <section className="h-full w-full bg-gradient-to-b from-[#050306] to-[#5D006D]">
       <h1 className="px-10 py-4 text-xl font-bold text-white">Total Songs</h1>
-      <div className="max-h-[calc(100vh_-_250px)] overflow-auto px-10">
+      <div className="max-h-[calc(100vh_-_250px)] overflow-auto px-6">
         {filteredSongs.map((song, index) => (
           <div
             key={song.id}

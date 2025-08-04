@@ -3,7 +3,7 @@ import { HiOutlinePhotograph } from "react-icons/hi";
 import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
 import { useSongStore } from "./components/songStore";
-import ScheduleModal from "./components/ScheduleModal"; // Import the new modal
+import ScheduleModal from "./components/ScheduleModal";
 
 const formatDuration = (seconds) => {
   const minutes = Math.floor(seconds / 60);
