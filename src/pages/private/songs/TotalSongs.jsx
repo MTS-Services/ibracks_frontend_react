@@ -1,130 +1,47 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect } from "react";
 import { IoPlay, IoPause, IoHeadsetSharp } from "react-icons/io5";
 import { IoMdTime } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
 import { PiDotsThreeOutline } from "react-icons/pi";
-import BottomPlayer from "./components/BottomPlayer";
 import axios from "../../../utils/axiosInstance";
 import { useSongStore } from "../upload/components/songStore";
 
 const TotalSongs = () => {
-  const [songs, setSongs] = useState([]);
-  const [currentSongIndex, setCurrentSongIndex] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.5);
-  const [isShuffle, setIsShuffle] = useState(false);
-  const [repeatMode, setRepeatMode] = useState("off");
-  const { searchQuery } = useSongStore();
-
-  const audioRef = useRef(new Audio());
+  const {
+    songs,
+    setSongs,
+    currentSongIndex,
+    isPlaying,
+    playSong,
+    searchQuery,
+  } = useSongStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/songs/published");
+        const res = await axios.get("/songs/published?limit=10000");
         setSongs(res.data.data);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchData();
-  }, []);
-
-  const handleNextSong = useCallback(() => {
-    if (songs.length === 0) return;
-    let nextIndex;
-    if (isShuffle) {
-      nextIndex = Math.floor(Math.random() * songs.length);
-    } else {
-      nextIndex = (currentSongIndex + 1) % songs.length;
+    if (songs.length === 0) {
+      fetchData();
     }
-    setCurrentSongIndex(nextIndex);
-    setIsPlaying(true);
-  }, [currentSongIndex, songs, isShuffle]);
+  }, [setSongs, songs.length]);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    const updateTime = () => setCurrentTime(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
-    const handleSongEnd = () => {
-      if (repeatMode === "one") {
-        audio.currentTime = 0;
-        audio.play();
-      } else {
-        handleNextSong();
-      }
-    };
-
-    audio.addEventListener("timeupdate", updateTime);
-    audio.addEventListener("loadedmetadata", updateDuration);
-    audio.addEventListener("ended", handleSongEnd);
-
-    return () => {
-      audio.removeEventListener("timeupdate", updateTime);
-      audio.removeEventListener("loadedmetadata", updateDuration);
-      audio.removeEventListener("ended", handleSongEnd);
-    };
-  }, [repeatMode, handleNextSong]);
-
-  // The play/pause logic is now handled
-  const handlePlayPause = (index) => {
-    const audio = audioRef.current;
-
-    if (currentSongIndex === index) {
-      if (isPlaying) {
-        audio.pause();
-        setIsPlaying(false);
-      } else {
-        audio.play();
-        setIsPlaying(true);
-      }
-    } else {
-      setCurrentSongIndex(index);
-      audio.src = songs[index].audioFile;
-      audio.play().catch((e) => console.error("Error playing audio:", e));
-      setIsPlaying(true);
-    }
-  };
-
-  const handlePrevSong = () => {
-    if (songs.length === 0) return;
-    const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-    setCurrentSongIndex(prevIndex);
-    setIsPlaying(true);
-  };
-
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    audioRef.current.volume = newVolume;
-    setVolume(newVolume);
-  };
-
-  const toggleShuffle = () => setIsShuffle(!isShuffle);
-
-  const toggleRepeat = () => {
-    setRepeatMode((prev) => {
-      if (prev === "off") return "all";
-      if (prev === "all") return "one";
-      return "off";
-    });
-  };
-
-  const currentSong =
-    currentSongIndex !== null ? songs[currentSongIndex] : null;
   const filteredSongs = songs.filter((song) =>
     song.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
-    <section className="h-full w-full bg-gradient-to-b from-[#050306] to-[#5D006D]">
+    <section className="h-full w-full">
       <h1 className="px-10 py-4 text-xl font-bold text-white">Total Songs</h1>
-      <div className="max-h-[calc(100vh_-_250px)] overflow-auto px-6">
+      <div className="px-6 pb-32">
         {filteredSongs.map((song, index) => (
           <div
             key={song.id}
-            onClick={() => handlePlayPause(index)}
+            onClick={() => playSong(index)}
             className="group grid cursor-pointer grid-cols-[30px_minmax(200px,_3fr)_2fr_2fr_auto] items-center gap-4 rounded-lg p-2 hover:bg-white/10"
           >
             <div className="relative flex h-full items-center justify-center text-center text-neutral-200">
@@ -171,23 +88,6 @@ const TotalSongs = () => {
             </div>
           </div>
         ))}
-      </div>
-      <div className="fixed bottom-0 left-0 w-full">
-        <BottomPlayer
-          song={currentSong}
-          isPlaying={isPlaying}
-          isShuffle={isShuffle}
-          repeatMode={repeatMode}
-          onPlayPause={() => handlePlayPause(currentSongIndex)}
-          onNext={handleNextSong}
-          onPrev={handlePrevSong}
-          onToggleShuffle={toggleShuffle}
-          onToggleRepeat={toggleRepeat}
-          currentTime={currentTime}
-          duration={duration}
-          volume={volume}
-          onVolumeChange={handleVolumeChange}
-        />
       </div>
     </section>
   );

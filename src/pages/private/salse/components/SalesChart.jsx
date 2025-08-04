@@ -8,10 +8,8 @@ import {
   Legend,
   Title,
 } from "chart.js";
-
 import { FaCircle } from "react-icons/fa";
 
-// Register chart components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,10 +31,11 @@ const SalesChart = ({ data }) => {
     },
     scales: {
       y: {
-        beginAtZero: true,
+        beginAtZero: true, // This ensures the scale starts from 0
         ticks: {
           color: "#ccc",
-          callback: (value) => value / 1000 + "k",
+          // <<< পরিবর্তন: 'k' এর পরিবর্তে '$' এবং কমা ব্যবহার করার জন্য এই লাইনটি পরিবর্তন করা হয়েছে
+          callback: (value) => "$" + value.toLocaleString(),
         },
         grid: {
           color: "rgba(255, 255, 255, 0.2)",
@@ -73,7 +72,6 @@ const SalesChart = ({ data }) => {
       <div className="h-64">
         <Bar options={options} data={chartData} />
       </div>
-      {/* Custom Legend */}
       <div className="mt-4 flex items-center justify-center gap-8 text-sm text-gray-300">
         <div className="flex items-center gap-2">
           <FaCircle className="text-xs text-yellow-400" />

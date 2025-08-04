@@ -12,7 +12,7 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm, isSubmitting }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-      <div className="mx-4 w-full max-w-md rounded-2xl bg-neutral-800 p-6 text-white shadow-lg">
+      <div className="mx-4 w-full max-w-md rounded-2xl bg-neutral-800 bg-gradient-to-b from-[#5D006D] to-[#4b0058] p-6 text-white shadow-lg">
         <h2 className="text-center text-xl font-bold text-white">
           Schedule Publication
         </h2>
@@ -28,6 +28,8 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm, isSubmitting }) => {
             inline
             dateFormat="MMMM d, yyyy h:mm aa"
             className="bg-transparent text-white"
+            showTimeInput
+            timeInputLabel="Custom Time:"
           />
         </div>
 

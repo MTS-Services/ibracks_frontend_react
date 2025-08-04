@@ -2,8 +2,9 @@ import React, { useState, useRef } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
-import { useSongStore } from "./components/songStore";
 import ScheduleModal from "./components/ScheduleModal";
+import toast from "react-hot-toast";
+import { useSongStore } from "./components/songStore";
 
 const formatDuration = (seconds) => {
   const minutes = Math.floor(seconds / 60);
@@ -29,7 +30,6 @@ const UploadPage = () => {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // New state to control the modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { songUploaded } = useSongStore();
@@ -75,9 +75,7 @@ const UploadPage = () => {
 
   const handleSubmit = async (publishAt = null) => {
     if (!formData.songName || !formData.audioFile || !formData.coverImage) {
-      alert(
-        "Please fill in the song name and upload both a cover image and music file.",
-      );
+      toast.error("Please fill in song name, cover image, and music file.");
       return;
     }
     setIsSubmitting(true);
@@ -99,12 +97,14 @@ const UploadPage = () => {
     try {
       const response = await axios.post("/songs", dataToSubmit);
       console.log("Server Response:", response.data);
-      alert(`Song ${publishAt ? "scheduled" : "published"} successfully!`);
+      toast.success(
+        `Song ${publishAt ? "scheduled" : "published"} successfully!`,
+      );
       songUploaded();
       handleDiscard();
     } catch (error) {
       console.error("Upload failed:", error);
-      alert("Upload failed. Please check the console for details.");
+      toast.error("Upload failed. Please check the console for details.");
     } finally {
       setIsSubmitting(false);
       setIsModalOpen(false);
@@ -123,7 +123,7 @@ const UploadPage = () => {
         onConfirm={handleConfirmSchedule}
         isSubmitting={isSubmitting}
       />
-      <div className="mr-4 ml-4 space-y-6 p-8 text-white">
+      <div className="space-y-6 bg-gradient-to-b from-[#050306] to-[#5D006D] p-8 pr-8 pl-8 text-white">
         <div className="mb-12 text-center">
           <h2 className="mr-74 text-lg font-semibold text-white">
             Upload Song

@@ -4,6 +4,7 @@ import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
 import { Link } from "react-router-dom";
 import { useSongStore } from "../../../pages/private/upload/components/songStore";
+import { toast } from "react-hot-toast";
 
 const RightSide = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -60,7 +61,9 @@ const RightSide = () => {
         {isDropdownOpen && (
           <div className="absolute top-full right-0 z-20 mt-2 w-48 rounded-lg bg-neutral-700 shadow-lg">
             <button
-              onClick={() => alert("Logging out...")}
+              onClick={() => {
+                toast.success("Logging out...");
+              }}
               className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
             >
               Log Out
@@ -93,7 +96,6 @@ const RightSide = () => {
               key={song.id}
               className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
             >
-              {/* <<< পরিবর্তন ২: এখন আমরা সরাসরি song.coverImage ব্যবহার করছি */}
               <img
                 src={song.coverImage}
                 alt={song.title}
