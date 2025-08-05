@@ -22,6 +22,7 @@ import NotFoundView from "../pages/error/NotFoundView";
 import CartTestView from "../pages/public/cart/CartTestView";
 import CheckoutView from "../pages/public/checkout/CheckoutView";
 import Account from "../pages/private/Account/Account";
+import UploadPage from "../pages/private/upload/UploadPage";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -106,6 +107,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: "salse",
         element: <SalseAnalysis />,
+      },
+      {
+        path: "upload",
+        element: <UploadPage />,
       },
     ],
   },

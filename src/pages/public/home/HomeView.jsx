@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+
+// Sections
 import {
   HeroSection,
   BrowseSection,
@@ -8,49 +10,68 @@ import {
   ServiceSection,
   ReleasesSection,
 } from "./components/sections/index";
-import { FiPlay } from "react-icons/fi";
-
 import ReleasesSectionTest from "./components/ReleasesSection/ReleasesSectionTest";
-import axios from "../../../utils/axiosInstance";
+
+// Services
+import { getAllSongs } from "../../../featured/song/trackService";
+import { getAllPlans } from "../../../featured/plans/planService";
+
+// Icons
+import { FiPlay } from "react-icons/fi";
 
 const HomeView = () => {
   const [songs, setSongs] = useState([]);
   const [plans, setPlans] = useState([]);
-
-  // console.log("Songs: ", songs);
-  // console.log("Plans: ", plans);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/songs/published?limit=6");
-        console.log(res.data.data);
-        setSongs(res.data.data);
+        setLoading(true);
 
-        const ress = await axios.get("/licenses");
-        console.log(ress.data.data);
-        setPlans(ress.data.data);
+        // Use your service functions (better abstraction)
+        const songsData = await getAllSongs({ limit: 6, published: true });
+        const plansData = await getAllPlans();
+
+        setSongs(songsData?.data || []);
+        setPlans(plansData?.data || []);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching home data:", error);
+        setSongs([]);
+        setPlans([]);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <>
       <HeroSection />
-      <ReleasesSection songs={songs} />
-      <ReleasesSectionTest></ReleasesSectionTest>
+      {/* <ReleasesSection songs={songs} /> */}
+      <ReleasesSectionTest />
       <BrowseSection songs={songs} plans={plans} />
       <LicensingSection plans={plans} />
+
+      {/* Test Section - Positioned with negative margin */}
+
+      {/* Avoid duplicate sections unless intentional */}
+      {/* If you need a second browse or license section, make sure it's unique */}
+      {/* Otherwise, remove duplicates */}
+
       <SoundSection />
       <GetInTouch />
       <ServiceSection />
-
-      {/* =================== shakil munshi ================== */}
-
-      {/* =================== shakil munshi ================== */}
     </>
   );
 };

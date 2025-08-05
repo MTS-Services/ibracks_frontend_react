@@ -1,5 +1,6 @@
 import { RouterProvider } from "react-router-dom";
 import { AppRoutes } from "./router/router";
+import { Toaster } from "react-hot-toast";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "swiper/css";
@@ -17,6 +18,7 @@ const App = () => {
     <Provider store={store}>
       <AuthProvider>
         <CartProvider>
+          <Toaster />
           <RouterProvider router={AppRoutes} />
         </CartProvider>
       </AuthProvider>

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const musicCards = [
   {
     id: 1,
@@ -60,11 +62,14 @@ const HeroSection = () => {
                 Hip-Hop.
               </p>
             </div>
-            <button className="inline-flex items-center justify-center gap-1 self-center overflow-hidden rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-12 py-3 transition-transform hover:scale-105 lg:self-start">
+            <Link
+              className="inline-flex items-center justify-center gap-1 self-center overflow-hidden rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 px-12 py-3 transition-transform hover:scale-105 lg:self-start"
+              to="/tracks"
+            >
               <div className="text-center text-lg text-black capitalize">
                 Browse Our Tracks
               </div>
-            </button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">

@@ -1,70 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaCrown } from "react-icons/fa6";
-import { MdFileUpload } from "react-icons/md";
-const recentData = [
-  {
-    title: "Perfect",
-    artist: "Ed Sheeran",
-    time: "2min ago",
-    albumArt: "https://placehold.co/44x44/3498DB/FFFFFF?text=P",
-  },
-  {
-    title: "Roman Picisan",
-    artist: "Hanin Dhiya",
-    time: "8min ago",
-    albumArt: "https://placehold.co/44x44/9B59B6/FFFFFF?text=RP",
-  },
-  {
-    title: "Tittle (Deluxe)",
-    artist: "Meghan Trainor",
-    time: "2hr ago",
-    albumArt: "https://placehold.co/44x44/E74C3C/FFFFFF?text=T",
-  },
-  {
-    title: "Shiver",
-    artist: "Ed Sheeran",
-    time: "6hr ago",
-    albumArt: "https://placehold.co/44x44/FFC107/000000?text=S",
-  },
-  {
-    title: "Feel Something",
-    artist: "Jaymes Young",
-    time: "11hr ago",
-    albumArt: "https://placehold.co/44x44/795548/FFFFFF?text=FS",
-  },
-  {
-    title: "Shape of You",
-    artist: "Ed Sheeran",
-    time: "1day ago",
-    albumArt: "https://placehold.co/44x44/2ECC71/FFFFFF?text=SOY",
-  },
-  {
-    title: "Bad Habits",
-    artist: "Ed Sheeran",
-    time: "1day ago",
-    albumArt: "https://placehold.co/44x44/F1C40F/000000?text=BH",
-  },
-];
-
+import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
+import { Link } from "react-router-dom";
+import { useSongStore } from "../../../pages/private/upload/components/songStore";
+import { toast } from "react-hot-toast";
 
 const RightSide = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [recentUploadsData, setRecentUploadsData] = useState([]);
   const dropdownRef = useRef(null);
+  const { uploadTrigger } = useSongStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/songs/published?limit=6");
-        console.log(res.data.data);
+        const res = await axios.get("/songs/new-releases?limit=7");
         setRecentUploadsData(res.data.data);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, []);
+  }, [uploadTrigger]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -77,6 +35,7 @@ const RightSide = () => {
 
   return (
     <aside className="w-70 flex-shrink-0 flex-col space-y-6 p-4 text-white lg:flex">
+      {/* User profile and Upload Song sections remain the same */}
       <div className="relative" ref={dropdownRef}>
         <div
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -99,11 +58,12 @@ const RightSide = () => {
             className={`transition-transform ${isDropdownOpen ? "rotate-90" : ""}`}
           />
         </div>
-
         {isDropdownOpen && (
           <div className="absolute top-full right-0 z-20 mt-2 w-48 rounded-lg bg-neutral-700 shadow-lg">
             <button
-              onClick={() => alert("Logging out...")}
+              onClick={() => {
+                toast.success("Logging out...");
+              }}
               className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
             >
               Log Out
@@ -111,14 +71,18 @@ const RightSide = () => {
           </div>
         )}
       </div>
-
-      <div className="space-y-4">
+      <div className="mt-6 space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
-        <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90">
-          <MdFileUpload className="text-5xl" />
-          <p className="font-bold">Upload Here</p>
-        </div>
+        <Link
+          to="/admin/upload"
+          className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gradient-to-b from-orange-200 to-yellow-500 text-neutral-700 hover:opacity-90"
+        >
+          <PiUploadSimpleBold className="text-5xl" />
+          <h4 className="font-semibold">Upload Here</h4>
+        </Link>
       </div>
+
+      {/* Recent Uploads section */}
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-white">Recent Uploads</h2>
@@ -128,19 +92,25 @@ const RightSide = () => {
         </div>
         <div className="space-y-4">
           {recentUploadsData.map((song) => (
-            <div key={song.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <img
-                  src={song.coverImage}
-                  alt={song.title}
-                  className="h-11 w-11 rounded-lg"
-                />
-                <div>
-                  <p className="text-sm font-bold text-white">{song.title}</p>
-                  <p className="text-xs text-neutral-400">{song.artist}</p>
-                </div>
+            <div
+              key={song.id}
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
+            >
+              <img
+                src={song.coverImage}
+                alt={song.title}
+                className="h-11 w-11 rounded-lg object-cover"
+              />
+
+              <div>
+                <p className="text-sm font-bold text-white">{song.title}</p>
+                {song.musicTag && (
+                  <p className="text-xs text-neutral-400 capitalize">
+                    {song.musicTag}
+                  </p>
+                )}
               </div>
-              <p className="text-xs text-neutral-400">{song.time}</p>
+              <p className="text-xs text-neutral-400">{song.publishedAgo}</p>
             </div>
           ))}
         </div>

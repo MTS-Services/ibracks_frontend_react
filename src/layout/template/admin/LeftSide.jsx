@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { FiEdit, FiHome, FiMusic, FiSettings, FiVideo } from "react-icons/fi";
 import { GrLineChart } from "react-icons/gr";
+import toast from "react-hot-toast";
 
 const userRolesData = [
   {
@@ -13,12 +14,20 @@ const userRolesData = [
     status: "idle",
     email: "editor@ibracks.com",
   },
+  {
+    role: "viewer",
+    status: "idle",
+    email: "viewer@ibracks.com",
+  },
 ];
 
 const navLinksData = [
   // { name: "dashboard", icon: <FiHome />, path: "/admin" },
-  { name: "tracks", icon: <FiMusic />, path: "/admin/songs" },
-  { name: "Sales", icon: <GrLineChart />, path: "/admin/salse" },
+  { name: "Total Songs Uploaded", icon: <FiMusic />, path: "/admin/songs" },
+  { name: "Total Sales (Amount)", icon: <GrLineChart />, path: "/admin/salse" },
+  // {
+  //   name: "User Admin",
+  // },
   // { name: "videos", icon: <FiVideo />, path: "/admin/videos" },
   // { name: "settings", icon: <FiSettings />, path: "/admin/settings" },
 ];
@@ -52,8 +61,6 @@ const LeftSide = () => {
             {isActive(link.path) && (
               <div className="absolute top-2 right-0 h-10 w-1 rounded-tl-sm rounded-bl-sm bg-white" />
             )}
-
-            {/* Icon bubble */}
             <span
               className={`rounded-lg p-2 transition-colors duration-200 ${
                 isActive(link.path)
@@ -87,7 +94,7 @@ const LeftSide = () => {
               </div>
             </div>
             <button
-              onClick={() => alert(`Editing ${user.role}`)}
+              onClick={() => toast.success(`Editing ${user.role}`)}
               className="text-amber-400 hover:text-amber-300"
             >
               <FiEdit />

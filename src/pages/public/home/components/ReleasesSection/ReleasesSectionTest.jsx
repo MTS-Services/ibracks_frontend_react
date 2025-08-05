@@ -396,7 +396,7 @@ const ReleasesSectionTest = () => {
   const displayedSongs = songs.slice(0, 6);
 
   return (
-    <section className="relative min-h-screen w-full">
+    <section className="relative mx-auto w-full max-w-7xl pt-10">
       <div className="mb-8 flex items-center gap-4">
         <h2 className="text-xl font-semibold text-white sm:text-2xl">
           New Releases
