@@ -31,8 +31,8 @@ const BrowseSection = ({ songs, plans }) => {
   };
 
   return (
-    <section className="bg-gradient-to-b from-[#100418] to-[#150618] lg:py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">
+    <section className="bg-gradient-to-b from-[#060207] to-[#150618]">
+      <div className="mx-auto w-full max-w-7xl pt-40 pb-20">
         {/* Header */}
         <h2 className="mb-8 text-2xl font-semibold text-white capitalize sm:text-3xl md:text-4xl">
           Browse Tracks

@@ -1,59 +1,81 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+
+// ===============code_by_shakil_munshi===================
+// Import Swiper styles
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { IoPlayCircleOutline } from "react-icons/io5";
 
+// ===============code_by_shakil_munshi===================
+// Import icons
 import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 import { IoMdArrowDroprightCircle } from "react-icons/io";
 
-// Define a constant for your default image path
-// Make sure this path is correct relative to your public directory
+// ===============code_by_shakil_munshi===================
+// Assuming this is your custom axios instance
+
+import axios from "../../utils/axiosInstance";
+import { FaPlay } from "react-icons/fa";
+
 const DEFAULT_COVER_IMAGE = "/treacks/cart2.png";
-// If you're using the one you mentioned:
-// const DEFAULT_COVER_IMAGE = "/treacks/cart2.png";
-// Ensure cart2.png is inside public/treacks/
 
 const TracksPageHeroSection = () => {
   const [newReleases, setNewReleases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ===============code_by_shakil_munshi===================
+  // Audio state
+  // ==================================
+
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
+  const audioRef = useRef(new Audio());
+
   useEffect(() => {
     const fetchNewReleases = async () => {
       try {
-        const url =
-          "https://backend-ibracks.mtscorporate.com/api/songs/new-releases";
-        const response = await fetch(url);
+        const response = await axios.get(`songs/new-releases`);
+        const data = response.data;
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (!data || !data.data) {
+          throw new Error("Invalid data format received from API.");
         }
 
-        const data = await response.json();
-
         const formattedReleases = data.data.map((item) => {
-          // --- IMPROVED DEFAULT IMAGE LOGIC ---
           let imageUrl = item.coverImage;
-          // Check if coverImage is null, undefined, or an empty string
           if (!imageUrl || imageUrl.trim() === "") {
             imageUrl = DEFAULT_COVER_IMAGE;
           }
-          // --- END IMPROVED LOGIC ---
 
           return {
             id: item.id,
             title: item.title,
             artist: item.user ? item.user.name : "Unknown Artist",
             image: imageUrl,
+
+            // ===============code_by_shakil_munshi===================
+            // Assume your API has an 'audioUrl' field for the song file
+            // ==================================
+
+            audioUrl: item.audioFile,
           };
         });
         setNewReleases(formattedReleases);
       } catch (err) {
         console.error("Failed to fetch new releases:", err);
-        setError(err.message);
+        if (err.response) {
+          setError(
+            `Server error: ${err.response.status} - ${err.response.statusText}`,
+          );
+        } else if (err.request) {
+          setError("Network error: No response received from server.");
+        } else {
+          setError(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -61,6 +83,35 @@ const TracksPageHeroSection = () => {
 
     fetchNewReleases();
   }, []);
+
+  // ===============code_by_shakil_munshi===================
+  // Function to handle playing a song
+  // ==================================
+
+  const handlePlaySong = (release) => {
+    // ===============code_by_shakil_munshi===================
+    // Stop the current song if one is playing
+    // ==================================
+
+    if (currentlyPlaying) {
+      audioRef.current.pause();
+    }
+    // ===============code_by_shakil_munshi===================
+    // Check if the clicked song is the same as the current one
+    // ==================================
+
+    if (currentlyPlaying && currentlyPlaying.id === release.id) {
+      setCurrentlyPlaying(null);
+    } else {
+      // ===============code_by_shakil_munshi===================
+      // If a new song is clicked, set the new source and play
+      // ==================================
+
+      audioRef.current.src = release.audioUrl;
+      audioRef.current.play();
+      setCurrentlyPlaying(release);
+    }
+  };
 
   if (loading) {
     return (
@@ -140,16 +191,24 @@ const TracksPageHeroSection = () => {
                 key={release.id}
                 className="flex !h-auto !w-auto flex-col items-start justify-start gap-2.5"
               >
-                <div className="h-[176px] w-[176px] overflow-hidden rounded">
+                <div
+                  className="relative h-[176px] w-[176px] cursor-pointer overflow-hidden rounded"
+                  onClick={() => handlePlaySong(release)}
+                >
                   <img
                     className="h-full w-full object-cover object-center"
                     src={release.image}
                     alt={release.title}
-                    // Add onError to catch broken image links from API and fall back to default
                     onError={(e) => {
                       e.target.src = DEFAULT_COVER_IMAGE;
                     }}
                   />
+                  {/* Optional: Add a play icon overlay */}
+                  {currentlyPlaying && currentlyPlaying.id === release.id && (
+                    <div className="bg-opacity-50 absolute inset-0 flex items-center justify-center bg-black/60">
+                      <IoPlayCircleOutline className="h-12 w-12 text-white" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex w-full flex-col items-start justify-start gap-0.5 py-1">
                   <div className="self-stretch truncate text-sm font-semibold text-neutral-200 sm:text-base">

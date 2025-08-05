@@ -512,5 +512,4 @@ const TracksView = () => {
     </section>
   );
 };
-
 export default TracksView;
