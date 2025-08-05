@@ -1,7 +1,9 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import DatePicker from "react-datepicker";
-import { FaCalendarAlt, FaFilter } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import { MdFilterList } from "react-icons/md";
+import MonthPickerModal from "./MonthPickerModal";
+import { useClickOutside } from "./useClickOutside";
 
 const SalesFilterBar = ({
   activeFilter,
@@ -9,12 +11,20 @@ const SalesFilterBar = ({
   setFilter,
   dateRange,
   filters,
+  onMonthSelect,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
+  const [showMonthPicker, setShowMonthPicker] = useState(false);
+
+  const datePickerRef = useRef(null);
+  const monthPickerRef = useRef(null);
+
+  useClickOutside(datePickerRef, () => setShowPicker(false));
+  useClickOutside(monthPickerRef, () => setShowMonthPicker(false));
 
   return (
     <div className="flex flex-wrap items-center justify-between rounded-lg text-white">
-      {/* Time period selection */}
+      {/* Quick filters (24 hours, etc.) */}
       <div className="flex flex-wrap gap-8">
         {filters.map((label) => (
           <div key={label} className="inline-flex w-fit flex-col items-center">
@@ -26,7 +36,9 @@ const SalesFilterBar = ({
               }`}
               onClick={() => {
                 setFilter(label);
+                setDateRange({ start: null, end: null });
                 setShowPicker(false);
+                setShowMonthPicker(false);
               }}
             >
               {label}
@@ -43,11 +55,12 @@ const SalesFilterBar = ({
       {/* Right side actions */}
       <div className="mt-2 flex items-center gap-4 sm:mt-0">
         {/* Date Range Picker */}
-        <div className="relative z-20">
+        <div className="relative z-20" ref={datePickerRef}>
           <button
             onClick={() => {
               setShowPicker(!showPicker);
-              setFilter(""); // Clear quick filter
+              setFilter("");
+              setShowMonthPicker(false);
             }}
             className="flex items-center gap-2 rounded border border-gray-500 px-3 py-3 hover:bg-white/20"
           >
@@ -66,6 +79,9 @@ const SalesFilterBar = ({
                 onChange={(update) => {
                   const [start, end] = update;
                   setDateRange({ start, end });
+                  if (start && end) {
+                    setShowPicker(false);
+                  }
                 }}
                 inline
               />
@@ -73,11 +89,26 @@ const SalesFilterBar = ({
           )}
         </div>
 
-        {/* Filter Button */}
-        <button className="flex items-center gap-2 rounded border border-gray-500 px-3 py-3 hover:bg-white/20">
-          <MdFilterList className="text-[#979797]" />
-          <span className="font-poppins text-xs text-white">Filters</span>
-        </button>
+        {/* Filter Button for Month Selection */}
+        <div className="relative z-20" ref={monthPickerRef}>
+          <button
+            onClick={() => {
+              setShowMonthPicker(!showMonthPicker);
+              setFilter("");
+              setDateRange({ start: null, end: null });
+            }}
+            className="flex items-center gap-2 rounded border border-gray-500 px-3 py-3 hover:bg-white/20"
+          >
+            <MdFilterList className="text-[#979797]" />
+            <span className="font-poppins text-xs text-white">Filters</span>
+          </button>
+
+          <MonthPickerModal
+            isOpen={showMonthPicker}
+            onClose={() => setShowMonthPicker(false)}
+            onMonthSelect={onMonthSelect}
+          />
+        </div>
       </div>
     </div>
   );

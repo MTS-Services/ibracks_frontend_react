@@ -1,80 +1,69 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { IoPlay, IoPause, IoHeadsetSharp } from "react-icons/io5";
 import { IoMdTime } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
 import { PiDotsThreeOutline } from "react-icons/pi";
-import BottomPlayer from "./components/BottomPlayer";
-import { getAllSongs } from "../../../featured/song/trackService";
 import axios from "../../../utils/axiosInstance";
-
-// Expanded dummy songs data (20+ items)
+import { useSongStore } from "../upload/components/songStore";
 
 const TotalSongs = () => {
-  const [currentSong, setCurrentSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const [songs, setSongs] = useState([]);
+  const {
+    songs,
+    setSongs,
+    currentSongIndex,
+    isPlaying,
+    playSong,
+    searchQuery,
+  } = useSongStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/songs/published?limit=6");
-        console.log(res.data.data);
+        const res = await axios.get("/songs/published?limit=10000");
         setSongs(res.data.data);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchData();
-  }, []);
-
-  const handlePlayPause = (song) => {
-    if (currentSong?.id === song.id) {
-      setIsPlaying(!isPlaying);
-    } else {
-      setCurrentSong(song);
-      setIsPlaying(true);
+    if (songs.length === 0) {
+      fetchData();
     }
-  };
+  }, [setSongs, songs.length]);
+
+  const filteredSongs = songs.filter((song) =>
+    song.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
-    <section className="">
+    <section className="h-full w-full">
       <h1 className="px-10 py-4 text-xl font-bold text-white">Total Songs</h1>
-      <div className="max-h-[650px] overflow-auto px-10">
-        {songs.map((song, index) => (
+      <div className="px-6 pb-32">
+        {filteredSongs.map((song, index) => (
           <div
             key={song.id}
-            className="group grid grid-cols-[30px_minmax(200px,_3fr)_2fr_2fr_auto] items-center gap-4 rounded-lg p-2 hover:bg-white/10"
+            onClick={() => playSong(index)}
+            className="group grid cursor-pointer grid-cols-[30px_minmax(200px,_3fr)_2fr_2fr_auto] items-center gap-4 rounded-lg p-2 hover:bg-white/10"
           >
             <div className="relative flex h-full items-center justify-center text-center text-neutral-200">
-              {currentSong?.id === song.id && isPlaying ? (
-                <button
-                  onClick={() => handlePlayPause(song)}
-                  className="text-xl text-white"
-                >
-                  <IoPause />
-                </button>
+              {currentSongIndex === index && isPlaying ? (
+                <IoPause className="text-xl text-white" />
               ) : (
-                <button
-                  onClick={() => handlePlayPause(song)}
-                  className="absolute inset-0 flex items-center justify-center text-xl text-white opacity-0 transition-opacity group-hover:opacity-100"
-                >
-                  <IoPlay />
-                </button>
+                <>
+                  <IoPlay className="absolute inset-0 m-auto text-xl text-white opacity-0 transition-opacity group-hover:opacity-100" />
+                  <span className="transition-opacity group-hover:opacity-0">
+                    {index + 1}
+                  </span>
+                </>
               )}
-              <span
-                className={`transition-opacity ${
-                  currentSong?.id === song.id || "group-hover:opacity-0"
-                }`}
-              >
-                {index + 1}
-              </span>
             </div>
             <div className="flex items-center gap-4">
               <img
-                src={song.coverImage}
+                src={
+                  song.coverImage ||
+                  "https://placehold.co/56x56/222/fff?text=No+Img"
+                }
                 alt={song.title}
-                className="h-14 w-14 rounded-lg"
+                className="h-14 w-14 rounded-lg object-cover"
               />
               <p className="truncate font-bold text-white">{song.title}</p>
             </div>
@@ -99,10 +88,6 @@ const TotalSongs = () => {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="fixed bottom-0 left-0 w-full">
-        <BottomPlayer />
       </div>
     </section>
   );
