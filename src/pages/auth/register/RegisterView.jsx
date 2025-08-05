@@ -111,7 +111,7 @@ const RegisterView = () => {
                 </span>
               </h2>
 
-              <p className="font-poppins justify-start self-stretch pt-3 pt-12 text-center text-xs font-normal text-neutral-200 sm:pt-0 md:pt-4 md:text-sm lg:pt-5">
+              <p className="font-poppins justify-start self-stretch pt-2 text-center text-xs font-normal text-neutral-200 sm:pt-12 md:pt-4 md:text-sm lg:pt-5">
                 {" "}
                 {/* Smaller text for mobile/tablet */}
                 Sign up in seconds and enjoy full access with zero commitment.
