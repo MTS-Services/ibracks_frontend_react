@@ -1,148 +1,293 @@
-import { useState } from "react";
+// import { IoIosArrowBack } from "react-icons/io";
+// import { useDispatch, useSelector } from "react-redux";
+// import { FaTrashAlt, FaArrowRight } from "react-icons/fa";
+// import { clearCart, removeItem } from "../../../featured/cart/cartSlice";
+// import PayPalCheckoutButton from "./components/PaystackCheckoutButton";
+
+// function CheckoutView() {
+//   const dispatch = useDispatch();
+
+//   const { items, totalQuantity } = useSelector((state) => state.cart);
+//   const user = useSelector((state) => state.auth?.user);
+
+//   const userEmail = user?.email || "customer@example.com";
+
+//   const subtotal = items.reduce(
+//     (sum, item) => sum + item.price * item.quantity,
+//     0,
+//   );
+//   const shipping = 0.0;
+//   const total = subtotal + shipping;
+
+//   // This function will be called after a successful PayPal payment
+//   const handleSuccessfulPayment = async (paypalDetails) => {
+//     console.log(
+//       "✅ Handling successful payment. PayPal Details:",
+//       paypalDetails,
+//     );
+
+//     const orderDetails = items.map((item) => {
+//       const match = item.id.match(/^(.+)-license-(.+)$/);
+//       if (!match) throw new Error(`Invalid item ID format: ${item.id}`);
+//       return { songId: match[1], licenseId: match[2] };
+//     });
+
+//     const apiOrderPayload = {
+//       orderDetails,
+//       paymentMethod: "PAYPAL",
+//       transactionId: paypalDetails.id, // Use the transaction ID from PayPal
+//       metadata: {
+//         gateway: "paypal",
+//         currency: paypalDetails.purchase_units[0].amount.currency_code,
+//         totalAmount: paypalDetails.purchase_units[0].amount.value,
+//         customerEmail: userEmail,
+//         payerId: paypalDetails.payer.payer_id,
+//         createdAt: paypalDetails.create_time,
+//       },
+//     };
+
+//     try {
+//       // আপনার ব্যাকএন্ডে অর্ডার পাঠানোর কোড
+//       // await axios.post("/payments/orders", apiOrderPayload);
+//       console.log("Order payload sent to backend:", apiOrderPayload);
+//       alert(
+//         `🎉 Order placed successfully!\nTransaction ID: ${paypalDetails.id}`,
+//       );
+//       dispatch(clearCart());
+//     } catch (error) {
+//       console.error("❌ Failed to place order after payment:", error);
+//       alert(
+//         "Payment successful, but order confirmation failed. Please contact support.",
+//       );
+//     }
+//   };
+
+//   const handleRemoveItem = (itemId) => {
+//     dispatch(removeItem(itemId));
+//   };
+
+//   const handleClearCart = () => {
+//     if (items.length > 0) {
+//       dispatch(clearCart());
+//     }
+//   };
+
+//   if (items.length === 0) {
+//     return (
+//       <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-900 text-white">
+//         <p className="text-xl font-semibold">Your cart is empty</p>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <section
+//       className="flex min-h-screen items-center justify-center bg-neutral-900 py-6 lg:py-20"
+//       style={{
+//         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
+//       }}
+//     >
+//       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 rounded-2xl p-4 text-white backdrop-blur-sm lg:flex-row lg:p-8">
+//         {/* Left Section: Shopping Cart */}
+//         <div className="flex flex-1 flex-col gap-6">
+//           <button
+//             onClick={() => window.history.back()}
+//             className="flex w-fit items-center gap-2 text-lg font-semibold text-white hover:text-yellow-200"
+//           >
+//             <IoIosArrowBack className="h-5 w-5" />
+//             <span className="hover:underline">Continue Shopping</span>
+//           </button>
+//           <hr className="border-t border-stone-300 opacity-30" />
+//           <div>
+//             <h2 className="text-lg font-medium text-gray-300">Shopping Cart</h2>
+//             <p className="text-sm text-gray-300">
+//               You have <strong>{totalQuantity}</strong> item(s) in your cart
+//             </p>
+//           </div>
+//           <div className="flex flex-col gap-6">
+//             {items.map((item) => (
+//               <div
+//                 key={item.id}
+//                 className="flex items-center gap-4 rounded-2xl bg-white p-4 pr-6 shadow-md"
+//               >
+//                 <img
+//                   className="h-20 w-20 rounded-lg border border-gray-300 object-cover"
+//                   src={item.songThumbnail}
+//                   alt={item.songTitle}
+//                 />
+//                 <div className="flex flex-1 flex-col gap-1">
+//                   <div className="text-lg font-semibold text-[#3B3B3B] capitalize">
+//                     {item.songTitle}
+//                   </div>
+//                   <div className="text-base font-normal text-neutral-700 capitalize">
+//                     {item.planTier}
+//                   </div>
+//                 </div>
+//                 <div className="flex items-center gap-4">
+//                   <div className="text-right text-sm font-medium text-[#393939]">
+//                     ${item.price.toFixed(2)}
+//                   </div>
+//                   <button
+//                     onClick={() => handleRemoveItem(item.id)}
+//                     className="rounded-full p-2 text-gray-400 transition-colors hover:bg-red-50"
+//                   >
+//                     <FaTrashAlt className="text-xl text-gray-500 hover:text-red-500" />
+//                   </button>
+//                 </div>
+//               </div>
+//             ))}
+//             <div className="mt-4 text-right">
+//               <button
+//                 onClick={handleClearCart}
+//                 className="text-red-400 hover:underline"
+//               >
+//                 Remove all items
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Right Section: Order Summary & Checkout */}
+//         <div className="flex w-full flex-col gap-6 rounded-2xl bg-white/20 p-6 backdrop-blur-md lg:w-96">
+//           <h2 className="text-2xl font-semibold text-gray-300">
+//             Order Summary
+//           </h2>
+//           <hr className="border-t border-indigo-500 opacity-30" />
+//           <div className="space-y-2">
+//             <div className="flex justify-between text-sm">
+//               <span className="text-white">Subtotal</span>
+//               <span className="text-white">${subtotal.toFixed(2)}</span>
+//             </div>
+//           </div>
+
+//           {/* --- Using the new PayPal button component --- */}
+//           <div className="mt-4">
+//             <PayPalCheckoutButton
+//               currency="USD"
+//               amount={total}
+//               onSuccess={handleSuccessfulPayment}
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
+// export default CheckoutView;
+
 import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTrashAlt, FaArrowRight } from "react-icons/fa";
 import { clearCart, removeItem } from "../../../featured/cart/cartSlice";
-
+import PayPalCheckoutButton from "./components/PaystackCheckoutButton";
 import axios from "../../../utils/axiosInstance";
 
 function CheckoutView() {
   const dispatch = useDispatch();
 
-  // Get cart state from Redux
   const { items, totalQuantity } = useSelector((state) => state.cart);
+  // We no longer need the user object here, as PayPal provides the email.
 
-  // Local state for form inputs (can later connect to backend)
-  const [cardName, setCardName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvv, setCvv] = useState("");
-
-  // Calculate dynamic values
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-  const shipping = items.length > 0 ? 0.0 : 0;
+  const shipping = 0.0;
   const total = subtotal + shipping;
 
-  const handleCheckout = async () => {
-    if (items.length === 0) {
-      alert("Your cart is empty. Add some licenses first.");
-      return;
-    }
+  // This function will be called after a successful PayPal payment
+  const handleSuccessfulPayment = async (paypalDetails) => {
+    console.log(
+      "✅ Handling successful payment. PayPal Details:",
+      paypalDetails,
+    );
 
-    if (!cardName || !cardNumber || !expiry || !cvv) {
-      alert("Please fill in all card details.");
-      return;
-    }
-
-    // ✅ Extract songId and licenseId (supports alphanumeric or UUID)
+    // 1. Prepare orderDetails from the cart
     const orderDetails = items.map((item) => {
       const match = item.id.match(/^(.+)-license-(.+)$/);
-      if (!match) {
-        throw new Error(`Invalid item ID format: ${item.id}`);
-      }
-      const songId = match[1];
-      const licenseId = match[2];
-      return { songId, licenseId };
+      if (!match) throw new Error(`Invalid item ID format: ${item.id}`);
+      return { songId: match[1], licenseId: match[2] };
     });
 
-    // 🧾 Generate a fake transaction ID for demo/testing
-    const transactionId = `txn_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-
-    // 📨 Final payload to send to backend
+    // 2. Create the final payload for your backend, matching your required structure
     const apiOrderPayload = {
       orderDetails,
-      paymentMethod: "CREDIT_CARD",
-      transactionId,
+      paymentMethod: "PAYPAL", // Changed from "CREDIT_CARD"
+      transactionId: paypalDetails.id, // Use the real transaction ID from PayPal
       metadata: {
-        gateway: "stripe", // mock or real gateway
-        currency: "USD",
-        cardLast4: cardNumber.slice(-4),
-        cardExpiry: expiry,
-        cardholderName: cardName,
-        totalAmount: total,
-        createdAt: new Date().toISOString(),
+        gateway: "paypal", // Changed from "stripe"
+        currency: paypalDetails.purchase_units[0].amount.currency_code,
+        // You can add more metadata from paypalDetails if needed
+        totalAmount: paypalDetails.purchase_units[0].amount.value,
+        payerEmail: paypalDetails.payer.email_address, // Get email directly from PayPal response
+        payerId: paypalDetails.payer.payer_id,
       },
     };
 
     try {
+      // 3. Send the payload to your backend endpoint
+      console.log("Sending order to backend with payload:", apiOrderPayload);
       const response = await axios.post("/payments/orders", apiOrderPayload);
-      console.log("✅ Order submitted:", response.data);
-      alert(`🎉 Order placed successfully!\nTotal: $${total.toFixed(2)}`);
+
+      console.log("✅ Backend response:", response.data);
+      alert(
+        `🎉 Order placed successfully!\nTransaction ID: ${paypalDetails.id}`,
+      );
       dispatch(clearCart());
     } catch (error) {
       console.error(
-        "❌ Failed to place order:",
+        "❌ Failed to send order to backend:",
         error?.response?.data || error.message,
       );
-      alert("Something went wrong while placing the order.");
+      alert(
+        "Your payment was successful, but we failed to save your order. Please contact support with your transaction ID.",
+      );
     }
   };
 
-  // Handlers
   const handleRemoveItem = (itemId) => {
     dispatch(removeItem(itemId));
-    alert(`Removed item from cart`);
   };
 
   const handleClearCart = () => {
     if (items.length > 0) {
       dispatch(clearCart());
-      alert("Cart cleared");
     }
   };
 
-  // Empty Cart State
   if (items.length === 0) {
     return (
-      <div className="flex min-h-100 flex-col items-center justify-center rounded-2xl bg-green-800/10 p-8 text-center text-white shadow-inner">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-900 text-white">
         <p className="text-xl font-semibold">Your cart is empty</p>
-        <p className="mt-2 text-gray-300">
-          Looks like you haven't added any licenses yet.
-        </p>
-        <button
-          onClick={handleClearCart}
-          className="mt-4 hidden rounded bg-gray-100 px-6 py-2 text-sm text-white opacity-0"
-        >
-          Clear Cart
-        </button>
       </div>
     );
   }
 
   return (
     <section
-      className="flex items-center justify-center bg-neutral-900 py-6 lg:py-20"
+      className="flex min-h-screen items-center justify-center bg-neutral-900 py-6 lg:py-20"
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 rounded-2xl p-0 text-white backdrop-blur-sm md:p-0 lg:flex-row">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 rounded-2xl p-4 text-white backdrop-blur-sm lg:flex-row lg:p-8">
         {/* Left Section: Shopping Cart */}
         <div className="flex flex-1 flex-col gap-6">
-          {/* Back Link */}
           <button
             onClick={() => window.history.back()}
-            className="flex w-55 items-center gap-2 text-lg font-semibold text-white hover:text-yellow-200"
-            aria-label="Go back to shopping"
+            className="flex w-fit items-center gap-2 text-lg font-semibold text-white hover:text-yellow-200"
           >
             <IoIosArrowBack className="h-5 w-5" />
             <span className="hover:underline">Continue Shopping</span>
           </button>
-
           <hr className="border-t border-stone-300 opacity-30" />
-
-          {/* Cart Title */}
           <div>
             <h2 className="text-lg font-medium text-gray-300">Shopping Cart</h2>
             <p className="text-sm text-gray-300">
               You have <strong>{totalQuantity}</strong> item(s) in your cart
             </p>
           </div>
-
-          {/* Cart Items */}
           <div className="flex flex-col gap-6">
             {items.map((item) => (
               <div
@@ -163,24 +308,18 @@ function CheckoutView() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  {/* Price */}
                   <div className="text-right text-sm font-medium text-[#393939]">
                     ${item.price.toFixed(2)}
                   </div>
-
-                  {/* Remove Button */}
                   <button
                     onClick={() => handleRemoveItem(item.id)}
                     className="rounded-full p-2 text-gray-400 transition-colors hover:bg-red-50"
-                    aria-label={`Remove ${item.songTitle} from cart`}
                   >
                     <FaTrashAlt className="text-xl text-gray-500 hover:text-red-500" />
                   </button>
                 </div>
               </div>
             ))}
-
-            {/* Clear Cart Button */}
             <div className="mt-4 text-right">
               <button
                 onClick={handleClearCart}
@@ -192,111 +331,12 @@ function CheckoutView() {
           </div>
         </div>
 
-        {/* Right Section: Card Details */}
+        {/* Right Section: Order Summary & Checkout */}
         <div className="flex w-full flex-col gap-6 rounded-2xl bg-white/20 p-6 backdrop-blur-md lg:w-96">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold text-gray-300">
-              Card Details
-            </h2>
-            <img
-              className="h-12 w-12 rounded-full object-cover ring-2 ring-white/50"
-              src="/shoppingcart/cart1.jpg"
-              alt="User avatar"
-            />
-          </div>
-
-          {/* Card Type */}
-          <div className="flex flex-col gap-3">
-            <label className="text-base font-medium text-white">
-              Card Type
-            </label>
-            <div className="flex gap-3">
-              {["Mastercard", "Visa", "PayPal"].map((type, i) => (
-                <div
-                  key={type}
-                  className="flex h-14 w-20 items-center justify-center rounded bg-white/20 p-1"
-                >
-                  <img
-                    src={`/shoppingcart/cart${2 + i}.png`}
-                    alt={type}
-                    className="h-full w-full object-contain"
-                  />
-                </div>
-              ))}
-              <div className="flex h-14 w-20 items-center justify-center rounded bg-zinc-300/30">
-                <span className="text-xs font-bold text-white">See all</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Name on Card */}
-          <label
-            htmlFor="nameOnCard"
-            className="text-sm font-medium text-white"
-          >
-            Name on Card
-          </label>
-          <input
-            type="text"
-            id="nameOnCard"
-            value={cardName}
-            onChange={(e) => setCardName(e.target.value)}
-            placeholder="John Doe"
-            className="h-10 w-full rounded-lg bg-white px-3 text-sm text-gray-800 ring-1 ring-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-
-          {/* Card Number */}
-          <label
-            htmlFor="cardNumber"
-            className="text-sm font-medium text-white"
-          >
-            Card Number
-          </label>
-          <input
-            type="text"
-            id="cardNumber"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-            placeholder="1111 2222 3333 4444"
-            className="h-10 w-full rounded-lg bg-white px-3 text-sm text-gray-800 ring-1 ring-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-
-          {/* Expiry & CVV */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="expirationDate"
-                className="text-sm font-medium text-white"
-              >
-                Expiration Date
-              </label>
-              <input
-                type="text"
-                id="expirationDate"
-                value={expiry}
-                onChange={(e) => setExpiry(e.target.value)}
-                placeholder="MM/YY"
-                className="h-10 w-full rounded-lg bg-white px-3 text-sm text-gray-800 ring-1 ring-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
-            <div>
-              <label htmlFor="cvv" className="text-sm font-medium text-white">
-                CVV
-              </label>
-              <input
-                type="text"
-                id="cvv"
-                value={cvv}
-                onChange={(e) => setCvv(e.target.value)}
-                placeholder="123"
-                className="h-10 w-full rounded-lg bg-white px-3 text-sm text-gray-800 ring-1 ring-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
-          </div>
-
+          <h2 className="text-2xl font-semibold text-gray-300">
+            Order Summary
+          </h2>
           <hr className="border-t border-indigo-500 opacity-30" />
-
-          {/* Order Summary */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-white">Subtotal</span>
@@ -304,15 +344,13 @@ function CheckoutView() {
             </div>
           </div>
 
-          {/* Checkout Button */}
-          <button
-            onClick={handleCheckout}
-            className="mt-4 flex items-center justify-between rounded-xl bg-yellow-600 px-6 py-4 font-semibold text-white transition-colors hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-400"
-          >
-            <span>${total.toFixed(2)}</span>
-            <span>Checkout</span>
-            <FaArrowRight />
-          </button>
+          <div className="mt-4">
+            <PayPalCheckoutButton
+              currency="USD"
+              amount={total}
+              onSuccess={handleSuccessfulPayment}
+            />
+          </div>
         </div>
       </div>
     </section>
