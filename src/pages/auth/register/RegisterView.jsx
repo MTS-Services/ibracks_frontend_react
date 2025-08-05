@@ -92,14 +92,14 @@ const RegisterView = () => {
         </div>
       </div>
       {/* Content Overlay - This will contain your form and left/right sections */}
-      <div className="relative z-10 flex w-full items-center justify-center">
+      <div className="relative z-10 m-0 flex h-screen w-full items-center justify-center overflow-hidden p-0">
         <div
           className="bg z-30 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-y-auto px-8 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
           style={{
             backgroundColor: "rgba(243, 243, 243, 0.10)",
           }}
         >
-          <div className="mx-auto flex justify-center">
+          <div className="mx-auto flex justify-center pt-8">
             <div className="">
               <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
                 {" "}
@@ -121,7 +121,7 @@ const RegisterView = () => {
 
           {/* Form */}
           <form
-            className="flex flex-col items-start justify-start gap-4 self-stretch md:gap-5 lg:gap-6"
+            className="flex flex-col items-start justify-start gap-4 self-stretch pb-6 sm:py-0 md:gap-5 lg:gap-6"
             onSubmit={handleSubmit}
           >
             {/* Name */}
