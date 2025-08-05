@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
@@ -18,8 +18,8 @@ import { IoMdArrowDroprightCircle } from "react-icons/io";
 // ===============code_by_shakil_munshi===================
 // Assuming this is your custom axios instance
 
-import axios from "../../utils/axiosInstance";
 import { FaPlay } from "react-icons/fa";
+import axios from "../../utils/axiosInstance";
 
 const DEFAULT_COVER_IMAGE = "/treacks/cart2.png";
 
@@ -45,9 +45,20 @@ const TracksPageHeroSection = () => {
           throw new Error("Invalid data format received from API.");
         }
 
-        const formattedReleases = data.data.map((item) => {
+        // Filter out any invalid items (null, undefined, or missing key properties)
+        const validReleases = data.data.filter(
+          (item) => item && item.id && item.title,
+        );
+
+        const formattedReleases = validReleases.map((item) => {
+          // Your existing logic for setting the cover image is good,
+          // but let's make it even more robust.
           let imageUrl = item.coverImage;
-          if (!imageUrl || imageUrl.trim() === "") {
+          if (
+            !imageUrl ||
+            typeof imageUrl !== "string" ||
+            imageUrl.trim() === ""
+          ) {
             imageUrl = DEFAULT_COVER_IMAGE;
           }
 
@@ -56,31 +67,18 @@ const TracksPageHeroSection = () => {
             title: item.title,
             artist: item.user ? item.user.name : "Unknown Artist",
             image: imageUrl,
-
-            // ===============code_by_shakil_munshi===================
-            // Assume your API has an 'audioUrl' field for the song file
-            // ==================================
-
             audioUrl: item.audioFile,
           };
         });
-        setNewReleases(formattedReleases);
+
+        // Take the first 20 valid and formatted releases
+        setNewReleases(formattedReleases.slice(0, 20));
       } catch (err) {
-        console.error("Failed to fetch new releases:", err);
-        if (err.response) {
-          setError(
-            `Server error: ${err.response.status} - ${err.response.statusText}`,
-          );
-        } else if (err.request) {
-          setError("Network error: No response received from server.");
-        } else {
-          setError(err.message);
-        }
+        setError(err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchNewReleases();
   }, []);
 

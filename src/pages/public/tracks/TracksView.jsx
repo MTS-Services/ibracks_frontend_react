@@ -1,21 +1,18 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { FaShareAlt } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 
 import HeroSection from "./components/sections/HeroSection";
-import { getAllSongs } from "../../../featured/song/trackService";
-import { addItem } from "../../../featured/cart/cartSlice";
+
 import LicensPlan from "../../../components/common/LicensPlan";
 import Modal from "../../../components/ui/Modal";
-import { getAllPlans } from "../../../featured/plans/planService";
 import axios from "../../../utils/axiosInstance";
+import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 
 const TracksView = () => {
-  const dispatch = useDispatch();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Category");
   const [selectedBpm, setSelectedBpm] = useState("All Bpm");
@@ -138,7 +135,7 @@ const TracksView = () => {
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <HeroSection songs={songs} />
+      <TracksPageHeroSection />
 
       <header className="">
         <h2 className="flex justify-center py-4 text-2xl font-[600] text-white capitalize md:py-10 md:text-3xl lg:text-4xl">
@@ -512,4 +509,5 @@ const TracksView = () => {
     </section>
   );
 };
+
 export default TracksView;
