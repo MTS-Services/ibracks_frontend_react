@@ -6,12 +6,12 @@ const SongCard = ({ song, currentPlayingSong, isPlaying, handlePlaySong }) => {
   return (
     <div
       key={song.id || `${song.title}-${song.artist}`}
-      className="group max-w-[calc(50%-1rem)]sm:max-w-none relative w-48"
+      className="group relative w-48 max-w-[calc(50%-1rem)] sm:max-w-none"
     >
       <img
         src={song.image}
         alt={song.title}
-        className="h-48 w-full rounded object-cover shadow-lg"
+        className="h-48 w-full rounded-2xl border border-gray-600 object-cover shadow-lg"
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = "/products/cart1.jpg";

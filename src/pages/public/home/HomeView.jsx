@@ -58,14 +58,12 @@ const HomeView = () => {
   return (
     <>
       <HeroSection />
-      <ReleasesSection songs={songs} />
+      {/* <ReleasesSection songs={songs} /> */}
+      <ReleasesSectionTest />
       <BrowseSection songs={songs} plans={plans} />
       <LicensingSection plans={plans} />
 
       {/* Test Section - Positioned with negative margin */}
-      <div className="relative z-10 mx-auto -mt-20 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ReleasesSectionTest />
-      </div>
 
       {/* Avoid duplicate sections unless intentional */}
       {/* If you need a second browse or license section, make sure it's unique */}

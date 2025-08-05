@@ -32,7 +32,7 @@ const BrowseSection = ({ songs, plans }) => {
 
   return (
     <section className="bg-gradient-to-b from-[#060207] to-[#150618]">
-      <div className="mx-auto w-full max-w-7xl pt-40 pb-20">
+      <div className="mx-auto w-full max-w-7xl pt-30 pb-20">
         {/* Header */}
         <h2 className="mb-8 text-2xl font-semibold text-white capitalize sm:text-3xl md:text-4xl">
           Browse Tracks
@@ -61,7 +61,7 @@ const BrowseSection = ({ songs, plans }) => {
                       <img
                         src={track.coverImage}
                         alt="Album"
-                        className="h-16 w-16 rounded-sm object-cover"
+                        className="h-16 w-16 rounded border border-gray-600 object-cover"
                       />
                       <span className="text-base text-neutral-300">
                         {track.description}
@@ -77,17 +77,7 @@ const BrowseSection = ({ songs, plans }) => {
                   <td className="px-4 py-4 text-neutral-400">{track.bpm}</td>
                   {/* Tags */}
                   <td className="px-4 py-4">
-                    <div className="flex flex-wrap gap-2">
-                      {track.musicTag}
-                      {/* {track.musicTag.map((tag, i) => (
-                        <span
-                          key={i}
-                          className="inline-block rounded-full bg-black/20 px-3 py-1 text-xs text-gray-400 capitalize"
-                        >
-                          {tag}
-                        </span>
-                      ))} */}
-                    </div>
+                    <div className="flex flex-wrap gap-2">{track.musicTag}</div>
                   </td>
 
                   {/* Actions */}

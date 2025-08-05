@@ -23,7 +23,7 @@ const PlayerControls = ({
   repeatMode,
   toggleRepeat,
 }) => {
-  if (!currentPlayingSong) return null; // গান না থাকলে প্লেয়ার কন্ট্রোল দেখানোর দরকার নেই
+  if (!currentPlayingSong) return null;
 
   return (
     <div className="flex items-center gap-4 sm:gap-6">
