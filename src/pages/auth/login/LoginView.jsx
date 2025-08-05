@@ -84,7 +84,7 @@ const LoginView = () => {
       </div>
 
       {/* Content Overlay - This will contain your form and left/right sections */}
-      <div className="relative z-10 flex h-full w-full items-center justify-center">
+      <div className="relative z-10 flex h-full h-screen w-full items-center justify-center overflow-auto">
         <div
           className="bg z-30 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-y-auto px-8 py-6 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
           style={{
