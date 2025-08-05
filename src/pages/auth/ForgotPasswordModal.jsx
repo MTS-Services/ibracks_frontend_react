@@ -7,6 +7,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
     useContext(AuthContext);
 
   // Clear states when modal opens or closes
+  // Clear states when modal opens or closes
   useEffect(() => {
     if (!isOpen) {
       setEmail("");

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../../featured/auth/AuthContext";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import toast, { Toaster } from "react-hot-toast"; // Import toast and Toaster
 
 const RegisterView = () => {
   const [name, setName] = useState("");
@@ -73,9 +73,8 @@ const RegisterView = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
-      <Toaster position="top-center" reverseOrder={false} />{" "}
-      {/* Add Toaster component */}
+    <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
+      <Toaster position="top-center" reverseOrder={false} />
       {/* Background Image Container - Hidden on md (tablet) and smaller screens */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden md:hidden lg:flex">
         <div
@@ -121,9 +120,10 @@ const RegisterView = () => {
           </div>
 
           {/* Form */}
-          <div className="flex flex-col items-start justify-start gap-4 self-stretch md:gap-5 lg:gap-6">
-            {" "}
-            {/* Adjusted gap for responsiveness */}
+          <form
+            className="flex flex-col items-start justify-start gap-4 self-stretch md:gap-5 lg:gap-6"
+            onSubmit={handleSubmit}
+          >
             {/* Name */}
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
@@ -138,7 +138,8 @@ const RegisterView = () => {
                 <input
                   type="text"
                   name="name"
-                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your Name here..."
                   className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
@@ -157,6 +158,8 @@ const RegisterView = () => {
                 <input
                   type="tel"
                   id="phone"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Enter your number  here..."
                   className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
@@ -175,6 +178,8 @@ const RegisterView = () => {
                 <input
                   type="email"
                   id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your Email here..."
                   className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
@@ -193,6 +198,8 @@ const RegisterView = () => {
                 <input
                   type="password"
                   id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password here..."
                   className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
@@ -210,19 +217,42 @@ const RegisterView = () => {
                 {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="password"
-                  id="confirmPassword"
+                  id="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Enter your Confirm Password here..."
                   className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
               </div>
             </div>
+
+            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
+              <label
+                htmlFor="profileImage"
+                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+              >
+                Profile Image (Optional)
+              </label>
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+                <input
+                  type="file"
+                  id="profileImage"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                />
+              </div>
+            </div>
+
             {/* Sign In Button */}
-            <button className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base">
+            <button
+              className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
+              disabled={loading}
+            >
               {" "}
-              {/* Smaller height and text for mobile/tablet */}
-              Sign Up
+              {loading ? "Registering..." : "Sign Up"}
             </button>
-          </div>
+          </form>
         </div>
         {/* Right Part - Hidden on md (tablet) and smaller screens */}
         <div className="hidden w-1/2 lg:block"></div>

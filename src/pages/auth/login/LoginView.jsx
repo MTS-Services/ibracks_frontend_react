@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../featured/auth/AuthContext";
 import ForgotPasswordModal from "../ForgotPasswordModal";
@@ -122,6 +122,8 @@ const LoginView = () => {
                 <input
                   type="email"
                   id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email here..."
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -141,6 +143,8 @@ const LoginView = () => {
                 <input
                   type="password"
                   id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password here..."
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -148,6 +152,8 @@ const LoginView = () => {
                 />
               </div>
             </div>
+
+            {/* Sign In Button */}
             {/* Remember / Forgot */}
             <div className="font-poppins flex w-full items-center justify-between text-sm md:text-base">
               <label className="flex cursor-pointer items-center gap-2 rounded p-2">
@@ -181,8 +187,6 @@ const LoginView = () => {
                 {authSuccess}
               </p>
             )}
-
-            {/* Sign In Button */}
             <button
               type="submit"
               className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
@@ -234,8 +238,6 @@ const LoginView = () => {
         {/* Right Part - Hidden on md (tablet) and smaller screens */}
         <div className="hidden w-1/2 lg:block"></div>
       </div>
-
-      {/* Forgot Password Modal */}
       <ForgotPasswordModal
         isOpen={isForgotPasswordModalOpen}
         onClose={closeForgotPasswordModal}
