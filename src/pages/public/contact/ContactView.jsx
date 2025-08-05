@@ -81,7 +81,7 @@ const ContactView = () => {
             </div>
             <div className="flex w-full flex-col items-start justify-start gap-3.5 self-stretch">
               <div className="flex flex-col items-start justify-start gap-3.5 self-stretch lg:flex-row">
-                <div className="inline-flex w-full flex-1 flex-col items-start justify-center gap-2.5 rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-1 outline-white/20">
+                <div className="inline-flex w-full flex-1 flex-col items-start justify-center gap-2.5 rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-white/20">
                   <input
                     type="text"
                     placeholder="Last Name"
@@ -92,7 +92,7 @@ const ContactView = () => {
                     required
                   />
                 </div>
-                <div className="inline-flex w-full flex-1 flex-col items-start justify-center gap-2.5 rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-1 outline-white/20">
+                <div className="inline-flex w-full flex-1 flex-col items-start justify-center gap-2.5 rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-white/20">
                   <input
                     type="text"
                     placeholder="First Name"
@@ -115,7 +115,7 @@ const ContactView = () => {
                   required
                 />
               </div>
-              <div className="flex w-full flex-col items-start justify-center gap-2.5 self-stretch rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-1 outline-white/20">
+              <div className="flex w-full flex-col items-start justify-center gap-2.5 self-stretch rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-white/20">
                 <input
                   type="tel"
                   placeholder="Phone Number"
@@ -125,7 +125,7 @@ const ContactView = () => {
                   className="w-full justify-start border-none bg-transparent font-['Poppins'] text-xs font-[400] text-white/60 capitalize focus:outline-none"
                 />
               </div>
-              <div className="flex h-28 w-full flex-col items-start justify-start gap-2.5 self-stretch rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-1 outline-white/20">
+              <div className="flex h-28 w-full flex-col items-start justify-start gap-2.5 self-stretch rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-white/20">
                 <textarea
                   placeholder="Message"
                   name="message" // Added name attribute
@@ -162,7 +162,7 @@ const ContactView = () => {
           <img
             src="/contactpage/img1.jpg" // Placeholder image
             alt="Contact Us"
-            className="h-[470px] w-[416px] rounded-xl object-cover"
+            className="h-[500px] w-[500px] rounded-xl object-cover"
           />
         </div>
       </div>

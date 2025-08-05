@@ -1,55 +1,20 @@
-// src/pages/TracksPage.jsx
-import { useState, useContext } from "react"; // useContext import করুন
-import { FaShareAlt } from "react-icons/fa";
-import { LuSearch } from "react-icons/lu";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
+import { FaShareAlt } from "react-icons/fa";
+import { LuSearch } from "react-icons/lu";
 
-import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
-import { CartContext } from "../../../utils/CartContextDefinition";
-
-const tracks = [
-  {
-    id: 1,
-    title: "NOLSTAGIA",
-    time: "2:45",
-    bpm: "103",
-    tags: ["Afrobeat", "Happy"],
-    thumbnail: "/shoppingcart/cart5.jpg",
-    price: 30.0,
-  },
-  {
-    id: 2,
-    title: "Melody Magic",
-    time: "3:10",
-    bpm: "120",
-    tags: ["Electronic", "Energetic"],
-    thumbnail: "/shoppingcart/cart6.jpg",
-    price: 25.0,
-  },
-  {
-    id: 3,
-    title: "Chill Vibes",
-    time: "4:00",
-    bpm: "90",
-    tags: ["Jazz", "Chill"],
-    thumbnail: "/shoppingcart/cart7.jpg",
-    price: 35.0,
-  },
-  {
-    id: 4,
-    title: "Groovy Beat",
-    time: "2:50",
-    bpm: "110",
-    tags: ["Hip-hop", "Inspiring"],
-    thumbnail: "/shoppingcart/cart1.jpg",
-    price: 28.0,
-  },
-  // আরও ট্র্যাক যোগ করুন
-];
+import HeroSection from "./components/sections/HeroSection";
+import { getAllSongs } from "../../../featured/song/trackService";
+import { addItem } from "../../../featured/cart/cartSlice";
+import LicensPlan from "../../../components/common/LicensPlan";
+import Modal from "../../../components/ui/Modal";
+import { getAllPlans } from "../../../featured/plans/planService";
+import axios from "../../../utils/axiosInstance";
 
 const TracksView = () => {
-  const { addToCart } = useContext(CartContext);
+  const dispatch = useDispatch();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Category");
@@ -66,29 +31,74 @@ const TracksView = () => {
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [isListViewDropdownOpen, setIsListViewDropdownOpen] = useState(false);
 
+  const [songs, setSongs] = useState([]);
+  const [plans, setPlans] = useState([]);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+
+  const cartItems = useSelector((state) => state.cart.items);
+
+  // ==================================
+  // API Call - for all songs
+  // ==================================
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("/songs/published?limit=6");
+        console.log(res.data.data);
+        setSongs(res.data.data);
+
+        const ress = await axios.get("/licenses");
+        console.log(ress.data.data);
+        setPlans(ress.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // ==================================
+  // Open License Modal
+  // ==================================
+  const handleToggle = (track) => {
+    setSelectedSong(track);
+    setIsOpen(true);
+    console.log(track);
+  };
+
+  // Check if item is already in cart
+  const isSongInCart = (songId) => {
+    return cartItems.some((item) => item.songId === songId);
+  };
+
+  // ==================================
+  // Handle Search Change - for Filter
+  // ==================================
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
-
+  // ==================================
+  // Handle Search - for Filter
+  // ==================================
   const handleSearchClick = () => {
     console.log("Searching for: ", searchTerm);
   };
-
-  const handleDropdownChange = (e, setSelectedValue, setDropdownOpenState) => {
+  // ==================================
+  // Handle Change Dropdown - Filter
+  // ==================================
+  const handleDropdownChange = (e, setSelectedValue) => {
     setSelectedValue(e.target.value);
   };
-
+  // ==================================
+  // Handle Dropdown - for Filter
+  // ==================================
   const toggleDropdown = (setDropdownOpenState) => {
     setDropdownOpenState((prevState) => !prevState);
   };
 
-  // Add to Cart handler
-  const handleAddToCart = (track) => {
-    addToCart(track);
-    alert(`${track.title} added to cart!`);
-  };
-
-  const filteredTracks = tracks.filter((track) => {
+  const filteredTracks = songs.filter((track) => {
     const matchesSearch = track.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -122,19 +132,18 @@ const TracksView = () => {
   });
 
   return (
-    <div
-      className="min-h-screen bg-neutral-900 px-[11px] py-10 sm:px-6 lg:px-8"
+    <section
+      className="bg-neutral-900 px-4 py-10 sm:px-6 lg:px-8"
       style={{
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
-      <div className="">
-        <TracksPageHeroSection />
-      </div>
-      <div className="">
-        <div className="flex justify-center pb-6 text-2xl font-[600] text-white capitalize md:text-3xl lg:pt-8 lg:text-4xl">
+      <HeroSection songs={songs} />
+
+      <header className="">
+        <h2 className="flex justify-center py-4 text-2xl font-[600] text-white capitalize md:py-10 md:text-3xl lg:text-4xl">
           Tracks
-        </div>
+        </h2>
         <div className="mx-auto max-w-[950px] rounded-md bg-white/5 p-4 md:p-6">
           <div className="mx-auto mb-6 flex flex-wrap justify-center gap-2 md:gap-10">
             {/* Category Dropdown */}
@@ -203,6 +212,7 @@ const TracksView = () => {
                 )}
               </div>
             </div>
+
             {/* Moods Dropdown */}
             <div className="relative">
               <select
@@ -244,6 +254,7 @@ const TracksView = () => {
                 )}
               </div>
             </div>
+
             {/* Genres Dropdown (first dropdown you highlighted) */}
             <div className="relative">
               <select
@@ -353,14 +364,14 @@ const TracksView = () => {
               </div>
             </div>
           </div>
+
           <div className="mx-auto flex items-center justify-center px-2">
             <div className="inline-flex w-full max-w-[880px] items-center justify-between rounded-lg bg-white px-3 py-1 md:px-4 md:py-2">
               <input
+                onChange={handleSearchChange}
                 type="text"
                 placeholder="What type of track are you looking for?"
-                className="w-full bg-transparent font-['Poppins'] text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
-                value={searchTerm}
-                onChange={handleSearchChange}
+                className="w-full bg-transparent text-sm font-normal text-black outline-none placeholder:text-black/60 md:text-base"
               />
               <div
                 className="ml-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-neutral-200 p-1.5 md:ml-3 md:h-9 md:w-9 md:p-2.5"
@@ -371,14 +382,15 @@ const TracksView = () => {
             </div>
           </div>
         </div>
-      </div>
+      </header>
+
       {/* table part */}
-      <section className="sm:p-6 lg:p-8">
-        {" "}
+      <main className="sm:p-6 lg:py-14">
         <div className="mx-auto w-full max-w-7xl">
           <div className="overflow-x-auto border-b border-gray-500">
             <table className="min-w-full text-left text-xs text-white sm:text-sm md:text-base">
               <thead className="text-sm text-orange-300 sm:text-base md:text-xl">
+                {/* Added the missing <tr> tag here */}
                 <tr>
                   <th
                     className="px-2 py-3 text-center font-medium sm:px-4 sm:py-4"
@@ -388,12 +400,12 @@ const TracksView = () => {
                   </th>
                   <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">
                     Time
-                  </th>{" "}
-                  <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">BPM</th>{" "}
-                  <th className="py-3 font-medium md:px-4">Tags</th>{" "}
-                  <th className="py-3 font-medium md:px-4 md:py-4"></th>{" "}
+                  </th>
+                  <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">BPM</th>
+                  <th className="py-3 font-medium md:px-4">Tags</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-gray-500">
                 {filteredTracks.length > 0 ? (
                   filteredTracks.map((track) => (
@@ -402,8 +414,8 @@ const TracksView = () => {
                       <td className="py-2 sm:py-4" colSpan={2}>
                         <div className="flex items-center gap-2 sm:gap-4">
                           <img
-                            src={track.thumbnail}
-                            alt="Album"
+                            src={track.coverImage}
+                            alt={`${track.title} cover`}
                             className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
                           />
                           <span className="pr-3 text-[10px] text-neutral-300 sm:text-sm md:text-base">
@@ -413,39 +425,70 @@ const TracksView = () => {
                       </td>
                       {/* Time */}
                       <td className="px-4 py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-2">
-                        {track.time}
-                      </td>{" "}
+                        {track.duration}
+                      </td>
                       {/* BPM */}
-                      <td className="text- py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
+                      <td className="py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
                         {track.bpm}
-                      </td>{" "}
+                      </td>
                       {/* Tags */}
                       <td className="py-2 sm:px-4 sm:py-4">
                         <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
-                          {track.tags.map((tag, i) => (
+                          {track.tags}
+                          {/* {track.tags.map((tag, i) => (
                             <span
-                              key={i}
+                              key={`${track.id}-${i}`}
                               className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
                             >
                               {tag}
                             </span>
-                          ))}
+                          ))} */}
                         </div>
                       </td>
+
                       {/* Actions */}
                       <td className="py-2 sm:py-4">
                         <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2">
-                            <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />{" "}
-                          </button>
-                          {/* "Add to Cart" button - onClick handler যোগ করা হয়েছে */}
-                          <button
-                            onClick={() => handleAddToCart(track)} // এখানে addToCart ফাংশন কল করা হয়েছে
-                            className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
+                          <Modal
+                            isOpen={isOpen && selectedSong?.id === track.id}
+                            onClose={() => setIsOpen(false)}
+                            title="Choose Your License"
+                            size="lg"
                           >
-                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />{" "}
-                            <span>${track.price.toFixed(2)}</span>{" "}
-                            {/* পণ্যের মূল্য দেখানো হয়েছে */}
+                            <LicensPlan
+                              selectedSong={selectedSong}
+                              plans={plans}
+                            />
+                          </Modal>
+                          {/* Share button */}
+                          <button
+                            className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
+                            aria-label={`Share ${track.title}`}
+                          >
+                            <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
+                          </button>
+                          {/* Cart button */}
+
+                          <button
+                            onClick={() => handleToggle(track)}
+                            disabled={isSongInCart(track.id)}
+                            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
+                              isSongInCart(track.id)
+                                ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                                : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
+                            }`}
+                            aria-label={
+                              isSongInCart(track.id)
+                                ? `${track.title} already in cart`
+                                : `Add ${track.title} to cart for $${track.pricing.toFixed(2)}`
+                            }
+                          >
+                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
+                            <span>
+                              {isSongInCart(track.id)
+                                ? "Added"
+                                : `$${track.pricing.toFixed(2)}`}
+                            </span>
                           </button>
                         </div>
                       </td>
@@ -465,8 +508,8 @@ const TracksView = () => {
             </table>
           </div>
         </div>
-      </section>
-    </div>
+      </main>
+    </section>
   );
 };
 export default TracksView;

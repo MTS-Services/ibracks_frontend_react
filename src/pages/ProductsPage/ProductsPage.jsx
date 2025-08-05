@@ -1,6 +1,6 @@
-import Relatedtracks from "../../components/ProductsPage/Relatedtracks";
-import Availabestems from "../../components/ProductsPage/Availabestems";
-import ProductsHero from "../../components/ProductsPage/ProductsHero";
+import Relatedtracks from "../public/products/components/sections/Relatedtracks";
+import Availabestems from "../public/products/components/sections/Availabestems";
+import ProductsHero from "../public/products/components/sections/ProductsHero";
 
 const ProductsPage = () => {
   return (

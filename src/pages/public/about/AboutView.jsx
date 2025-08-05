@@ -1,19 +1,33 @@
-import React from "react";
-import DiscographyDisplay from "../../../components/About/AboutDiscography";
-import AboutWhatSets from "../../../components/About/AboutWhatSets";
-import AboutMainSection from "../../../components/About/AboutMainSection";
+import { useEffect, useState } from "react";
+
+import HeroSection from "./components/sections/HeroSection";
+import ApartSection from "./components/sections/ApartSection";
+import DiscographySection from "./components/sections/DiscographySection";
+
+import axios from "../../../utils/axiosInstance";
 
 const AboutView = () => {
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("/songs/published?limit=6");
+
+        setSongs(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
-    <div
-      style={{
-        background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
-      }}
-    >
-      <AboutMainSection></AboutMainSection>
-      <AboutWhatSets></AboutWhatSets>
-      <DiscographyDisplay></DiscographyDisplay>
-    </div>
+    <>
+      <HeroSection />
+      <ApartSection />
+      <DiscographySection songs={songs} />
+    </>
   );
 };
 

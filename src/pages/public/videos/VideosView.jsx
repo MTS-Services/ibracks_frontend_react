@@ -116,6 +116,7 @@ const VideosView = () => {
         background: "linear-gradient(180deg, #050306 0%, #5D006D 100%)",
       }}
     >
+      <h1 className="mb-4 text-center text-white md:mb-6 lg:mb-8">Videos</h1>
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
         {displayedVideos.map((video) => (
           <div
@@ -176,7 +177,7 @@ const VideosView = () => {
               className="inline-flex items-center justify-center gap-1 rounded-[7px] bg-[#43024F] px-12 py-3 transition-all duration-300 ease-in-out hover:bg-gradient-to-t hover:from-[#DAA520] hover:to-[#F5DEB3]"
               onClick={loadMoreVideos}
             >
-              <div className="cursor-pointer text-center font-['Plus_Jakarta_Sans'] text-base leading-normal font-semibold text-white capitalize shadow-2xl">
+              <div className="cursor-pointer text-center text-base leading-normal font-semibold text-white capitalize shadow-2xl">
                 Load more
               </div>
               <div data-size="48" className="h-6 w-6">

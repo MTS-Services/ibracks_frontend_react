@@ -116,7 +116,7 @@
 
   p {
     font-size: var(--text-base);
-    font-family: var(--font-secondary);
+    font-family: var(--font-primary);
     font-weight: var(--font-normal);
     color: var(--text-color-paragraph);
     line-height: 1.6;
@@ -191,6 +191,21 @@
   .scrollbar-hide {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+  }
+
+  @keyframes fade-in-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-down {
+    animation: fade-in-down 0.3s ease-out both;
   }
 }
 

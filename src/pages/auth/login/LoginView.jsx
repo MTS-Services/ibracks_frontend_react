@@ -91,13 +91,16 @@ const LoginView = () => {
             backgroundColor: "rgba(243, 243, 243, 0.10)",
           }}
         >
+          <Link to="/" className="flex cursor-pointer items-center text-white">
+            {"< "} Back{" "}
+          </Link>
           <div className="mx-auto flex justify-center">
             <div className="">
               <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
-                Get Started -
-              </h2>
-              <h2 className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
-                It’s Free
+                Get Started -{" "}
+                <span className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
+                  It’s Free
+                </span>
               </h2>
             </div>
           </div>
@@ -130,7 +133,7 @@ const LoginView = () => {
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
                 htmlFor="password"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                className="text-sm font-normal text-white capitalize md:text-base"
               >
                 Password
               </label>
@@ -191,10 +194,9 @@ const LoginView = () => {
 
           <h6 className="mx-auto flex items-center justify-center gap-2 text-center text-sm font-bold text-white">
             Don't have a account?{" "}
-            <Link className="font-bold" to="/register">
-              {" "}
-              Sign Up now{" "}
-            </Link>{" "}
+            <Link className="font-bold text-yellow-200" to="/auth/register">
+              Sign Up now
+            </Link>
           </h6>
           {/* Separator */}
           <div className="my-2 flex w-full items-center gap-2 md:my-4 md:gap-4">

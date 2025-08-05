@@ -1,22 +1,21 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
-import ReleasesSection from "../ReleasesSection/ReleasesSection";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[800px] bg-[url('/image/home/hero-bg.jpg')] bg-cover bg-center py-20">
-      <div className="absolute inset-0 bg-black opacity-40" />
+    <section className="relative min-h-[700px] bg-[url('/image/home/hero-bg.jpg')] bg-cover bg-center px-4 py-10 md:py-20">
+      <div className="absolute inset-0 bg-black opacity-50" />
 
       <div className="mx-auto max-w-7xl">
         {/* Search Bar - Absolute positioned */}
         <main className="flex flex-col justify-between md:flex-row">
           {/* Left side - Text content */}
-          <article className="relative space-y-10 md:w-1/2">
-            <h1 className="bg-gradient-to-t from-yellow-400 via-yellow-400 to-yellow-100 bg-clip-text text-4xl font-bold text-transparent md:text-6xl">
+          <article className="relative mb-4 space-y-4 md:w-1/2 md:space-y-10">
+            <h1 className="bg-gradient-to-t from-yellow-400 via-yellow-400 to-yellow-100 bg-clip-text text-center text-4xl font-bold text-transparent md:text-left md:text-6xl">
               Feel the Sound. Own the Vibe.
             </h1>
 
-            <p className="text-2xl font-normal text-white capitalize">
+            <p className="text-center text-lg font-normal text-white capitalize md:text-left md:text-2xl">
               Discover the magic of music with us. Our platform is your gateway
               to a world of melodies and emotions. Whether you're a passionate
               listener, a budding artist, or an industry professional, we have
@@ -52,7 +51,11 @@ const HeroSection = () => {
               </p>
             </div>
 
-            <img src="/image/layer-music.png" alt="Music player" className="" />
+            <img
+              src="/image/layer-music.png"
+              alt="Music player"
+              className="w-115"
+            />
           </article>
         </main>
       </div>

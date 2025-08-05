@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../../featured/auth/AuthContext";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import toast, { Toaster } from "react-hot-toast"; // Import toast and Toaster
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const RegisterView = () => {
   const [name, setName] = useState("");
@@ -100,61 +100,65 @@ const RegisterView = () => {
             backgroundColor: "rgba(243, 243, 243, 0.10)",
           }}
         >
-          <div className="mx-auto flex justify-center pt-8 sm:pt-1">
+          <div className="mx-auto flex justify-center">
             <div className="">
-              <div className="flex items-center">
-                <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
-                  Get Started -
-                </h2>
-                <h2 className="text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
-                  It’s Free
-                </h2>
-              </div>
-
-              <p className="font-poppins justify-start self-stretch text-center text-xs font-normal text-neutral-200 md:text-sm">
+              <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
+                {" "}
+                {/* Smaller text for mobile/tablet */}
+                Get Started -
+              </h2>
+              <h2 className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
+                {" "}
+                {/* Smaller text for mobile/tablet */}
+                It’s Free
+              </h2>
+              <p className="font-poppins justify-start self-stretch pt-3 text-center text-xs font-normal text-neutral-200 md:pt-4 md:text-sm lg:pt-5">
+                {" "}
+                {/* Smaller text for mobile/tablet */}
                 Sign up in seconds and enjoy full access with zero commitment.
               </p>
             </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-start justify-start gap-3 self-stretch md:gap-5 lg:gap-4"
-          >
+          {/* Form */}
+          <div className="flex flex-col items-start justify-start gap-4 self-stretch md:gap-5 lg:gap-6">
+            {" "}
+            {/* Adjusted gap for responsiveness */}
+            {/* Name */}
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
-                htmlFor="name"
-                className="font-poppins text-sm font-[400] font-normal text-white capitalize md:text-base"
+                htmlFor="Name"
+                className="font-poppins text-sm font-[400] font-normal text-white capitalize md:text-base" // Smaller text for mobile/tablet
               >
                 Name
               </label>
               <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+                {" "}
+                {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="text"
                   name="name"
                   id="name"
                   placeholder="Enter your Name here..."
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
               </div>
             </div>
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
-                htmlFor="phone"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                htmlFor="tel"
+                className="font-poppins text-sm font-normal text-white capitalize md:text-base" // Smaller text for mobile/tablet
               >
                 Phone Number
               </label>
               <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+                {" "}
+                {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="tel"
                   id="phone"
-                  placeholder="Enter your number here..."
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                  placeholder="Enter your number  here..."
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
               </div>
             </div>
@@ -166,13 +170,13 @@ const RegisterView = () => {
                 Email
               </label>
               <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+                {" "}
+                {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="email"
                   id="email"
                   placeholder="Enter your Email here..."
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
               </div>
             </div>
@@ -184,75 +188,43 @@ const RegisterView = () => {
                 Password
               </label>
               <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+                {" "}
+                {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="password"
                   id="password"
                   placeholder="Enter your password here..."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
               </div>
             </div>
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
-                htmlFor="confirmPassword"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                htmlFor="conframpassword"
+                className="font-poppins text-sm font-normal text-white capitalize md:text-base" // Smaller text for mobile/tablet
               >
                 Confirm Password
               </label>
               <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+                {" "}
+                {/* Smaller height and padding for mobile/tablet */}
                 <input
                   type="password"
                   id="confirmPassword"
                   placeholder="Enter your Confirm Password here..."
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
+                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base" // Smaller text for mobile/tablet
                 />
               </div>
             </div>
-
-            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
-              <label
-                htmlFor="profileImage"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
-              >
-                Profile Image (Optional)
-              </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
-                <input
-                  type="file"
-                  id="profileImage"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
-                />
-              </div>
-            </div>
-
-            {/* Error and Success messages will now be handled by react-hot-toast */}
-            {/* {error && (
-              <p className="font-poppins self-stretch text-center text-sm text-red-500">
-                {error}
-              </p>
-            )}
-            {success && (
-              <p className="font-poppins self-stretch text-center text-sm text-green-500">
-                {success}
-              </p>
-            )} */}
-
-            <button
-              type="submit"
-              className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
-              disabled={loading}
-            >
+            {/* Sign In Button */}
+            <button className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base">
               {" "}
-              {loading ? "Registering..." : "Sign Up"}
+              {/* Smaller height and text for mobile/tablet */}
+              Sign Up
             </button>
-          </form>
+          </div>
         </div>
+        {/* Right Part - Hidden on md (tablet) and smaller screens */}
         <div className="hidden w-1/2 lg:block"></div>
       </div>
     </div>
