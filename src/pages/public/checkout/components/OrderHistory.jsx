@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "../../../../utils/axiosInstance";
 import {
   FaPlay,
   FaPause,
@@ -7,7 +8,7 @@ import {
   FaRegHeart,
 } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import axios from "../../../../utils/axiosInstance";
+
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,16 +28,14 @@ const OrderHistory = () => {
         if (response.data && response.data.success) {
           setOrders(response.data.orders);
         } else {
-          // If success is false or data is not in the expected format
           throw new Error(
             response.data.message || "Could not retrieve orders.",
           );
         }
       } catch (err) {
-        // Handle specific errors like 404 (Not Found)
         if (err.response && err.response.status === 404) {
           setError("You haven't placed any orders yet.");
-          setOrders([]); // Ensure orders are empty
+          setOrders([]);
         } else {
           setError(err.message || "An unexpected error occurred.");
         }
@@ -45,7 +44,6 @@ const OrderHistory = () => {
         setLoading(false);
       }
     };
-
     fetchOrders();
   }, []);
 
@@ -60,9 +58,7 @@ const OrderHistory = () => {
       audio.pause();
     }
     return () => {
-      // Cleanup audio on component unmount
       audio.pause();
-      audio.src = "";
     };
   }, [isPlaying, currentSong]);
 
@@ -113,60 +109,85 @@ const OrderHistory = () => {
       );
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         {orders.map((order) => (
           <div
             key={order.id}
-            className="rounded-lg bg-neutral-800 p-6 shadow-lg"
+            className="overflow-hidden rounded-xl bg-neutral-800 shadow-lg"
           >
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-sm text-gray-400">Order Placed</p>
-                <p className="font-semibold">
-                  {new Date(order.createdAt).toLocaleDateString()}
+            {/* --- Order Summary Header --- */}
+            <div className="flex flex-col items-start justify-between gap-4 bg-neutral-700/50 p-4 sm:flex-row sm:items-center">
+              <div className="flex-1">
+                <p className="text-sm text-gray-400">ORDER PLACED</p>
+                <p className="font-semibold text-white">
+                  {new Date(order.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 </p>
               </div>
-              <div>
-                <p className="text-sm text-gray-400">Total Amount</p>
-                <p className="font-semibold">${order.amount.toFixed(2)}</p>
+              <div className="flex-1">
+                <p className="text-sm text-gray-400">TOTAL</p>
+                <p className="font-semibold text-white">
+                  ${order.amount.toFixed(2)}
+                </p>
               </div>
-              <div>
-                <p className="text-sm text-gray-400">Transaction ID</p>
-                <p className="rounded bg-neutral-700 p-1 font-mono text-xs">
+              <div className="flex-1">
+                <p className="text-sm text-gray-400">TRANSACTION ID</p>
+                <p className="font-mono text-xs text-gray-300">
                   {order.transactionId}
                 </p>
               </div>
             </div>
-            <div className="border-t border-neutral-700 pt-4">
+
+            {/* --- Purchased Items List --- */}
+            <div className="p-4">
+              <h3 className="mb-4 text-lg font-bold text-yellow-400">
+                {order.items.length > 1
+                  ? `${order.items.length} items purchased`
+                  : "1 item purchased"}
+              </h3>
               {order.items.map((item) => (
                 <div
                   key={item.id}
-                  className="mb-2 flex items-center justify-between"
+                  className="mb-4 flex items-center justify-between"
                 >
                   <div className="flex items-center">
                     <img
-                      src={item.song.coverImage}
+                      src={
+                        item.song.coverImage ||
+                        "https://placehold.co/100x100/000000/FFFFFF?text=No+Image"
+                      }
                       alt={item.song.title}
-                      className="mr-4 h-12 w-12 rounded-md"
+                      className="mr-4 h-16 w-16 rounded-lg object-cover"
                     />
                     <div>
-                      <p className="font-semibold">{item.song.title}</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-lg font-bold text-white">
+                        {item.song.title}
+                      </p>
+                      {/* --- LICENSE NAME & ID FIXED --- */}
+                      <p className="text-sm text-gray-300">
                         {item.licenseDetails.name}
+                      </p>
+                      <p className="mt-1 font-mono text-xs text-gray-500">
+                        License ID: {item.licenseId}
                       </p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-4 text-center">
+
+            {/* --- View Details Button --- */}
+            <div className="border-t border-neutral-700 px-4 py-2 text-center">
               <button
                 onClick={() =>
                   setExpandedOrderId(
                     expandedOrderId === order.id ? null : order.id,
                   )
                 }
-                className="flex w-full items-center justify-center p-2 font-semibold text-yellow-400 hover:text-yellow-300"
+                className="flex w-full items-center justify-center p-2 font-semibold text-yellow-400 transition-colors hover:text-yellow-300"
               >
                 {expandedOrderId === order.id
                   ? "Hide Details"
@@ -178,55 +199,76 @@ const OrderHistory = () => {
                 )}
               </button>
             </div>
+
+            {/* --- Expanded Details View (Downloads & Actions) --- */}
             {expandedOrderId === order.id && (
-              <div className="mt-6 space-y-4 border-t border-neutral-700 pt-6">
-                <h3 className="text-lg font-semibold">Your Downloads</h3>
-                {order.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between rounded-lg bg-neutral-700 p-3"
-                  >
-                    <div className="flex items-center">
-                      <img
-                        src={item.song.coverImage}
-                        alt={item.song.title}
-                        className="mr-4 h-16 w-16 rounded-md"
-                      />
-                      <div>
-                        <p className="text-lg font-bold">{item.song.title}</p>
+              <div className="bg-neutral-900/50 p-4">
+                <h3 className="mb-4 text-xl font-bold text-yellow-400">
+                  Your Downloads & Actions
+                </h3>
+                <div className="space-y-4">
+                  {order.items.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between rounded-lg bg-neutral-700 p-3"
+                    >
+                      <div className="flex items-center">
+                        <img
+                          src={
+                            item.song.coverImage ||
+                            "https://placehold.co/100x100/000000/FFFFFF?text=No+Image"
+                          }
+                          alt={item.song.title}
+                          className="mr-4 h-16 w-16 rounded-md object-cover"
+                        />
+                        <div>
+                          <p className="text-lg font-bold text-white">
+                            {item.song.title}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {item.licenseDetails.name}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3 sm:space-x-5">
+                        <button
+                          onClick={() => handleToggleLike(item.song.id)}
+                          className="text-2xl text-gray-300 transition-transform hover:scale-110 hover:text-white"
+                          title="Like/Unlike"
+                        >
+                          {likedSongs.has(item.song.id) ? (
+                            <FaHeart className="text-red-500" />
+                          ) : (
+                            <FaRegHeart />
+                          )}
+                        </button>
+                        <a
+                          href={item.song.audioFile}
+                          download={`${item.song.title}.mp3`}
+                          className="text-2xl text-gray-300 transition-transform hover:scale-110 hover:text-white"
+                          title="Download"
+                        >
+                          <FaDownload />
+                        </a>
+                        <button
+                          onClick={() => handlePlayPause(item.song)}
+                          className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-500 text-xl text-black transition-colors hover:bg-yellow-400"
+                          title={
+                            isPlaying && currentSong?.id === item.song.id
+                              ? "Pause"
+                              : "Play"
+                          }
+                        >
+                          {isPlaying && currentSong?.id === item.song.id ? (
+                            <FaPause />
+                          ) : (
+                            <FaPlay />
+                          )}
+                        </button>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <button
-                        onClick={() => handleToggleLike(item.song.id)}
-                        className="text-2xl transition-transform hover:scale-110"
-                      >
-                        {likedSongs.has(item.song.id) ? (
-                          <FaHeart className="text-red-500" />
-                        ) : (
-                          <FaRegHeart />
-                        )}
-                      </button>
-                      <a
-                        href={item.song.audioFile}
-                        download={`${item.song.title}.mp3`}
-                        className="text-2xl transition-transform hover:scale-110"
-                      >
-                        <FaDownload />
-                      </a>
-                      <button
-                        onClick={() => handlePlayPause(item.song)}
-                        className="rounded-full bg-yellow-500 p-3 text-2xl text-black transition-colors hover:bg-yellow-400"
-                      >
-                        {isPlaying && currentSong?.id === item.song.id ? (
-                          <FaPause />
-                        ) : (
-                          <FaPlay />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -238,9 +280,9 @@ const OrderHistory = () => {
   return (
     <div className="min-h-screen bg-neutral-900 p-4 text-white sm:p-8">
       <div className="mx-auto max-w-4xl">
-        <h1 className="mb-2 text-3xl font-bold">Order history</h1>
+        <h1 className="mb-2 text-4xl font-bold text-white">Order History</h1>
         {!loading && !error && (
-          <p className="mb-8 text-gray-400">{orders.length} order(s)</p>
+          <p className="mb-8 text-gray-400">{orders.length} order(s) found</p>
         )}
         {renderContent()}
       </div>
