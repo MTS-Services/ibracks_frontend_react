@@ -25,7 +25,7 @@ const ProgressBar = ({
         }}
       />
       {/* Optional: Show time below the progress bar for better UX */}
-      <div className="flex justify-between px-4 text-xs text-neutral-400">
+      <div className="flex justify-between px-4 text-xs text-neutral-400 sm:px-18">
         <span>{formatTime(currentTime)}</span>
         <span>{formatTime(duration)}</span>
       </div>

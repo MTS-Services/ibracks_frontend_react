@@ -6,12 +6,12 @@ const SongCard = ({ song, currentPlayingSong, isPlaying, handlePlaySong }) => {
   return (
     <div
       key={song.id || `${song.title}-${song.artist}`}
-      className="group relative w-48 max-w-[calc(50%-1rem)] sm:max-w-none"
+      className="group relative px-1 pb-3 sm:w-full sm:px-3 sm:py-0"
     >
       <img
         src={song.image}
         alt={song.title}
-        className="h-48 w-full rounded-2xl border border-gray-600 object-cover shadow-lg"
+        className="h-48 w-full rounded-2xl border border-gray-600 object-cover p-2 shadow-lg sm:w-[1000px]"
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = "/products/cart1.jpg";
@@ -19,7 +19,7 @@ const SongCard = ({ song, currentPlayingSong, isPlaying, handlePlaySong }) => {
       />
       {song.audioUrl ? (
         <div
-          className="bg-opacity-50 absolute inset-0 flex cursor-pointer items-center justify-center rounded opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="bg-opacity-50 absolute inset-0 flex cursor-pointer items-center justify-center rounded p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           onClick={() => handlePlaySong(song)}
         >
           {isCurrentPlaying && isPlaying ? (
@@ -33,19 +33,20 @@ const SongCard = ({ song, currentPlayingSong, isPlaying, handlePlaySong }) => {
           No Audio
         </div>
       )}
-
-      <div className="mt-2 text-center">
-        <p className="font-manrope max-w-[120px] truncate text-base leading-tight font-semibold text-neutral-200 sm:max-w-full sm:text-lg sm:leading-relaxed">
-          {song.title}
-        </p>
-        <p className="font-manrope max-w-[120px] truncate text-xs leading-none font-normal text-neutral-300 sm:max-w-full sm:text-sm">
-          {song.artist}
-        </p>
-        {isCurrentPlaying && isPlaying && (
-          <p className="mt-1 animate-pulse text-xs text-green-400">
-            Playing...
+      <div className="flex items-center justify-center">
+        <div className="m-fu mx-auto mt-2 justify-center text-center">
+          <p className="font-manrope max-w-[120px] truncate text-base leading-tight font-semibold text-neutral-200 sm:max-w-full sm:text-lg sm:leading-relaxed">
+            {song.title}
           </p>
-        )}
+          <p className="font-manrope max-w-[120px] truncate text-xs leading-none font-normal text-neutral-300 sm:max-w-full sm:text-sm">
+            {song.artist}
+          </p>
+          {isCurrentPlaying && isPlaying && (
+            <p className="mt-1 animate-pulse text-center text-xs text-green-400">
+              Playing...
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

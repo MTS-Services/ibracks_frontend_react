@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-
 import MainLayout from "../layout/template/main/MainLayout";
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
@@ -23,6 +22,8 @@ import CartTestView from "../pages/public/cart/CartTestView";
 import CheckoutView from "../pages/public/checkout/CheckoutView";
 import Account from "../pages/private/Account/Account";
 import UploadPage from "../pages/private/upload/UploadPage";
+import PrivateRoute from "../featured/auth/PrivateRoute";
+import PravateRoutsTest from "../components/PravateRoutsTest";
 import OrderHistory from "../pages/public/checkout/components/OrderHistory";
 
 const AppRoutes = createBrowserRouter([
@@ -97,9 +98,23 @@ const AppRoutes = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <PravateRoutsTest />
+      </PrivateRoute>
+    ),
+  },
+
   {
     path: "/admin",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,

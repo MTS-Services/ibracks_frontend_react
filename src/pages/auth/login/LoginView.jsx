@@ -14,6 +14,9 @@ const LoginView = () => {
 
   const {
     login,
+    // ===============new_code===================
+    googleSignIn, // AuthContext থেকে googleSignIn ফাংশন ইম্পোর্ট করা হয়েছে
+    // ===============new_code===================
     loading: authLoading,
     error: authError,
     success: authSuccess,
@@ -58,6 +61,24 @@ const LoginView = () => {
       console.error("Login error in LoginView:", err);
     }
   };
+
+  // ===============new_code===================
+  // Google Sign-in হ্যান্ডলার
+  const handleGoogleSignIn = async () => {
+    setAuthError(null);
+    setAuthSuccess(null);
+    try {
+      const result = await googleSignIn();
+      if (result.success) {
+        navigate("/"); // সফল হলে হোম পেজে রিডাইরেক্ট করা হবে
+      } else {
+        // ত্রুটি AuthContext দ্বারা সেট করা হয়েছে
+      }
+    } catch (err) {
+      console.error("Google Sign-in error in LoginView:", err);
+    }
+  };
+  // ===============new_code===================
 
   const openForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(true);
@@ -211,7 +232,13 @@ const LoginView = () => {
 
           {/* Social Login Buttons */}
           <div className="flex w-full flex-col gap-3 md:gap-4">
-            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
+            {/* ===============new_code=================== */}
+            {/* Google Sign-in Button */}
+            <button
+              onClick={handleGoogleSignIn} // Google Sign-in ফাংশন কল করা হয়েছে
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3"
+              disabled={authLoading} // লোডিং অবস্থায় বাটন ডিজেবল করা হয়েছে
+            >
               <img
                 src="/New folder/google.svg"
                 className="h-5 w-5 md:h-6 md:w-6"
@@ -221,6 +248,7 @@ const LoginView = () => {
                 Sign in With Google
               </span>
             </button>
+            {/* ===============new_code=================== */}
             <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               <img
                 src="/New folder/apple.svg"

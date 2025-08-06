@@ -13,17 +13,6 @@ import { AuthContext } from "../../../featured/auth/AuthContext";
 
 import CartDropdown from "../../../components/common/CartDropdown";
 
-// Navigation Links Data
-const navLinks = [
-  { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  { label: "Tracks", path: "/tracks" },
-  { label: "Video", path: "/video" },
-  { label: "Services", path: "/services" },
-  { label: "Products", path: "/products" },
-  { label: "Contact", path: "/contact" },
-];
-
 const NavStyle = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -86,6 +75,25 @@ const NavStyle = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Conditionally define navLinks based on user login status and role
+  const navLinks = [
+    { label: "Home", path: "/" },
+    { label: "About", path: "/about" },
+    { label: "Tracks", path: "/tracks" },
+    { label: "Video", path: "/video" },
+    { label: "Services", path: "/services" },
+    { label: "Products", path: "/products" },
+    { label: "Contact", path: "/contact" },
+    // Conditionally show Dashboard or My Dashboard based on user role
+    ...(user
+      ? user.role === "admin"
+        ? [{ label: "Dashboard", path: "/admin" }]
+        : user.role === "user"
+          ? [{ label: "My Dashboard", path: "/dashboard" }] // Assuming a /dashboard route for regular users
+          : []
+      : []),
+  ];
 
   return (
     <nav className="sticky top-0 z-20 bg-black text-white">
@@ -336,7 +344,3 @@ const NavStyle = () => {
 };
 
 export default NavStyle;
-
-{
-  /* Profile/Login Icon */
-}

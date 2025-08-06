@@ -1,16 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaCrown } from "react-icons/fa6";
 import { PiUploadSimpleBold } from "react-icons/pi";
 import axios from "../../../utils/axiosInstance";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSongStore } from "../../../pages/private/upload/components/songStore";
 import { toast } from "react-hot-toast";
+import { AuthContext } from "../../../featured/auth/AuthContext";
 
 const RightSide = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [recentUploadsData, setRecentUploadsData] = useState([]);
   const dropdownRef = useRef(null);
   const { uploadTrigger } = useSongStore();
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +38,6 @@ const RightSide = () => {
 
   return (
     <aside className="w-70 flex-shrink-0 flex-col space-y-6 p-4 text-white lg:flex">
-      {/* User profile and Upload Song sections remain the same */}
       <div className="relative" ref={dropdownRef}>
         <div
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -43,14 +45,17 @@ const RightSide = () => {
         >
           <div className="flex items-center gap-3">
             <img
-              src="https://placehold.co/48x48/ffffff/000?text=JR"
+              src={
+                user?.profileImage ||
+                "https://placehold.co/48x48/ffffff/000?text=JR"
+              }
               alt="User Avatar"
               className="h-12 w-12 rounded-full"
             />
             <div>
-              <p className="font-semibold text-white">James Rodriguez</p>
+              <p className="font-semibold text-white">{user?.name}</p>
               <div className="flex items-center gap-1 text-xs text-neutral-400">
-                <span>Admin</span> <FaCrown className="text-amber-400" />
+                <span>{user?.role}</span> <FaCrown className="text-amber-400" />
               </div>
             </div>
           </div>
@@ -58,11 +63,15 @@ const RightSide = () => {
             className={`transition-transform ${isDropdownOpen ? "rotate-90" : ""}`}
           />
         </div>
+
         {isDropdownOpen && (
           <div className="absolute top-full right-0 z-20 mt-2 w-48 rounded-lg bg-neutral-700 shadow-lg">
             <button
               onClick={() => {
+                logout();
                 toast.success("Logging out...");
+                // The fix is here: Change the path to the correct one
+                navigate("/about");
               }}
               className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-neutral-600"
             >
@@ -71,6 +80,7 @@ const RightSide = () => {
           </div>
         )}
       </div>
+
       <div className="mt-6 space-y-4">
         <h2 className="text-lg font-bold text-white">Upload Song</h2>
         <Link
@@ -82,7 +92,6 @@ const RightSide = () => {
         </Link>
       </div>
 
-      {/* Recent Uploads section */}
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-white">Recent Uploads</h2>

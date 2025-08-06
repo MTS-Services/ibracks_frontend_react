@@ -8,7 +8,6 @@ import {
   SoundSection,
   GetInTouch,
   ServiceSection,
-  ReleasesSection,
 } from "./components/sections/index";
 import ReleasesSectionTest from "./components/ReleasesSection/ReleasesSectionTest";
 
