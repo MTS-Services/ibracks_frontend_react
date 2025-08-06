@@ -167,7 +167,7 @@ const NavStyle = () => {
                     View Account
                   </Link>
                   <Link
-                    to="/shop-cart"
+                    to="/order-history"
                     className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
                     onClick={() => setIsProfileMenuOpen(false)}
                   >

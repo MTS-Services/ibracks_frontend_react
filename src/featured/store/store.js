@@ -11,31 +11,30 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // localStorage ব্যবহার করার জন্য
+import storage from "redux-persist/lib/storage";
 
 import cartReducer from "../cart/cartSlice";
 import audioPlayerReducer from "../song/playingSlice";
+import authReducer from "../auth/authSlice"; // <-- 1. Notun authReducer import korun
 
-// ধাপ ১: আপনার সব রিডিউসারকে একত্রিত করুন
+// 2. Apnar shob reducer'ke ekotrito korun
 const rootReducer = combineReducers({
   cart: cartReducer,
   audioPlayer: audioPlayerReducer,
+  auth: authReducer, // <-- 3. Ekhane authReducer jog korun
 });
 
-// ধাপ ২: redux-persist এর জন্য কনফিগারেশন তৈরি করুন
 const persistConfig = {
-  key: "root", // localStorage-এ মূল key
+  key: "root",
   storage,
-  // whitelist দিয়ে বলে দিন শুধুমাত্র কোন state-টি সেভ করতে চান
-  whitelist: ["cart"],
+  // whitelist diye bole din shudhumatro kon state'gulo save korte chan
+  whitelist: ["cart", "auth"], // <-- 4. Ekhane 'auth' jog korun
 };
 
-// ধাপ ৩: একত্রিত রিডিউসারকে persistReducer দিয়ে র‍্যাপ করুন
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// ধাপ ৪: স্টোর কনফিগার করুন
 export const store = configureStore({
-  reducer: persistedReducer, // এখানে সরাসরি পারসিস্টেড রিডিউসার ব্যবহার করুন
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -44,4 +43,4 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store);
+export const persistor = persistStore(store); 

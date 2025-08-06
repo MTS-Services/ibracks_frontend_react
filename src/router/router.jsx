@@ -23,6 +23,7 @@ import CartTestView from "../pages/public/cart/CartTestView";
 import CheckoutView from "../pages/public/checkout/CheckoutView";
 import Account from "../pages/private/Account/Account";
 import UploadPage from "../pages/private/upload/UploadPage";
+import OrderHistory from "../pages/public/checkout/components/OrderHistory";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -75,6 +76,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: "/video",
         element: <VideosView />,
+      },
+      {
+        path: "/order-history",
+        element: <OrderHistory />,
       },
     ],
   },
