@@ -341,9 +341,7 @@ const HeroSection = () => {
         </main>
       ) : (
         !isLoading && (
-          <div className="mt-10 text-center text-xl text-neutral-400">
-            No tracks found matching your criteria.
-          </div>
+          <div className="mt-10 text-center text-xl text-neutral-400"></div>
         )
       )}
     </section>
