@@ -6,7 +6,6 @@ import ProductsHeroMobail from "./components/sections/ProductsHeroMobail";
 import RelatedTracks from "./components/sections/Relatedtracks";
 
 import { getAllSongs } from "../../../featured/song/trackService";
-import { BrowseSection } from "../home/components/sections";
 
 const ProductsView = () => {
   const [songs, setSongs] = useState([]);
@@ -34,7 +33,7 @@ const ProductsView = () => {
         <ProductsHero />
       </div>
       <div className="block lg:hidden">
-        <BrowseSection></BrowseSection>
+        <ProductsHeroMobail />
       </div>
 
       <Availabestems songs={songs} />
