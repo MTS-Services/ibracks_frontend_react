@@ -16,9 +16,6 @@ import ReleasesSectionTest from "./components/ReleasesSection/ReleasesSectionTes
 import { getAllSongs } from "../../../featured/song/trackService";
 import { getAllPlans } from "../../../featured/plans/planService";
 
-// Icons
-import { FiPlay } from "react-icons/fi";
-
 const HomeView = () => {
   const [songs, setSongs] = useState([]);
   const [plans, setPlans] = useState([]);
