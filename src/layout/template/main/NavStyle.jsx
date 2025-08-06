@@ -97,7 +97,6 @@ const NavStyle = () => {
   const profileDropdownLinks = user
     ? [
         { label: "View Account", path: "/account", icon: FaUserTie },
-        { label: "My Cart", path: "/shop-cart", icon: FaShoppingBag },
         ...(user.role === "admin"
           ? [{ label: "Dashboard", path: "/admin", icon: RiProductHuntLine }] // You can replace the icon with a more suitable one
           : user.role === "user"
@@ -109,7 +108,7 @@ const NavStyle = () => {
                 },
               ]
             : []),
-        { label: "Services", path: "/service", icon: RiCustomerService2Fill },
+        { label: "Services", path: "/services", icon: RiCustomerService2Fill },
       ]
     : [];
 
