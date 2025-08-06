@@ -83,6 +83,7 @@ const NavStyle = () => {
     { label: "Tracks", path: "/tracks" },
     { label: "Video", path: "/video" },
     { label: "Services", path: "/services" },
+    { label: "Products", path: "/products" },
     { label: "Contact", path: "/contact" },
     // Conditionally show Dashboard or My Dashboard based on user role
     ...(user
