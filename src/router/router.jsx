@@ -8,11 +8,9 @@ import TracksView from "../pages/public/tracks/TracksView";
 import ProductsView from "../pages/public/products/ProductsView";
 import VideosView from "../pages/public/videos/VideosView";
 import ContactView from "../pages/public/contact/ContactView";
-
 import AuthLayout from "../layout/template/auth/AuthLayout";
 import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
-
 import DashboardLayout from "../layout/template/admin/DashboardLayout";
 import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
@@ -22,7 +20,7 @@ import CartTestView from "../pages/public/cart/CartTestView";
 import CheckoutView from "../pages/public/checkout/CheckoutView";
 import Account from "../pages/private/Account/Account";
 import UploadPage from "../pages/private/upload/UploadPage";
-import PrivateRoute from "../featured/auth/PrivateRoute";
+import { PrivateRoute, PrivateAdminRoute } from "../featured/auth/PrivateRoute"; // Import both
 import PravateRoutsTest from "../components/PravateRoutsTest";
 
 const AppRoutes = createBrowserRouter([
@@ -30,103 +28,58 @@ const AppRoutes = createBrowserRouter([
     path: "/",
     element: <MainLayout />,
     children: [
+      { index: true, element: <HomeView /> },
+      { path: "about", element: <AboutView /> },
+      { path: "contact", element: <ContactView /> },
+      { path: "services", element: <ServicesView /> },
+      { path: "shoping-cart", element: <CartView /> },
+      { path: "test-cart", element: <CartTestView /> },
+      { path: "check-out", element: <CheckoutView /> },
       {
-        index: true,
-        element: <HomeView />,
+        path: "account",
+        element: (
+          <PrivateRoute>
+            <Account />
+          </PrivateRoute>
+        ),
       },
-      {
-        path: "/about",
-        element: <AboutView />,
-      },
-      {
-        path: "/contact",
-        element: <ContactView />,
-      },
-      {
-        path: "/services",
-        element: <ServicesView />,
-      },
-
-      {
-        path: "/shoping-cart",
-        element: <CartView />,
-      },
-
-      {
-        path: "/test-cart",
-        element: <CartTestView />,
-      },
-      {
-        path: "/check-out",
-        element: <CheckoutView />,
-      },
-      {
-        path: "/account",
-        element: <Account />,
-      },
-
-      {
-        path: "/tracks",
-        element: <TracksView />,
-      },
-      {
-        path: "/products",
-        element: <ProductsView />,
-      },
-      {
-        path: "/video",
-        element: <VideosView />,
-      },
+      { path: "tracks", element: <TracksView /> },
+      { path: "products", element: <ProductsView /> },
+      { path: "video", element: <VideosView /> },
     ],
   },
   {
     path: "/auth",
     element: <AuthLayout />,
     children: [
-      {
-        path: "login",
-        element: <LoginView />,
-      },
-      {
-        path: "register",
-        element: <RegisterView />,
-      },
+      { path: "login", element: <LoginView /> },
+      { path: "register", element: <RegisterView /> },
     ],
   },
-
   {
     path: "/dashboard",
     element: (
       <PrivateRoute>
+        {" "}
+        {/* General user route */}
         <PravateRoutsTest />
       </PrivateRoute>
     ),
   },
-
   {
     path: "/admin",
     element: (
-      <PrivateRoute>
+      <PrivateAdminRoute>
+        {" "}
+        {/* Admin-only route */}
         <DashboardLayout />
-      </PrivateRoute>
+      </PrivateAdminRoute>
     ),
     children: [
-      {
-        index: true,
-        element: <Dashboard />,
-      },
-      {
-        path: "songs",
-        element: <TotalSongs />,
-      },
-      {
-        path: "salse",
-        element: <SalseAnalysis />,
-      },
-      {
-        path: "upload",
-        element: <UploadPage />,
-      },
+      { index: true, element: <Dashboard /> },
+      { path: "songs", element: <TotalSongs /> },
+      { path: "salse", element: <SalseAnalysis /> },
+      { path: "upload", element: <UploadPage /> },
     ],
   },
   {
