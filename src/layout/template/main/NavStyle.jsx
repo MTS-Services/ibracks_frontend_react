@@ -172,7 +172,7 @@ const NavStyle = () => {
                     onClick={() => setIsProfileMenuOpen(false)}
                   >
                     <FaShoppingBag className="h-4 w-4 text-[#EFA645]" />
-                    My Cart
+                    Order History
                   </Link>
                   <Link
                     to="/products"
