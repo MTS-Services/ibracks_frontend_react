@@ -34,6 +34,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
+  // ===============added_by_gemini===================
+  // Determine if the app is running on localhost
+  // This is used to conditionally set the 'secure' flag on cookies
+  // ===================================================
+  const isLocalhost =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1";
+
   // ===============code_by_shakil_munshi===================
   // Sync token to cookies
   // This useEffect runs whenever the 'token' state changes.
@@ -45,15 +53,14 @@ export const AuthProvider = ({ children }) => {
       // Set cookie for 7 days (adjust as needed)
       // IMPORTANT:
       // - `secure: true` means the cookie will ONLY be sent over HTTPS.
-      //   If you are developing on `http://localhost`, this cookie will NOT be set.
-      //   For development, you might need to temporarily remove `secure: true`
-      //   or use a tool like ngrok to get an HTTPS URL.
-      // - `sameSite: "strict"` helps prevent CSRF attacks but requires
-      //   that the request originates from the same site.
       // =======================================================
       Cookies.set("token", token, {
         expires: 7, // Cookie expires in 7 days
-        secure: true, // Only send over HTTPS
+        // ===============added_by_gemini===================
+        // Conditionally set 'secure' to false for localhost
+        // For production, this will be true by default
+        // ===================================================
+        secure: !isLocalhost,
         sameSite: "strict", // Strict same-site policy
       });
       console.log("Cookie set with token:", token); // Added for debugging
@@ -61,7 +68,7 @@ export const AuthProvider = ({ children }) => {
       Cookies.remove("token");
       console.log("Cookie removed."); // Added for debugging
     }
-  }, [token]);
+  }, [token, isLocalhost]);
 
   // ===============code_by_shakil_munshi===================
   // Set axios default header if token changes
@@ -176,7 +183,10 @@ export const AuthProvider = ({ children }) => {
       const data = response.data;
       console.log("Register response data:", data); // Debugging: check what the server sends
 
-      // Ensure that `data.data.user` and `data.data.token` exist in the response
+      // ===============code_by_shakil_munshi==================
+      // Backend থেকে আসা response data'র গঠন Login-এর মতো হওয়া উচিত।
+      // এখানে নিশ্চিত করা হচ্ছে যে response-এ user এবং token আছে কিনা।
+      // =======================================================
       if (data.data && data.data.user && data.data.token) {
         setUser(data.data.user);
         setToken(data.data.token); // This should trigger the useEffect to set the cookie
