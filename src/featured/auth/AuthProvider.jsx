@@ -3,11 +3,16 @@ import Cookies from "js-cookie";
 import { AuthContext } from "./AuthContext";
 import axios from "../../utils/axiosInstance"; // your axios setup
 
+// ===============new_code shakil munshi===================
+// Firebase imports
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import firebaseApp from "../../firebase.config";
+
 export const AuthProvider = ({ children }) => {
   // ===============code_by_shakil_munshi===================
   // Load user from localStorage, token from cookies
   // =======================================================
-
   const [user, setUser] = useState(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -34,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // ===============added_by_gemini===================
+  // ===============code by shaki munshi===================
   // Determine if the app is running on localhost
   // This is used to conditionally set the 'secure' flag on cookies
   // ===================================================
@@ -50,13 +55,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       // ===============code_by_shakil_munshi===================
-      // Set cookie for 7 days (adjust as needed)
-      // IMPORTANT:
-      // - `secure: true` means the cookie will ONLY be sent over HTTPS.
+
       // =======================================================
       Cookies.set("token", token, {
         expires: 7, // Cookie expires in 7 days
-        // ===============added_by_gemini===================
+        // ===============added_by_shakil==================
         // Conditionally set 'secure' to false for localhost
         // For production, this will be true by default
         // ===================================================
@@ -133,11 +136,20 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  // ===============code_by_shakil_munshi===================
+  // Goole register   and api hid  the data base
+  // =======================================================
+  const provider = new GoogleAuthProvider();
 
+  const auth = getAuth(firebaseApp);
+  auth.languageCode = "it";
+  // To apply the default browser preference instead of explicitly setting it.
+  // auth.useDeviceLanguage();
   // ===============code_by_shakil_munshi===================
   // -------------- REGISTER --------------------
   // Handles user registration, including image upload.
   // =======================================================
+
   const register = async (
     name,
     phoneNumber,
@@ -168,10 +180,7 @@ export const AuthProvider = ({ children }) => {
       formData.append("phoneNumber", phoneNumber);
       formData.append("email", email);
       formData.append("password", password);
-      formData.append("role", "user"); // Assuming a default role
-      // For `crypto.randomUUID()`, ensure you are in a secure context (HTTPS)
-      // or a browser environment that supports it.
-      // If not, you might need a polyfill or a different UUID generation method.
+      formData.append("role", "user");
       formData.append("uid", crypto.randomUUID());
 
       if (profileImage) formData.append("profileImage", profileImage);
@@ -184,8 +193,6 @@ export const AuthProvider = ({ children }) => {
       console.log("Register response data:", data); // Debugging: check what the server sends
 
       // ===============code_by_shakil_munshi==================
-      // Backend থেকে আসা response data'র গঠন Login-এর মতো হওয়া উচিত।
-      // এখানে নিশ্চিত করা হচ্ছে যে response-এ user এবং token আছে কিনা।
       // =======================================================
       if (data.data && data.data.user && data.data.token) {
         setUser(data.data.user);
@@ -205,12 +212,125 @@ export const AuthProvider = ({ children }) => {
       console.error("Registration error:", err);
       const message =
         err.response?.data?.message || "Registration failed. Please try again.";
+
+      // ===============added_by_shakil===================
+      if (message.includes("User with this email already exists")) {
+        console.log("Email already exists. Attempting to log in...");
+        const loginResponse = await login(email, password, false);
+        if (loginResponse.success) {
+          console.log("Successfully logged in instead of registering.");
+          setSuccess(
+            "An account already exists with this email. You have been logged in.",
+          );
+          return {
+            success: true,
+            message:
+              "An account already exists with this email. You have been logged in.",
+          };
+        }
+      }
       setError(message);
       return { success: false, message };
     } finally {
       setLoading(false);
     }
   };
+
+  // ===============new_code_shakil===================
+  // -------------- GOOGLE SIGN-IN --------------------
+  // Handles Google Sign-in and sends user data to backend API.
+  // =======================================================
+  const googleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Default password to use for Google accounts
+      const defaultGooglePassword = "GoogleUser@123";
+
+      // Prepare form data to send to backend
+      const formData = new FormData();
+      formData.append("email", user.email || "");
+      formData.append("uid", user.uid || "");
+      formData.append("password", defaultGooglePassword);
+      formData.append("name", user.displayName || "Google User");
+      formData.append("role", "user"); // default role
+
+      // Optional fields (add them anyway even if empty)
+      formData.append("phoneNumber", user.phoneNumber || "");
+      formData.append("photoURL", user.photoURL || "");
+
+      // Try to register first
+      try {
+        const response = await axios.post("/users/register", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        const data = response.data;
+
+        if (data.data && data.data.user && data.data.token) {
+          setUser(data.data.user);
+          setToken(data.data.token);
+          setSuccess(data.message || "Google sign-in successful!");
+          return {
+            success: true,
+            message: data.message || "Google sign-in successful!",
+          };
+        } else {
+          const message =
+            "Google sign-in failed: Unexpected response from backend.";
+          setError(message);
+          return { success: false, message };
+        }
+      } catch (regErr) {
+        // If user already exists, fallback to login
+        const msg = regErr.response?.data?.message || "";
+
+        if (msg.includes("already exists") || regErr.response?.status === 400) {
+          console.warn("User exists. Trying to login...");
+
+          const loginResponse = await login(
+            user.email,
+            defaultGooglePassword,
+            false,
+          );
+          if (loginResponse.success) {
+            setSuccess("Google user logged in successfully.");
+            return {
+              success: true,
+              message: "Google user logged in successfully.",
+            };
+          } else {
+            throw new Error("Fallback login failed.");
+          }
+        }
+
+        // Other registration errors
+        const message =
+          regErr.response?.data?.message ||
+          "Google sign-in failed during registration.";
+        setError(message);
+        return { success: false, message };
+      }
+    } catch (err) {
+      console.error("Google Sign-in error:", err);
+      const message =
+        err.code === "auth/popup-closed-by-user"
+          ? "Google sign-in cancelled by user."
+          : err.response?.data?.message ||
+            "Google sign-in failed. Please try again.";
+      setError(message);
+      return { success: false, message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ===============new_code= shakil==================
 
   // ===============code_by_shakil_munshi===================
   // -------------- LOGOUT --------------------
@@ -304,6 +424,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     forgotPassword,
     updatePassword,
+    googleSignIn,
     setError, // Allowing direct manipulation of error/success messages
     setSuccess, // useful for clearing messages on route change etc.
   };
