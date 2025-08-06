@@ -1,10 +1,36 @@
+import { useRef, useState } from "react";
 import { FiPlusCircle } from "react-icons/fi";
-import { MdPlayArrow } from "react-icons/md";
+import { MdPlayArrow, MdPause } from "react-icons/md"; // Import both icons
 import { RxBorderDotted } from "react-icons/rx";
 
-// It now accepts 'cardColor' as a prop
+// It now accepts 'album' as an object and 'cardColor' as a prop
 const AboutDiscography = ({ album, cardColor }) => {
-  const { title, coverImage, previewColor } = album;
+  // Destructure the necessary properties from the album object
+  // Assuming 'audioFile' from your JSON data is the URL for the song.
+  const { title, coverImage, previewColor, audioFile } = album;
+
+  // Use state to track if the song is playing
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  // Use a ref to access the audio element directly
+  const audioRef = useRef(null);
+
+  // Function to handle the play/pause toggle
+  const togglePlay = () => {
+    // If the audio element doesn't exist, exit the function
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      // If the song is playing, pause it
+      audioRef.current.pause();
+    } else {
+      // If the song is paused, play it
+      audioRef.current.play();
+    }
+
+    // Toggle the isPlaying state
+    setIsPlaying(!isPlaying);
+  };
 
   return (
     <div
@@ -45,12 +71,22 @@ const AboutDiscography = ({ album, cardColor }) => {
               <FiPlusCircle className="size-6 text-white sm:text-lg" />
               <RxBorderDotted className="size-6 text-white" />
             </div>
-            <div className="rounded-2xl bg-white">
-              <MdPlayArrow className="size-6 p-1 text-base text-black sm:text-lg" />
-            </div>
+
+            {/* The button now handles the play/pause toggle */}
+            <button onClick={togglePlay} className="rounded-2xl bg-white">
+              {/* Conditionally render the icon based on the state */}
+              {isPlaying ? (
+                <MdPause className="size-6 p-1 text-base text-black sm:text-lg" />
+              ) : (
+                <MdPlayArrow className="size-6 p-1 text-base text-black sm:text-lg" />
+              )}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* The hidden audio element that plays the song */}
+      <audio ref={audioRef} src={audioFile} />
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { FaCheck } from "react-icons/fa";
 
 const LicensingSection = ({ plans }) => {
   return (
-    <section className="bg-gradient-to-b from-[#150618] to-[#150620] px-4 py-16">
+    <section className="bg-gradient-to-b from-[#150618] to-[#150620] px-4 pb-10">
       <div className="mx-auto max-w-7xl">
         <div>
           <h2 className="mb-10 text-center text-2xl font-bold text-white md:text-3xl">

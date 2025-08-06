@@ -23,7 +23,7 @@ const SoundSection = () => {
   ];
 
   return (
-    <section className="bg-gradient-to-b from-[#150620] to-[#150630] px-4 text-center lg:py-16">
+    <section className="bg-gradient-to-b from-[#150620] to-[#150630] px-4 pt-6 text-center lg:pb-10">
       <div className="mx-auto max-w-7xl">
         <h2 className="mb-4 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
           Sound Kits

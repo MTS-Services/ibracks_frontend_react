@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { FiPlay } from "react-icons/fi"; // Only FiPlay needed for header icon
-
-// Import the new components
+import { FiPlay } from "react-icons/fi";
 import SongCard from "./SongCard";
 import PlayerControls from "./PlayerControls";
-import ProgressBar from "./ProgressBar";
 import { FaHeart } from "react-icons/fa";
+
+// Import the service function
+import ProgressBar from "./ProgressBar";
+import { getAllSongs } from "../../../../../featured/song/trackService";
 
 const ReleasesSectionTest = () => {
   const [songs, setSongs] = useState([]);
@@ -20,13 +21,14 @@ const ReleasesSectionTest = () => {
   const [isShuffle, setIsShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState("off"); // 'off', 'one', 'all'
 
-  // Initialize Audio object once and store its reference
   const audioRef = useRef(new Audio());
-
-  // Refs for functions for event listeners to avoid stale closures (still useful for native events)
   const playNextSongRef = useRef();
   const playPreviousSongRef = useRef();
   const handlePlaySongRef = useRef();
+
+  // ==================CODE BY SHAKIL MNSHI =====================
+  // TIME CONTRORL
+  // ==============================================================
 
   const formatTime = (seconds) => {
     if (isNaN(seconds) || seconds < 0) return "00:00";
@@ -37,8 +39,11 @@ const ReleasesSectionTest = () => {
     }${secs}`;
   };
 
-  // Function to play the next song in the list
   const playNextSong = useCallback(() => {
+    // ==================CODE BY SHAKIL MNSHI =====================
+    // ... (Your existing playNextSong logic)
+    // ==============================================================
+
     console.log(
       "playNextSong called. Current song:",
       currentPlayingSong?.title,
@@ -83,15 +88,17 @@ const ReleasesSectionTest = () => {
         "Title:",
         songs[nextSongIndex]?.title,
       );
-      // Use the ref for handlePlaySong, as this function is called from within an event listener
       if (handlePlaySongRef.current) {
         handlePlaySongRef.current(songs[nextSongIndex]);
       }
     }
   }, [currentPlayingSong, songs, isShuffle, repeatMode]);
 
-  // Function to play the previous song in the list
   const playPreviousSong = useCallback(() => {
+    // ==================CODE BY SHAKIL MNSHI =====================
+    // ... (Your existing playPreviousSong logic)
+    // ==============================================================
+
     console.log(
       "playPreviousSong called. Current song:",
       currentPlayingSong?.title,
@@ -115,7 +122,6 @@ const ReleasesSectionTest = () => {
     } else {
       prevSongIndex = (currentIndex - 1 + songs.length) % songs.length;
     }
-    // Use the ref for handlePlaySong
     if (handlePlaySongRef.current) {
       console.log(
         "Playing previous song at index:",
@@ -127,9 +133,12 @@ const ReleasesSectionTest = () => {
     }
   }, [currentPlayingSong, songs, isShuffle]);
 
-  // Function to handle playing a specific song or toggling play/pause for the current song.
   const handlePlaySong = useCallback(
     (song) => {
+      // ==================CODE BY SHAKIL MNSHI =====================
+      // ... (Your existing handlePlaySong logic)
+      // ==============================================================
+
       console.log("handlePlaySong called for:", song.title);
       if (!song.audioUrl) {
         console.warn(`Song "${song.title}" has no audio URL available.`);
@@ -142,20 +151,21 @@ const ReleasesSectionTest = () => {
         return;
       }
 
-      // If a different song is clicked or no song is currently playing, load the new song.
       console.log("Loading new song:", song.title, "URL:", song.audioUrl);
       audioRef.current.src = song.audioUrl;
-      audioRef.current.load(); // Load the new source
+      audioRef.current.load();
       setCurrentPlayingSong(song);
-      setIsPlaying(true); // Attempt to play the new song
-      audioRef.current.volume = volume; // Set the initial volume.
+      setIsPlaying(true);
+      audioRef.current.volume = volume;
     },
     [currentPlayingSong, volume],
   );
 
-  // This useEffect attaches and cleans up audio event listeners ONCE.
-  // It handles the core audio events, not just play/pause.
   useEffect(() => {
+    // ==================CODE BY SHAKIL MNSHI =====================
+    // ... (Your existing audio event listeners logic)
+    // ==============================================================
+
     const audio = audioRef.current;
     console.log("Setting up audio event listeners...");
 
@@ -165,16 +175,14 @@ const ReleasesSectionTest = () => {
         isPlaying,
       );
       if (isPlaying && audio.paused) {
-        // Only attempt to play if the component state expects it to be playing AND audio is actually paused
         audio.play().catch((e) => {
           console.error("Autoplay failed (from canplaythrough listener):", e);
-          // Check if error is due to user interaction requirement
           if (e.name === "NotAllowedError" || e.name === "AbortError") {
             console.warn(
               "Autoplay blocked by browser. User interaction required.",
             );
           }
-          setIsPlaying(false); // Fallback to paused if autoplay fails
+          setIsPlaying(false);
         });
       }
     };
@@ -195,7 +203,6 @@ const ReleasesSectionTest = () => {
         audio.currentTime = 0;
         audio.play().catch((e) => console.error("Error repeating song:", e));
       } else {
-        // Use the ref for `playNextSong` to ensure the latest version is called
         if (playNextSongRef.current) {
           playNextSongRef.current();
         }
@@ -210,14 +217,12 @@ const ReleasesSectionTest = () => {
       setCurrentTime(0);
     };
 
-    // Attach event listeners
     audio.addEventListener("canplaythrough", handleCanPlayThrough);
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("ended", handleSongEnded);
     audio.addEventListener("error", handleError);
 
-    // Cleanup function: runs when component unmounts or dependencies change
     return () => {
       console.log("Cleaning up audio event listeners...");
       audio.removeEventListener("canplaythrough", handleCanPlayThrough);
@@ -226,10 +231,13 @@ const ReleasesSectionTest = () => {
       audio.removeEventListener("ended", handleSongEnded);
       audio.removeEventListener("error", handleError);
     };
-  }, [playNextSong, repeatMode, isPlaying]); // Dependencies for event listener (important!)
+  }, [playNextSong, repeatMode, isPlaying]);
 
-  // This useEffect handles the actual play/pause commands based on state.
   useEffect(() => {
+    // ==================CODE BY SHAKIL MNSHI =====================
+    // ... (Your existing play/pause logic)
+    // ==============================================================
+
     const audio = audioRef.current;
     console.log(
       "useEffect [isPlaying, currentPlayingSong] - isPlaying:",
@@ -242,9 +250,7 @@ const ReleasesSectionTest = () => {
 
     if (currentPlayingSong && audio.src) {
       if (isPlaying) {
-        // Attempt to play if currently paused.
         if (audio.paused) {
-          // Check if it's actually paused before trying to play
           console.log("Attempting to play audio...");
           audio.play().catch((e) => {
             console.error("Autoplay failed from isPlaying effect:", e);
@@ -253,15 +259,13 @@ const ReleasesSectionTest = () => {
                 "Autoplay blocked by browser. User interaction required.",
               );
             }
-            setIsPlaying(false); // Revert to paused if autoplay fails.
+            setIsPlaying(false);
           });
         } else {
           console.log("Audio is already playing.");
         }
       } else {
-        // Pause if `isPlaying` is false.
         if (!audio.paused) {
-          // Only pause if it's not already paused
           console.log("Attempting to pause audio...");
           audio.pause();
         } else {
@@ -271,42 +275,37 @@ const ReleasesSectionTest = () => {
     } else if (!currentPlayingSong) {
       console.log("No current song. Ensuring audio is paused and cleared.");
       audio.pause();
-      audio.src = ""; // Clear source
-      audio.load(); // Release resources
+      audio.src = "";
+      audio.load();
     }
   }, [isPlaying, currentPlayingSong]);
 
-  // This useEffect ensures that the refs always hold the *latest* version of their functions.
-  // This is critical for event listeners like `onended` that capture the function at attachment time.
   useEffect(() => {
+    // ==================CODE BY SHAKIL MNSHI =====================
+    // ... (Your existing refs update logic)
+    // ==============================================================
+
     playNextSongRef.current = playNextSong;
     playPreviousSongRef.current = playPreviousSong;
     handlePlaySongRef.current = handlePlaySong;
   }, [playNextSong, playPreviousSong, handlePlaySong]);
+  // ==================CODE BY SHAKIL MNSHI =====================
+  // Updated Data Fetching useEffect
+  // ==============================================================
 
-  // Data Fetching useEffect
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-
-      const url = `https://backend-ibracks.mtscorporate.com/api/songs/published`;
-      console.log("Fetching URL:", url);
-
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("API Error Response Text:", errorText);
-          throw new Error(
-            `HTTP error! status: ${response.status} - ${errorText}`,
-          );
-        }
-        const responseData = await response.json();
-        console.log("Parsed API Data (Full Object):", responseData);
+        const songsData = await getAllSongs({ limit: 20, published: true });
 
-        if (responseData && Array.isArray(responseData.data)) {
-          const processedSongs = responseData.data.map((song) => ({
+        // ==================CODE BY SHAKIL MNSHI =====================
+        // Process the data to match your component's state structure
+        // ==============================================================
+
+        if (songsData && Array.isArray(songsData.data)) {
+          const processedSongs = songsData.data.map((song) => ({
             ...song,
             id: song.id || song._id,
             image: song.coverImage || "/products/cart1.jpg",
@@ -316,25 +315,28 @@ const ReleasesSectionTest = () => {
           setSongs(processedSongs);
         } else {
           console.error(
-            "API response structure is not as expected or responseData.data is not an array:",
-            responseData,
+            "API response from getAllSongs is not as expected:",
+            songsData,
           );
           setError("Failed to load songs: Data format unexpected.");
           setSongs([]);
         }
       } catch (err) {
-        console.error("Error fetching data:", err);
+        console.error("Error fetching home data:", err);
         setError(`Error fetching data: ${err.message}`);
         setSongs([]);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
   const togglePlayPause = () => {
+    // ==================CODE BY SHAKIL MNSHI =====================
+    // ... (Your existing togglePlayPause logic)
+    // ==============================================================
+
     console.log("togglePlayPause clicked. Current state isPlaying:", isPlaying);
     if (!currentPlayingSong) {
       console.log("No song selected to play/pause. Cannot toggle.");
@@ -344,6 +346,10 @@ const ReleasesSectionTest = () => {
   };
 
   const handleVolumeChange = (e) => {
+    // ==================CODE BY SHAKIL MNSHI =====================
+    // ... (Your existing handleVolumeChange logic)
+    // ==============================================================
+
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
     if (audioRef.current) {
@@ -352,11 +358,14 @@ const ReleasesSectionTest = () => {
   };
 
   const handleProgressChange = (e) => {
+    // ==================CODE BY SHAKIL MUNSHI =====================
+    // ... (Your existing handleProgressChange logic)
+    // ==============================================================
+
     const newTime = parseFloat(e.target.value);
     setCurrentTime(newTime);
     if (audioRef.current) {
       audioRef.current.currentTime = newTime;
-      // If the user seeks while the song is paused, start playing from the new position.
       if (audioRef.current.paused && newTime > 0 && !isPlaying) {
         console.log(
           "Seeking while paused. Attempting to play from new position.",
@@ -375,6 +384,10 @@ const ReleasesSectionTest = () => {
   };
 
   const toggleShuffle = () => {
+    // ==================CODE BY SHAKIL MUNSHI =====================
+    // ... (Your existing toggleShuffle logic)
+    // ==============================================================
+
     setIsShuffle((prev) => !prev);
     if (!isShuffle && repeatMode === "one") {
       setRepeatMode("off");
@@ -382,6 +395,11 @@ const ReleasesSectionTest = () => {
   };
 
   const toggleRepeat = () => {
+    // ==================CODE BY SHAKIL MUNSHI =====================
+
+    // ... (Your existing toggleRepeat logic)
+    // ==============================================================
+
     setRepeatMode((prevMode) => {
       if (prevMode === "off") return "one";
       if (prevMode === "one") return "all";
@@ -392,8 +410,15 @@ const ReleasesSectionTest = () => {
     }
   };
 
-  // Slice the songs array to get only the first 6
   const displayedSongs = songs.slice(0, 6);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <section className="relative mx-auto w-full max-w-7xl pt-10">
@@ -404,10 +429,8 @@ const ReleasesSectionTest = () => {
         <FiPlay className="h-6 w-6 rounded-full bg-white p-1 text-black" />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-6 lg:gap-6 xl:grid-cols-6">
-        {loading ? (
-          <p className="text-lg text-white">Loading new releases...</p>
-        ) : error ? (
+      <div className="grid grid-cols-2 gap-2 py-2 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-6 lg:gap-6 xl:grid-cols-6">
+        {error ? (
           <p className="text-lg text-red-500">{error}</p>
         ) : Array.isArray(displayedSongs) && displayedSongs.length > 0 ? (
           displayedSongs.map((song) => (
@@ -433,13 +456,13 @@ const ReleasesSectionTest = () => {
             formatTime={formatTime}
           />
 
-          <div className="flex flex-1 items-center justify-between px-4 sm:px-8">
+          <div className="flex flex-1 items-center justify-between px-4 sm:px-16">
             <div className="flex w-fit items-center gap-4 sm:w-72 sm:gap-8">
               <div className="flex items-center gap-2 sm:gap-4">
                 <img
                   src={currentPlayingSong.image || "/products/cart1.jpg"}
                   alt="Album cover"
-                  className="h-14 w-14 rounded-lg object-cover sm:h-16 sm:w-16 sm:rounded-xl"
+                  className="hidden h-14 w-14 rounded-lg object-cover sm:block sm:h-16 sm:w-16 sm:rounded-xl"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "/products/cart1.jpg";
@@ -454,7 +477,6 @@ const ReleasesSectionTest = () => {
                   </p>
                 </div>
               </div>
-              {/* This Heart button still needs functionality */}
               <button className="hidden text-white transition-colors hover:text-red-500 sm:block">
                 <FaHeart size={20} />
               </button>
@@ -474,7 +496,6 @@ const ReleasesSectionTest = () => {
               toggleRepeat={toggleRepeat}
             />
 
-            {/* Time display (already handled by ProgressBar, this can be removed or kept for larger screens) */}
             <span className="font-manrope hidden text-sm font-normal text-neutral-400 sm:block sm:text-base">
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>

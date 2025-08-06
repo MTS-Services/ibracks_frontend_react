@@ -1,27 +1,34 @@
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast"; // Toaster এবং toast ইমপোর্ট করুন
+import toast, { Toaster } from "react-hot-toast";
 
 const ContactView = () => {
+  // =============code by shakil munshi==================
   // State variables to store form data
+  // =====================================================
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
 
+  // =============code by shakil munshi==================
   // State variables for form submission status
-  const [submitting, setSubmitting] = useState(false);
-  // const [submitted, setSubmitted] = useState(false); // আর দরকার নেই, টোস্ট ব্যবহার করব
-  // const [error, setError] = useState(false); // আর দরকার নেই, টোস্ট ব্যবহার করব
+  // =====================================================
 
+  const [submitting, setSubmitting] = useState(false);
+  // const [submitted, setSubmitted] = useState(false);
+  // const [error, setError] = useState(false);
+
+  // =============code by shakil munshi==================
   // Formspree endpoint URL (REPLACE 'yourformid' WITH YOUR ACTUAL FORMSPREE FORM ID)
-  const FORMSPREE_URL = "https://formspree.io/f/mkgzbkwl"; // IMPORTANT: Replace 'yourformid' with your actual Formspree form ID
+  // IMPORTANT: Replace 'yourformid' with your actual Formspree form ID
+  // =====================================================
+
+  const FORMSPREE_URL = "https://formspree.io/f/mkgzbkwl";
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     setSubmitting(true);
-    // setError(false); // এগুলোর দরকার নেই
-    // setSubmitted(false); // এগুলোর দরকার নেই
 
     try {
       const response = await fetch(FORMSPREE_URL, {
@@ -39,18 +46,22 @@ const ContactView = () => {
       });
 
       if (response.ok) {
-        toast.success("Message sent successfully!"); // সফল হলে টোস্ট দেখান
+        toast.success("Message sent successfully!");
+
+        // =============code by shakil munshi==================
         // Clear form fields after successful submission
+        // =====================================================
+
         setFirstName("");
         setLastName("");
         setEmail("");
         setPhone("");
         setMessage("");
       } else {
-        toast.error("Failed to send message. Please try again."); // ব্যর্থ হলে টোস্ট দেখান
+        toast.error("Failed to send message. Please try again.");
       }
     } catch (err) {
-      toast.error("An error occurred. Please try again later."); // কোনো এরর হলে টোস্ট দেখান
+      toast.error("An error occurred. Please try again later.");
     } finally {
       setSubmitting(false);
     }
@@ -147,17 +158,10 @@ const ContactView = () => {
                   {submitting ? "Sending..." : "Send Message"}
                 </div>
               </button>
-              {/* <p className="mt-2 w-full text-center text-green-400"> // এই অংশগুলোর আর দরকার নেই
-                            Message sent successfully!
-                        </p>
-                        <p className="mt-2 w-full text-center text-red-400">
-                            Failed to send message. Please try again.
-                        </p> */}
             </div>
           </form>
         </div>
 
-        {/* Image part - Using a placeholder for the image path */}
         <div className="m-auto hidden items-center justify-center rounded-xl bg-gradient-to-l pr-10 lg:flex">
           <img
             src="/contactpage/img1.jpg" // Placeholder image
@@ -166,7 +170,7 @@ const ContactView = () => {
           />
         </div>
       </div>
-      <Toaster /> {/* Toaster কম্পোনেন্ট যোগ করুন */}
+      <Toaster />
     </div>
   );
 };

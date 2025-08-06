@@ -65,7 +65,7 @@ const RegisterView = () => {
       setProfileImage(null);
       // Redirect to home page after a short delay to show the toast
       setTimeout(() => {
-        navigate("/"); // Adjust '/home' if your home route is different
+        navigate("/auth/login"); // Adjust '/home' if your home route is different
       }, 2000);
     } else if (error) {
       toast.error(error); // Display error from the AuthContext
