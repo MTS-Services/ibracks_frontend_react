@@ -83,17 +83,35 @@ const NavStyle = () => {
     { label: "Tracks", path: "/tracks" },
     { label: "Video", path: "/video" },
     { label: "Services", path: "/services" },
-    { label: "Products", path: "/products" },
+    // { label: "Products", path: "/products" },
     { label: "Contact", path: "/contact" },
     // Conditionally show Dashboard or My Dashboard based on user role
     ...(user
       ? user.role === "admin"
         ? [{ label: "Dashboard", path: "/admin" }]
-        : user.role === "user"
-          ? [{ label: "My Dashboard", path: "/dashboard" }] // Assuming a /dashboard route for regular users
-          : []
+        : []
       : []),
   ];
+
+  // Define profile dropdown links
+  const profileDropdownLinks = user
+    ? [
+        { label: "View Account", path: "/account", icon: FaUserTie },
+        { label: "My Cart", path: "/shop-cart", icon: FaShoppingBag },
+        ...(user.role === "admin"
+          ? [{ label: "Dashboard", path: "/admin", icon: RiProductHuntLine }] // You can replace the icon with a more suitable one
+          : user.role === "user"
+            ? [
+                {
+                  label: "My Dashboard",
+                  path: "/dashboard",
+                  icon: RiProductHuntLine,
+                },
+              ]
+            : []),
+        { label: "Services", path: "/service", icon: RiCustomerService2Fill },
+      ]
+    : [];
 
   return (
     <nav className="sticky top-0 z-20 bg-black text-white">
@@ -166,38 +184,17 @@ const NavStyle = () => {
                       {user.name}
                     </p>
                   </div>
-                  <Link
-                    to="/account"
-                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
-                    onClick={() => setIsProfileMenuOpen(false)}
-                  >
-                    <FaUserTie className="h-5 w-5 text-[#EFA645]" />
-                    View Account
-                  </Link>
-                  <Link
-                    to="/shop-cart"
-                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
-                    onClick={() => setIsProfileMenuOpen(false)}
-                  >
-                    <FaShoppingBag className="h-4 w-4 text-[#EFA645]" />
-                    My Cart
-                  </Link>
-                  <Link
-                    to="/products"
-                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
-                    onClick={() => setIsProfileMenuOpen(false)}
-                  >
-                    <RiProductHuntLine className="h-5 w-5 text-[#EFA645]" /> All
-                    Products
-                  </Link>
-                  <Link
-                    to="/service"
-                    className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
-                    onClick={() => setIsProfileMenuOpen(false)}
-                  >
-                    <RiCustomerService2Fill className="h-4 w-4 text-[#EFA645]" />{" "}
-                    Services
-                  </Link>
+                  {profileDropdownLinks.map(({ label, path, icon: Icon }) => (
+                    <Link
+                      key={label}
+                      to={path}
+                      className="flex items-center gap-1 border-b-1 border-[rgba(239,166,69,0.2)] px-4 py-2 text-sm font-[600] text-white transition-colors duration-200 hover:bg-purple-800"
+                      onClick={() => setIsProfileMenuOpen(false)}
+                    >
+                      <Icon className="h-4 w-4 text-[#EFA645]" />
+                      {label}
+                    </Link>
+                  ))}
                   <button
                     onClick={handleLogout}
                     className="block w-full items-center border-t border-[rgba(239,166,69,0.3)] px-4 py-2 text-left text-sm font-[600] text-red-400 transition-colors duration-200 hover:bg-purple-800"
