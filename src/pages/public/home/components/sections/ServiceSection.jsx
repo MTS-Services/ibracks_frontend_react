@@ -158,7 +158,7 @@ const ServiceSection = () => {
         <h2 className="mb-4 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
           Service
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-base text-white/80 sm:text-lg md:text-xl">
+        <p className="mx-auto mb-12 max-w-3xl text-base text-white/80 sm:text-base md:text-base">
           Your music deserves to be heard. We are here to help you craft your
           masterpiece, from raw recordings to a radio-ready track. Let's
           collaborate and make some magic happen.

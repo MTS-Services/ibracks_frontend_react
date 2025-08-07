@@ -53,7 +53,7 @@ const AboutDiscography = ({ album, cardColor }) => {
             {title}
           </h1>
           <div className="truncate pr-2 text-sm font-normal text-white">
-            {title}
+            {album.user.name}
           </div>
         </div>
         {/* Preview Button and Icons Container */}
