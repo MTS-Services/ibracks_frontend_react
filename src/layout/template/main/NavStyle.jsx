@@ -102,6 +102,11 @@ const NavStyle = () => {
               ]
             : []),
         { label: "Services", path: "/services", icon: RiCustomerService2Fill },
+        {
+          label: "Orders",
+          path: "/order-history",
+          icon: RiCustomerService2Fill,
+        },
       ]
     : [];
 
