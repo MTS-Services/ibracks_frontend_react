@@ -34,6 +34,9 @@ const TracksView = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
 
+  // State to track which track's link has been copied
+  const [copiedTrackId, setCopiedTrackId] = useState(null);
+
   const cartItems = useSelector((state) => state.cart.items);
 
   // ==================================
@@ -95,6 +98,36 @@ const TracksView = () => {
     setDropdownOpenState((prevState) => !prevState);
   };
 
+  // Function to handle the share button click and copy the link to the clipboard
+  const handleShareClick = (trackId) => {
+    // Construct the URL for the specific track
+    const trackUrl = `${window.location.origin}/tracks/${trackId}`;
+
+    // Use the modern Clipboard API if available, otherwise fallback
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(trackUrl)
+        .then(() => {
+          // Set state to show the "Copied!" text for this specific track
+          setCopiedTrackId(trackId);
+          setTimeout(() => setCopiedTrackId(null), 2000);
+        })
+        .catch((err) => console.error("Failed to copy text: ", err));
+    } else {
+      // Fallback for older browsers
+      const el = document.createElement("textarea");
+      el.value = trackUrl;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+
+      // Set state to show the "Copied!" text
+      setCopiedTrackId(trackId);
+      setTimeout(() => setCopiedTrackId(null), 2000);
+    }
+  };
+
   const filteredTracks = songs.filter((track) => {
     const matchesSearch = track.title
       .toLowerCase()
@@ -147,13 +180,7 @@ const TracksView = () => {
             <div className="relative">
               <select
                 value={selectedCategory}
-                onChange={(e) =>
-                  handleDropdownChange(
-                    e,
-                    setSelectedCategory,
-                    setIsCategoryDropdownOpen,
-                  )
-                }
+                onChange={(e) => handleDropdownChange(e, setSelectedCategory)}
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsCategoryDropdownOpen)}
               >
@@ -182,9 +209,7 @@ const TracksView = () => {
             <div className="relative">
               <select
                 value={selectedBpm}
-                onChange={(e) =>
-                  handleDropdownChange(e, setSelectedBpm, setIsBpmDropdownOpen)
-                }
+                onChange={(e) => handleDropdownChange(e, setSelectedBpm)}
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsBpmDropdownOpen)}
               >
@@ -214,13 +239,7 @@ const TracksView = () => {
             <div className="relative">
               <select
                 value={selectedMoods}
-                onChange={(e) =>
-                  handleDropdownChange(
-                    e,
-                    setSelectedMoods,
-                    setIsMoodsDropdownOpen,
-                  )
-                }
+                onChange={(e) => handleDropdownChange(e, setSelectedMoods)}
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsMoodsDropdownOpen)}
               >
@@ -256,13 +275,7 @@ const TracksView = () => {
             <div className="relative">
               <select
                 value={selectedGenres}
-                onChange={(e) =>
-                  handleDropdownChange(
-                    e,
-                    setSelectedGenres,
-                    setIsGenresDropdownOpen,
-                  )
-                }
+                onChange={(e) => handleDropdownChange(e, setSelectedGenres)}
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsGenresDropdownOpen)}
               >
@@ -297,13 +310,7 @@ const TracksView = () => {
             <div className="relative">
               <select
                 value={selectedSortOption}
-                onChange={(e) =>
-                  handleDropdownChange(
-                    e,
-                    setSelectedSortOption,
-                    setIsSortDropdownOpen,
-                  )
-                }
+                onChange={(e) => handleDropdownChange(e, setSelectedSortOption)}
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsSortDropdownOpen)}
               >
@@ -332,13 +339,7 @@ const TracksView = () => {
             <div className="relative">
               <select
                 value={selectedListView}
-                onChange={(e) =>
-                  handleDropdownChange(
-                    e,
-                    setSelectedListView,
-                    setIsListViewDropdownOpen,
-                  )
-                }
+                onChange={(e) => handleDropdownChange(e, setSelectedListView)}
                 className="appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
                 onClick={() => toggleDropdown(setIsListViewDropdownOpen)}
               >
@@ -455,15 +456,24 @@ const TracksView = () => {
                               plans={plans}
                             />
                           </Modal>
-                          {/* Share button */}
-                          <button
-                            className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
-                            aria-label={`Share ${track.title}`}
-                          >
-                            <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
-                          </button>
-                          {/* Cart button */}
 
+                          {/* Share button with the "Copied!" message */}
+                          <div className="relative flex items-center">
+                            {copiedTrackId === track.id && (
+                              <span className="absolute right-full mr-2 rounded-md bg-green-600 px-2 py-1 text-xs text-white shadow-lg transition-all duration-300">
+                                Copied!
+                              </span>
+                            )}
+                            <button
+                              onClick={() => handleShareClick(track.id)}
+                              className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
+                              aria-label={`Share ${track.title}`}
+                            >
+                              <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
+                            </button>
+                          </div>
+
+                          {/* Cart button */}
                           <button
                             onClick={() => handleToggle(track)}
                             disabled={isSongInCart(track.id)}
