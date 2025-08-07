@@ -4,7 +4,7 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { FaShareAlt } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
-import { Link, useSearchParams } from "react-router-dom"; // useSearchParams import করতে হবে
+import { Link, useSearchParams } from "react-router-dom";
 
 import HeroSection from "./components/sections/HeroSection";
 import LicensPlan from "../../../components/common/LicensPlan";
@@ -13,14 +13,14 @@ import axios from "../../../utils/axiosInstance";
 import TracksPageHeroSection from "../../../components/TracksPageHeroSection/TracksPageHeroSection";
 
 const TracksView = () => {
-  const [searchParams] = useSearchParams(); // useSearchParams hook ব্যবহার করুন
-  const initialSearchTerm = searchParams.get("search") || ""; // URL থেকে search parameter নিন
+  const [searchParams] = useSearchParams();
+  const initialSearchTerm = searchParams.get("search") || "";
 
   const [filterOptions, setFilterOptions] = useState({
-    search: initialSearchTerm, // initialSearchTerm দিয়ে state শুরু করুন
+    search: initialSearchTerm,
     musicTag: "All",
     bpm: "All",
-    sort: "Default",
+    sort: "Newest",
     priceSort: "Default",
   });
 
@@ -44,10 +44,38 @@ const TracksView = () => {
 
   const cartItems = useSelector((state) => state.cart.items);
 
-  // ... (বাকি কোড যেমন আছে তেমন থাকবে)
-
   useEffect(() => {
-    // ... (fetchDynamicOptions ফাংশন)
+    const fetchDynamicOptions = async () => {
+      try {
+        const res = await axios.get("/songs/published?limit=100");
+        const allSongs = res.data.data;
+
+        const tags = [
+          "All",
+          ...new Set(allSongs.map((song) => song.musicTag).filter(Boolean)),
+        ];
+        setDynamicTags(tags);
+
+        const bpms = [
+          "All",
+          ...new Set(
+            allSongs
+              .map((song) => song.bpm)
+              .filter((bpm) => bpm !== null)
+              .sort((a, b) => a - b),
+          ),
+        ];
+        setDynamicBpms(bpms);
+
+        if (plans.length === 0) {
+          const ress = await axios.get("/licenses");
+          setPlans(ress.data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dynamic filter options or plans: ", err);
+      }
+    };
+    fetchDynamicOptions();
   }, []);
 
   useEffect(() => {
@@ -56,6 +84,9 @@ const TracksView = () => {
       setError(null);
       try {
         const queryParams = new URLSearchParams();
+        queryParams.append("limit", 10);
+        queryParams.append("page", 1);
+
         if (filterOptions.search) {
           queryParams.append("search", filterOptions.search);
         }
@@ -66,53 +97,40 @@ const TracksView = () => {
           queryParams.append("bpm", parseInt(filterOptions.bpm));
         }
 
-        if (filterOptions.sort !== "Default") {
-          let sortParam;
+        let sortParam = "";
+        if (filterOptions.priceSort !== "Default") {
+          sortParam =
+            filterOptions.priceSort === "Low to High"
+              ? "pricing:asc"
+              : "pricing:desc";
+        } else if (filterOptions.sort !== "Default") {
           switch (filterOptions.sort) {
+            case "Newest":
+              sortParam = "publishedAt:desc";
+              break;
+            case "Oldest":
+              sortParam = "publishedAt:asc";
+              break;
             case "A-Z":
               sortParam = "title:asc";
               break;
-            case "Newest":
-              sortParam = "createdAt:desc";
-              break;
-            case "Oldest":
-              sortParam = "createdAt:asc";
+            case "Z-A":
+              sortParam = "title:desc";
               break;
             default:
               sortParam = "";
-          }
-          if (sortParam) {
-            queryParams.append("sort", sortParam);
           }
         }
 
-        if (filterOptions.priceSort !== "Default") {
-          let sortParam;
-          switch (filterOptions.priceSort) {
-            case "Low to High":
-              sortParam = "pricing:asc";
-              break;
-            case "High to Low":
-              sortParam = "pricing:desc";
-              break;
-            default:
-              sortParam = "";
-          }
-          if (sortParam) {
-            queryParams.append("sort", sortParam);
-          }
+        if (sortParam) {
+          queryParams.append("sort", sortParam);
         }
 
         const queryString = queryParams.toString();
-        const url = `/songs/published?limit=10&${queryString}`;
+        const url = `/songs/published?${queryString}`;
 
         const res = await axios.get(url);
         setSongs(res.data.data);
-
-        if (plans.length === 0) {
-          const ress = await axios.get("/licenses");
-          setPlans(ress.data.data);
-        }
       } catch (err) {
         console.error("Error fetching filtered data: ", err);
         setError("Failed to fetch data. Please try again.");
@@ -128,6 +146,10 @@ const TracksView = () => {
     setFilterOptions((prev) => ({ ...prev, [key]: value }));
   };
 
+  const toggleDropdown = (setDropdownOpenState) => {
+    setDropdownOpenState((prevState) => !prevState);
+  };
+
   const handleToggle = (track) => {
     setSelectedSong(track);
     setIsOpen(true);
@@ -135,10 +157,6 @@ const TracksView = () => {
 
   const isSongInCart = (songId) => {
     return cartItems.some((item) => item.songId === songId);
-  };
-
-  const toggleDropdown = (setDropdownOpenState) => {
-    setDropdownOpenState((prevState) => !prevState);
   };
 
   const handleShareClick = (trackId) => {
@@ -177,95 +195,94 @@ const TracksView = () => {
         </h2>
         <div className="mx-auto max-w-[950px] rounded-md bg-white/5 p-4 md:p-6">
           <div className="mx-auto mb-6 flex flex-wrap justify-center gap-2 md:gap-10">
-            {/* ... (Filter dropdowns যেমন আছে তেমনই থাকবে) */}
-            <div className="hidden w-full flex-wrap justify-center gap-2 md:flex md:gap-10">
-              <div className="relative w-full md:w-auto">
-                <select
-                  value={filterOptions.musicTag}
-                  onChange={(e) =>
-                    handleFilterChange("musicTag", e.target.value)
-                  }
-                  className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                  onClick={() => toggleDropdown(setIsTagsDropdownOpen)}
-                >
-                  {dynamicTags.map((tag) => (
-                    <option key={tag} value={tag}>
-                      {tag === "All" ? "All Category" : tag}
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
-                  {isTagsDropdownOpen ? (
-                    <FiChevronUp className="text-base text-black md:text-xl" />
-                  ) : (
-                    <FiChevronDown className="text-base text-black md:text-xl" />
-                  )}
-                </div>
+            <div className="relative w-full md:w-auto">
+              <select
+                value={filterOptions.musicTag}
+                onChange={(e) => handleFilterChange("musicTag", e.target.value)}
+                className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                onClick={() => toggleDropdown(setIsTagsDropdownOpen)}
+              >
+                {dynamicTags.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag === "All" ? "All Category" : tag}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
+                {isTagsDropdownOpen ? (
+                  <FiChevronUp className="text-base text-black md:text-xl" />
+                ) : (
+                  <FiChevronDown className="text-base text-black md:text-xl" />
+                )}
               </div>
+            </div>
 
-              <div className="relative w-full md:w-auto">
-                <select
-                  value={filterOptions.bpm}
-                  onChange={(e) => handleFilterChange("bpm", e.target.value)}
-                  className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                  onClick={() => toggleDropdown(setIsBpmDropdownOpen)}
-                >
-                  {dynamicBpms.map((bpm) => (
-                    <option key={bpm} value={bpm}>
-                      {bpm === "All" ? "All BPMs" : `${bpm} BPM`}
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
-                  {isBpmDropdownOpen ? (
-                    <FiChevronUp className="text-base text-black md:text-xl" />
-                  ) : (
-                    <FiChevronDown className="text-base text-black md:text-xl" />
-                  )}
-                </div>
+            <div className="relative w-full md:w-auto">
+              <select
+                value={filterOptions.bpm}
+                onChange={(e) => handleFilterChange("bpm", e.target.value)}
+                className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                onClick={() => toggleDropdown(setIsBpmDropdownOpen)}
+              >
+                {dynamicBpms.map((bpm) => (
+                  <option key={bpm} value={bpm}>
+                    {bpm === "All" ? "All BPMs" : `${bpm} BPM`}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-2">
+                {isBpmDropdownOpen ? (
+                  <FiChevronUp className="text-base text-black md:text-xl" />
+                ) : (
+                  <FiChevronDown className="text-base text-black md:text-xl" />
+                )}
               </div>
+            </div>
 
-              <div className="relative w-full md:w-auto">
-                <select
-                  value={filterOptions.sort}
-                  onChange={(e) => handleFilterChange("sort", e.target.value)}
-                  className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                  onClick={() => toggleDropdown(setIsSortDropdownOpen)}
-                >
-                  <option value="Default">Default</option>
-                  <option value="Newest">Newest</option>
-                  <option value="Oldest">Oldest</option>
-                  <option value="A-Z">A-Z</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
-                  {isSortDropdownOpen ? (
-                    <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
-                  ) : (
-                    <FiChevronDown className="text-base text-black md:text-xl" />
-                  )}
-                </div>
+            <div className="relative w-full md:w-auto">
+              <select
+                value={filterOptions.sort}
+                onChange={(e) => {
+                  handleFilterChange("sort", e.target.value);
+                  handleFilterChange("priceSort", "Default");
+                }}
+                className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                onClick={() => toggleDropdown(setIsSortDropdownOpen)}
+              >
+                <option value="Newest">Newest</option>
+                <option value="Oldest">Oldest</option>
+                <option value="A-Z">Title (A-Z)</option>
+                <option value="Z-A">Title (Z-A)</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
+                {isSortDropdownOpen ? (
+                  <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
+                ) : (
+                  <FiChevronDown className="text-base text-black md:text-xl" />
+                )}
               </div>
+            </div>
 
-              <div className="relative w-full md:w-auto">
-                <select
-                  value={filterOptions.priceSort}
-                  onChange={(e) =>
-                    handleFilterChange("priceSort", e.target.value)
-                  }
-                  className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
-                  onClick={() => toggleDropdown(setIsPriceDropdownOpen)}
-                >
-                  <option value="Default">All Prices</option>
-                  <option value="Low to High">Low to High</option>
-                  <option value="High to Low">High to Low</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
-                  {isPriceDropdownOpen ? (
-                    <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
-                  ) : (
-                    <FiChevronDown className="text-base text-black md:text-xl" />
-                  )}
-                </div>
+            <div className="relative w-full md:w-auto">
+              <select
+                value={filterOptions.priceSort}
+                onChange={(e) => {
+                  handleFilterChange("priceSort", e.target.value);
+                  handleFilterChange("sort", "Default");
+                }}
+                className="w-full appearance-none rounded-md bg-white px-2 py-1 pr-6 pl-2 text-sm text-black md:py-2 md:pr-8 md:text-[16px]"
+                onClick={() => toggleDropdown(setIsPriceDropdownOpen)}
+              >
+                <option value="Default">Price</option>
+                <option value="Low to High">Low to High</option>
+                <option value="High to Low">High to Low</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 md:px-3">
+                {isPriceDropdownOpen ? (
+                  <FiChevronUp className="pl-1 text-base text-black md:text-xl" />
+                ) : (
+                  <FiChevronDown className="text-base text-black md:text-xl" />
+                )}
               </div>
             </div>
           </div>
@@ -314,7 +331,6 @@ const TracksView = () => {
                   </th>
                 </tr>
               </thead>
-
               <tbody className="divide-y divide-gray-500">
                 {loading ? (
                   <tr>
@@ -334,25 +350,20 @@ const TracksView = () => {
                 ) : songs.length > 0 ? (
                   songs.map((track) => (
                     <tr key={track.id} className="transition hover:bg-white/5">
-                      <tr
-                        key={track.id}
-                        className="transition hover:bg-white/5"
-                      >
-                        <td className="py-2 pl-4 sm:py-4 md:pl-0" colSpan={2}>
-                          <Link to={`/products/${track.id}`}>
-                            <div className="flex items-center gap-2 sm:gap-4">
-                              <img
-                                src={track.coverImage}
-                                alt={`${track.title} cover`}
-                                className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
-                              />
-                              <span className="pr-3 text-[16px] text-neutral-300 sm:text-lg md:text-base">
-                                {track.title}
-                              </span>
-                            </div>
-                          </Link>
-                        </td>
-                      </tr>
+                      <td className="py-2 pl-4 sm:py-4 md:pl-0" colSpan={2}>
+                        <Link to={`/products/${track.id}`}>
+                          <div className="flex items-center gap-2 sm:gap-4">
+                            <img
+                              src={track.coverImage}
+                              alt={`${track.title} cover`}
+                              className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
+                            />
+                            <span className="pr-3 text-[16px] text-neutral-300 sm:text-lg md:text-base">
+                              {track.title}
+                            </span>
+                          </div>
+                        </Link>
+                      </td>
                       <td className="hidden px-4 py-2 text-xs font-[600] text-[#949494] sm:table-cell sm:py-4 sm:text-sm md:px-2">
                         {track.duration}
                       </td>
