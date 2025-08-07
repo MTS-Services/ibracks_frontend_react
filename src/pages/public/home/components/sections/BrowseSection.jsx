@@ -32,7 +32,7 @@ const BrowseSection = ({ songs, plans }) => {
 
   return (
     <section className="bg-gradient-to-b from-[#060207] to-[#150618]">
-      <div className="mx-auto w-full max-w-7xl pt-30 pb-20">
+      <div className="mx-auto w-full max-w-7xl pt-30 pb-10 sm:pt-30 sm:pb-20">
         {/* Header */}
         <h2 className="mb-8 text-2xl font-semibold text-white capitalize sm:text-3xl md:text-4xl">
           Browse Tracks

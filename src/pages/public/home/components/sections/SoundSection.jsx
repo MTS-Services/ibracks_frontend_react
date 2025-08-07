@@ -1,5 +1,3 @@
-import React from "react";
-
 const SoundSection = () => {
   const kits = [
     {
@@ -28,7 +26,7 @@ const SoundSection = () => {
         <h2 className="mb-4 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
           Sound Kits
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-base text-white/80 sm:text-lg">
+        <p className="mx-auto mb-12 max-w-3xl text-base text-white/80 sm:text-base">
           Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting
           Industry. Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever
           Since The 1500s, When An Unknown Printer Took A Galley Of Type And
