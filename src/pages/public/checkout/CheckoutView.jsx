@@ -13,15 +13,22 @@ function CheckoutView() {
 
   const { items } = useSelector((state) => state.cart);
   const ownedSongIds = useSelector((state) => state.auth.ownedSongIds || []);
+  const uploadedSongIds = useSelector(
+    (state) => state.auth.uploadedSongIds || [],
+  );
 
   // --- FINAL FIX: Using useMemo to prevent infinite loops ---
-  const { validItems, invalidItems, total } = useMemo(() => {
+  const { validItems, ownedItems, selfUploadedItems, total } = useMemo(() => {
     const valid = [];
-    const invalid = [];
+    const owned = [];
+    const selfUploaded = [];
+
     for (const item of items) {
       const songId = item.id.split("-license-")[0];
-      if (ownedSongIds.includes(songId)) {
-        invalid.push(item);
+      if (uploadedSongIds.includes(songId)) {
+        selfUploaded.push(item);
+      } else if (ownedSongIds.includes(songId)) {
+        owned.push(item);
       } else {
         valid.push(item);
       }
@@ -30,8 +37,13 @@ function CheckoutView() {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
-    return { validItems: valid, invalidItems: invalid, total: newTotal };
-  }, [items, ownedSongIds]);
+    return {
+      validItems: valid,
+      ownedItems: owned,
+      selfUploadedItems: selfUploaded,
+      total: newTotal,
+    };
+  }, [items, ownedSongIds, uploadedSongIds]);
 
   const handleSuccessfulPayment = async (paypalDetails) => {
     const orderDetails = validItems.map((item) => {
@@ -63,8 +75,8 @@ function CheckoutView() {
         `🎉 Order placed successfully! You will now be redirected to your order history.`,
       );
       dispatch(clearCart());
-      // Fetch owned songs again to instantly update the library
-      // dispatch(fetchOwnedSongs()); // You need to import this if you use it
+      // You can optionally re-fetch owned songs here to update the state instantly
+      // dispatch(fetchOwnedSongs());
       navigate("/order-history");
     } catch (error) {
       console.error("❌ Failed to send order to backend:", error);
@@ -112,26 +124,36 @@ function CheckoutView() {
             </p>
           </div>
 
-          {invalidItems.length > 0 && (
-            <div className="rounded-lg border border-red-500 bg-red-900/50 p-4">
-              <h3 className="font-bold text-red-300">Already Purchased</h3>
-              <p className="mb-2 text-sm text-red-200">
-                The following items are in your library and will not be charged:
+          {selfUploadedItems.length > 0 && (
+            <div className="rounded-lg border border-yellow-500 bg-yellow-900/50 p-4">
+              <h3 className="font-bold text-yellow-300">Cannot Purchase</h3>
+              <p className="mb-2 text-sm text-yellow-200">
+                You cannot purchase your own songs. These have been excluded:
               </p>
-              {invalidItems.map((item) => (
-                <div key={item.id} className="flex items-center gap-4 p-2">
-                  <img
-                    src={item.songThumbnail}
-                    alt={item.songTitle}
-                    className="h-10 w-10 rounded-md"
-                  />
-                  <span className="text-sm opacity-80">{item.songTitle}</span>
+              {selfUploadedItems.map((item) => (
+                <div key={item.id} className="text-sm opacity-80">
+                  - {item.songTitle}
+                </div>
+              ))}
+            </div>
+          )}
+          {ownedItems.length > 0 && (
+            <div className="mt-4 rounded-lg border border-blue-500 bg-blue-900/50 p-4">
+              <h3 className="font-bold text-blue-300">
+                Already in Your Library
+              </h3>
+              <p className="mb-2 text-sm text-blue-200">
+                You already own these songs. They will not be charged again:
+              </p>
+              {ownedItems.map((item) => (
+                <div key={item.id} className="text-sm opacity-80">
+                  - {item.songTitle}
                 </div>
               ))}
             </div>
           )}
 
-          <div className="flex flex-col gap-6">
+          <div className="mt-4 flex flex-col gap-6">
             <h3 className="text-md font-semibold text-gray-200">
               Items to Purchase
             </h3>
@@ -169,11 +191,7 @@ function CheckoutView() {
               ))
             ) : (
               <div className="rounded-lg bg-neutral-800 p-6 text-center">
-                <p className="text-gray-300">
-                  {invalidItems.length > 0
-                    ? "No new items to purchase."
-                    : "Your cart is empty."}
-                </p>
+                <p className="text-gray-300">No new items to purchase.</p>
               </div>
             )}
           </div>
