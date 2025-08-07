@@ -4,7 +4,7 @@ import MainLayout from "@/layout/template/main/MainLayout";
 import { PrivateRoute, PrivateAdminRoute } from "@/featured/auth/PrivateRoute"; // Import both
 import HomeView from "@/pages/public/home/HomeView";
 import AboutView from "@/pages/public/about/AboutView";
-import ServicesView from "@/pages/public/services/ServicesView";
+
 import CartView from "@/pages/public/cart/CartView";
 import TracksView from "@/pages/public/tracks/TracksView";
 import ProductsView from "@/pages/public/products/ProductsView";
@@ -27,6 +27,7 @@ import PravateRoutsTest from "@/components/PravateRoutsTest";
 import OrderHistory from "@/pages/public/checkout/components/OrderHistory";
 
 import NotFoundView from "@/pages/error/NotFoundView";
+// import ServicesView from "../pages/public/services/ServicesView";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ const AppRoutes = createBrowserRouter([
       { index: true, element: <HomeView /> },
       { path: "about", element: <AboutView /> },
       { path: "contact", element: <ContactView /> },
-      { path: "services", element: <ServicesView /> },
+      // { path: "services", element: <ServicesView /> },
       { path: "shoping-cart", element: <CartView /> },
       { path: "test-cart", element: <CartTestView /> },
       { path: "check-out", element: <CheckoutView /> },
