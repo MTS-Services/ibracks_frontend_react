@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layout/template/main/MainLayout";
+import { PrivateRoute, PrivateAdminRoute } from "../featured/auth/PrivateRoute"; // Import both
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
 import ServicesView from "../pages/public/services/ServicesView";
@@ -11,6 +12,7 @@ import ContactView from "../pages/public/contact/ContactView";
 import AuthLayout from "../layout/template/auth/AuthLayout";
 import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
+
 import DashboardLayout from "../layout/template/admin/DashboardLayout";
 import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
@@ -20,7 +22,6 @@ import CartTestView from "../pages/public/cart/CartTestView";
 import CheckoutView from "../pages/public/checkout/CheckoutView";
 import Account from "../pages/private/Account/Account";
 import UploadPage from "../pages/private/upload/UploadPage";
-import { PrivateRoute, PrivateAdminRoute } from "../featured/auth/PrivateRoute"; // Import both
 import PravateRoutsTest from "../components/PravateRoutsTest";
 import OrderHistory from "../pages/public/checkout/components/OrderHistory";
 
