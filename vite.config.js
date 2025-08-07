@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-
 import path from "path";
 import { fileURLToPath } from "url";
 import { visualizer } from "rollup-plugin-visualizer";
@@ -9,14 +8,13 @@ import { visualizer } from "rollup-plugin-visualizer";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
     visualizer({
       filename: "dist/stats.html",
-      open: true, // opens the file in your browser after build
+      open: true,
       gzipSize: true,
       brotliSize: true,
     }),
@@ -27,15 +25,19 @@ export default defineConfig({
     },
   },
   build: {
+    chunkSizeWarningLimit: 1000, // Optional: Raise the warning threshold
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ["react", "react-dom"],
-          router: ["react-router-dom"],
-          chartjs: ["react-chartjs-2"],
-          datepicker: ["react-datepicker"],
-          recharts: ["recharts"],
-          swiper: ["swiper"],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react")) return "react";
+            if (id.includes("react-router-dom")) return "router";
+            if (id.includes("react-chartjs-2")) return "chartjs";
+            if (id.includes("react-datepicker")) return "datepicker";
+            if (id.includes("recharts")) return "recharts";
+            if (id.includes("swiper")) return "swiper";
+            return "vendor";
+          }
         },
       },
     },
