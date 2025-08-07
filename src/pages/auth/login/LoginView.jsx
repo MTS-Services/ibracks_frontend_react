@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../featured/auth/AuthContext";
 import ForgotPasswordModal from "../ForgotPasswordModal";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
@@ -12,9 +13,7 @@ const LoginView = () => {
 
   const {
     login,
-    // ===============new_code===================
-    googleSignIn, // AuthContext থেকে googleSignIn ফাংশন ইম্পোর্ট করা হয়েছে
-    // ===============new_code===================
+    googleSignIn, // Imported the googleSignIn function from AuthContext
     loading: authLoading,
     error: authError,
     success: authSuccess,
@@ -23,6 +22,21 @@ const LoginView = () => {
   } = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  // Use useEffect to display toast notifications for errors and success messages
+  useEffect(() => {
+    if (authError) {
+      toast.error(authError);
+      setAuthError(null); // Clear the error after showing the toast
+    }
+  }, [authError, setAuthError]);
+
+  useEffect(() => {
+    if (authSuccess) {
+      toast.success(authSuccess);
+      setAuthSuccess(null); // Clear the success message after showing the toast
+    }
+  }, [authSuccess, setAuthSuccess]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,35 +61,32 @@ const LoginView = () => {
         setEmail("");
         setPassword("");
         setRememberMe(false);
-
         navigate("/");
       } else {
         // Error already set by AuthContext
       }
     } catch (err) {
       console.error("Login error in LoginView:", err);
-    } finally {
-      // Any cleanup if needed
+      setAuthError("An unexpected error occurred during login.");
     }
   };
 
-  // ===============new_code===================
-  // Google Sign-in হ্যান্ডলার
+  // Google Sign-in handler
   const handleGoogleSignIn = async () => {
     setAuthError(null);
     setAuthSuccess(null);
     try {
       const result = await googleSignIn();
       if (result.success) {
-        navigate("/"); // সফল হলে হোম পেজে রিডাইরেক্ট করা হবে
+        navigate("/"); // Redirect to home page on success
       } else {
-        // ত্রুটি AuthContext দ্বারা সেট করা হয়েছে
+        // Error already set by AuthContext
       }
     } catch (err) {
       console.error("Google Sign-in error in LoginView:", err);
+      setAuthError("An unexpected error occurred during Google Sign-in.");
     }
   };
-  // ===============new_code===================
 
   const openForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(true);
@@ -87,6 +98,7 @@ const LoginView = () => {
 
   return (
     <div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
+      <Toaster />
       {/* Background Image Container - Hidden on md (tablet) and smaller screens */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden md:hidden lg:flex">
         <div
@@ -97,7 +109,7 @@ const LoginView = () => {
           }}
         >
           <img
-            src="/log/loginbg.png" // Ensure this path is correct relative to your public directory
+            src="/log/loginbg.png"
             alt="Background"
             className="h-full w-full object-cover"
           />
@@ -170,7 +182,6 @@ const LoginView = () => {
               </div>
             </div>
 
-            {/* Sign In Button */}
             {/* Remember / Forgot */}
             <div className="font-poppins flex w-full items-center justify-between text-sm md:text-base">
               <label className="flex cursor-pointer items-center gap-2 rounded p-2">
@@ -185,25 +196,14 @@ const LoginView = () => {
                 </span>
               </label>
               <button
-                type="button" // Important: use type="button" to prevent form submission
-                onClick={openForgotPasswordModal} // Open the modal on click
+                type="button"
+                onClick={openForgotPasswordModal}
                 className="font-poppins justify-start text-sm font-normal text-white capitalize hover:underline focus:outline-none md:text-base"
               >
                 Forget Password?
               </button>
             </div>
 
-            {/* Error and Success messages from AuthProvider */}
-            {authError && (
-              <p className="font-poppins self-stretch text-center text-sm text-red-500">
-                {authError}
-              </p>
-            )}
-            {authSuccess && (
-              <p className="font-poppins self-stretch text-center text-sm text-green-500">
-                {authSuccess}
-              </p>
-            )}
             <button
               type="submit"
               className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
@@ -230,15 +230,14 @@ const LoginView = () => {
 
           {/* Social Login Buttons */}
           <div className="flex w-full flex-col gap-3 md:gap-4">
-            {/* ===============new_code=================== */}
             {/* Google Sign-in Button */}
             <button
-              onClick={handleGoogleSignIn} // Google Sign-in ফাংশন কল করা হয়েছে
+              onClick={handleGoogleSignIn}
               className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3"
-              disabled={authLoading} // লোডিং অবস্থায় বাটন ডিজেবল করা হয়েছে
+              disabled={authLoading}
             >
               <img
-                src="/New folder/google.svg" // Ensure this path is correct
+                src="/New folder/google.svg"
                 className="h-5 w-5 md:h-6 md:w-6"
                 alt="Google"
               />
@@ -246,10 +245,9 @@ const LoginView = () => {
                 Sign in With Google
               </span>
             </button>
-            {/* ===============new_code=================== */}
             <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               <img
-                src="/New folder/apple.svg" // Ensure this path is correct
+                src="/New folder/apple.svg"
                 className="h-5 w-5 w-6 md:h-6"
                 alt="Apple"
               />

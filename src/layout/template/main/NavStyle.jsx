@@ -7,6 +7,7 @@ import { RiProductHuntLine, RiCustomerService2Fill } from "react-icons/ri";
 import { HiMiniArrowLeftStartOnRectangle } from "react-icons/hi2";
 import { useSelector } from "react-redux";
 import { AuthContext } from "../../../featured/auth/AuthContext";
+import toast, { Toaster } from "react-hot-toast"; // Import toast and Toaster
 
 // Make sure you have these contexts available and imported
 // I am assuming they are defined elsewhere in your project
@@ -40,6 +41,8 @@ const NavStyle = () => {
   const handleLogout = () => {
     logout();
     setIsProfileMenuOpen(false);
+    // Add the toast notification here to give immediate feedback
+    toast.success("You have been logged out successfully!");
   };
 
   // Helper function for active link styling
@@ -114,6 +117,8 @@ const NavStyle = () => {
 
   return (
     <nav className="sticky top-0 z-20 bg-black text-white">
+      {/* The Toaster component renders the toast notifications */}
+      <Toaster position="bottom-center" />
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-1 pb-2 md:px-6 md:py-3 lg:px-0">
         {/* Logo */}
         <Link to="/">
