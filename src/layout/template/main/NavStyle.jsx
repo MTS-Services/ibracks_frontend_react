@@ -96,7 +96,7 @@ const NavStyle = () => {
             ? [
                 {
                   label: "My Dashboard",
-                  path: "/dashboard",
+                  path: "/order-history",
                   icon: RiProductHuntLine,
                 },
               ]

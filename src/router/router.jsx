@@ -47,7 +47,11 @@ const AppRoutes = createBrowserRouter([
       },
       {
         path: "/order-history",
-        element: <OrderHistory />,
+        element: (
+          <PrivateRoute>
+            <OrderHistory />
+          </PrivateRoute>
+        ),
       },
       { path: "tracks", element: <TracksView /> },
       { path: "products", element: <ProductsView /> },
