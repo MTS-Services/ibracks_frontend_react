@@ -2,18 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../featured/auth/AuthContext";
 import ForgotPasswordModal from "../ForgotPasswordModal";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
-    useState(false); // New state for modal
+    useState(false);
 
   const {
     login,
-    googleSignIn, // Imported the googleSignIn function from AuthContext
+    googleSignIn,
     loading: authLoading,
     error: authError,
     success: authSuccess,
@@ -23,68 +23,70 @@ const LoginView = () => {
 
   const navigate = useNavigate();
 
-  // Use useEffect to display toast notifications for errors and success messages
+  // This useEffect is now modified to only handle errors from AuthContext.
+  // Success toasts will be handled manually in the handleSubmit function.
   useEffect(() => {
     if (authError) {
-      toast.error(authError);
-      setAuthError(null); // Clear the error after showing the toast
+      toast.error(authError, {
+        position: "top-center",
+      });
+      setAuthError(null);
     }
   }, [authError, setAuthError]);
 
-  useEffect(() => {
-    if (authSuccess) {
-      toast.success(authSuccess);
-      setAuthSuccess(null); // Clear the success message after showing the toast
-    }
-  }, [authSuccess, setAuthSuccess]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setAuthError(null);
     setAuthSuccess(null);
 
-    // --- Client-side Validation ---
     if (!email || !password) {
-      setAuthError("Please enter your email and password.");
+      toast.error("Please enter your email and password.", {
+        position: "top-center",
+      });
       return;
     }
+
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setAuthError("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.", {
+        position: "top-center",
+      });
       return;
     }
 
     try {
+      // The login function in AuthContext should only return success/error, not show a toast.
       const result = await login(email, password, rememberMe);
 
       if (result.success) {
+        // Handle the success toast here
+        toast.success("Login successful!", { position: "top-center" });
         setEmail("");
         setPassword("");
         setRememberMe(false);
         navigate("/");
-      } else {
-        // Error already set by AuthContext
       }
     } catch (err) {
       console.error("Login error in LoginView:", err);
-      setAuthError("An unexpected error occurred during login.");
+      toast.error("An unexpected error occurred during login.");
     }
   };
 
-  // Google Sign-in handler
   const handleGoogleSignIn = async () => {
     setAuthError(null);
     setAuthSuccess(null);
+
     try {
       const result = await googleSignIn();
       if (result.success) {
-        navigate("/"); // Redirect to home page on success
-      } else {
-        // Error already set by AuthContext
+        // Handle the success toast here
+        toast.success("Google sign-in successful!", {
+          position: "top-center",
+        });
+        navigate("/");
       }
     } catch (err) {
       console.error("Google Sign-in error in LoginView:", err);
-      setAuthError("An unexpected error occurred during Google Sign-in.");
+      toast.error("An unexpected error occurred during Google Sign-in.");
     }
   };
 
@@ -98,7 +100,6 @@ const LoginView = () => {
 
   return (
     <div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
-      <Toaster />
       {/* Background Image Container - Hidden on md (tablet) and smaller screens */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden md:hidden lg:flex">
         <div
@@ -162,6 +163,7 @@ const LoginView = () => {
                 />
               </div>
             </div>
+
             {/* Password */}
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
@@ -203,7 +205,6 @@ const LoginView = () => {
                 Forget Password?
               </button>
             </div>
-
             <button
               type="submit"
               className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
@@ -219,6 +220,7 @@ const LoginView = () => {
               Sign Up now
             </Link>
           </h6>
+
           {/* Separator */}
           <div className="my-2 flex w-full items-center gap-2 md:my-4 md:gap-4">
             <div className="h-px flex-1 bg-neutral-200"></div>
@@ -257,9 +259,11 @@ const LoginView = () => {
             </button>
           </div>
         </div>
+
         {/* Right Part - Hidden on md (tablet) and smaller screens */}
         <div className="hidden w-1/2 lg:block"></div>
       </div>
+
       <ForgotPasswordModal
         isOpen={isForgotPasswordModalOpen}
         onClose={closeForgotPasswordModal}

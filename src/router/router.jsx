@@ -35,6 +35,8 @@ const AppRoutes = createBrowserRouter([
       { path: "shoping-cart", element: <CartView /> },
       { path: "test-cart", element: <CartTestView /> },
       { path: "check-out", element: <CheckoutView /> },
+      { path: "/products/:id", element: <ProductsView /> },
+
       {
         path: "account",
         element: (

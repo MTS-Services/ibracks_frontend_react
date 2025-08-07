@@ -426,7 +426,7 @@ const ReleasesSectionTest = () => {
         <h2 className="text-xl font-semibold text-white sm:text-2xl">
           New Releases
         </h2>
-        <FiPlay className="h-6 w-6 rounded-full bg-white p-1 text-black" />
+        <FiPlay className="mt-1 h-6 w-6 rounded-full bg-white p-1 text-black" />
       </div>
 
       <div className="grid grid-cols-2 gap-2 py-2 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-6 lg:gap-6 xl:grid-cols-6">
@@ -477,9 +477,7 @@ const ReleasesSectionTest = () => {
                   </p>
                 </div>
               </div>
-              <button className="hidden text-white transition-colors hover:text-red-500 sm:block">
-                <FaHeart size={20} />
-              </button>
+              <button className="hidden text-white transition-colors hover:text-red-500 sm:block"></button>
             </div>
 
             <PlayerControls

@@ -57,16 +57,19 @@ const BrowseSection = ({ songs, plans }) => {
                 <tr key={track.id} className="transition hover:bg-white/5">
                   {/* Thumbnail + Title */}
                   <td className="py-4" colSpan={2}>
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={track.coverImage}
-                        alt="Album"
-                        className="h-16 w-16 rounded border border-gray-600 object-cover"
-                      />
-                      <span className="text-base text-neutral-300">
-                        {track.description}
-                      </span>
-                    </div>
+                    <Link to={`/products/${track.id}`}>
+                      {" "}
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={track.coverImage}
+                          alt="Album"
+                          className="h-16 w-16 rounded border border-gray-600 object-cover"
+                        />
+                        <span className="text-base text-neutral-300">
+                          {track.description}
+                        </span>
+                      </div>
+                    </Link>
                   </td>
 
                   {/* Time */}
