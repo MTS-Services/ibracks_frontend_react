@@ -27,7 +27,7 @@ import PravateRoutsTest from "@/components/PravateRoutsTest";
 import OrderHistory from "@/pages/public/checkout/components/OrderHistory";
 
 import NotFoundView from "@/pages/error/NotFoundView";
-import ServicesView from "../pages/public/services/ServicesView";
+// import ServicesView from "../pages/public/services/ServicesView";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -37,7 +37,7 @@ const AppRoutes = createBrowserRouter([
       { index: true, element: <HomeView /> },
       { path: "about", element: <AboutView /> },
       { path: "contact", element: <ContactView /> },
-      { path: "services", element: <ServicesView /> },
+      // { path: "services", element: <ServicesView /> },
       { path: "shoping-cart", element: <CartView /> },
       { path: "test-cart", element: <CartTestView /> },
       { path: "check-out", element: <CheckoutView /> },
