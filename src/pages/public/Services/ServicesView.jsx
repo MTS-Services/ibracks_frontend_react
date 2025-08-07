@@ -3,6 +3,7 @@ import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
+
 const ServiceDetailsModal = ({ isOpen, onClose, service }) => {
   if (!isOpen || !service) return null;
 
