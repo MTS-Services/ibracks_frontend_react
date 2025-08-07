@@ -430,16 +430,14 @@ const TracksView = () => {
                       </td>
                       {/* Tags */}
                       <td className="py-2 sm:px-4 sm:py-4">
-                        <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
-                          {track.tags}
-                          {/* {track.tags.map((tag, i) => (
-                            <span
-                              key={`${track.id}-${i}`}
-                              className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
-                            >
-                              {tag}
+                        <div className="flex flex-wrap gap-2 font-[400] sm:gap-2">
+                          {track.musicTag && track.musicTag.length > 0 ? (
+                            track.musicTag
+                          ) : (
+                            <span className="text-gray-500">
+                              No tag available
                             </span>
-                          ))} */}
+                          )}
                         </div>
                       </td>
 
