@@ -115,7 +115,7 @@ const ContactView = () => {
                   />
                 </div>
               </div>
-              <div className="inline-flex w-full flex-1 flex-col items-start justify-center gap-2.5 rounded-[5px] bg-white/5 px-3.5 py-3 outline outline-1 outline-white/20">
+              <div className="inline-flex w-full flex-1 flex-col items-start justify-center gap-2.5 rounded-[5px] bg-white/5 px-3.5 py-3 outline-1 outline-white/20">
                 <input
                   type="email"
                   placeholder="Email"
