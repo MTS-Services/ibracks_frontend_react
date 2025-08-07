@@ -9,6 +9,7 @@ import TracksView from "../pages/public/tracks/TracksView";
 import ProductsView from "../pages/public/products/ProductsView";
 import VideosView from "../pages/public/videos/VideosView";
 import ContactView from "../pages/public/contact/ContactView";
+
 import AuthLayout from "../layout/template/auth/AuthLayout";
 import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
@@ -17,13 +18,14 @@ import DashboardLayout from "../layout/template/admin/DashboardLayout";
 import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
 import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
-import NotFoundView from "../pages/error/NotFoundView";
 import CartTestView from "../pages/public/cart/CartTestView";
 import CheckoutView from "../pages/public/checkout/CheckoutView";
 import Account from "../pages/private/Account/Account";
 import UploadPage from "../pages/private/upload/UploadPage";
 import PravateRoutsTest from "../components/PravateRoutsTest";
 import OrderHistory from "../pages/public/checkout/components/OrderHistory";
+
+import NotFoundView from "../pages/error/NotFoundView";
 
 const AppRoutes = createBrowserRouter([
   {
