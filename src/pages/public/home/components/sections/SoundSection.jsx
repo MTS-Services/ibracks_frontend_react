@@ -53,8 +53,8 @@ const SoundSection = () => {
                 </span>
               </div>
 
-              {/* Content Section */}
-              <div className="flex flex-col gap-3 p-5 sm:p-6">
+              {/* Content Section - Modified for left alignment */}
+              <div className="flex flex-col gap-3 p-5 text-left sm:p-6">
                 <h3 className="text-lg font-semibold text-white uppercase sm:text-xl">
                   {kit.title}
                 </h3>
@@ -62,7 +62,7 @@ const SoundSection = () => {
                   {kit.description}
                 </p>
 
-                <button className="mt-4 w-full self-center rounded bg-gradient-to-b from-orange-200 to-yellow-500 px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 sm:w-40 sm:self-start">
+                <button className="mt-4 w-full self-start rounded bg-gradient-to-b from-orange-200 to-yellow-500 px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 sm:w-40">
                   See Details
                 </button>
               </div>

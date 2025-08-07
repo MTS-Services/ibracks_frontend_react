@@ -68,7 +68,7 @@ const FooterStyle = () => {
             ].map((item) => (
               <p
                 key={item}
-                className="cursor-pointer p-2 text-sm leading-tight font-normal text-white hover:underline"
+                className="cursor-pointer text-sm leading-tight font-normal text-white hover:underline"
               >
                 {item}
               </p>
