@@ -24,6 +24,7 @@ import Account from "../pages/private/Account/Account";
 import UploadPage from "../pages/private/upload/UploadPage";
 import PravateRoutsTest from "../components/PravateRoutsTest";
 import OrderHistory from "../pages/public/checkout/components/OrderHistory";
+import LicenseInfo from "../pages/private/license/LicenseInfo";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -86,10 +87,11 @@ const AppRoutes = createBrowserRouter([
       </PrivateAdminRoute>
     ),
     children: [
-      { index: true, element: <Dashboard /> },
+      { index: true, element: <TotalSongs /> },
       { path: "songs", element: <TotalSongs /> },
       { path: "salse", element: <SalseAnalysis /> },
       { path: "upload", element: <UploadPage /> },
+      { path: "license", element: <LicenseInfo /> },
     ],
   },
   {

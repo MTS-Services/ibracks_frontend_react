@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FiEdit, FiHome, FiMusic, FiSettings, FiVideo } from "react-icons/fi";
 import { GrLineChart } from "react-icons/gr";
 import toast from "react-hot-toast";
+import { MdOutlineDescription } from "react-icons/md";
 
 const userRolesData = [
   {
@@ -25,9 +26,11 @@ const navLinksData = [
   // { name: "dashboard", icon: <FiHome />, path: "/admin" },
   { name: "Total Songs Uploaded", icon: <FiMusic />, path: "/admin/songs" },
   { name: "Total Sales (Amount)", icon: <GrLineChart />, path: "/admin/salse" },
-  // {
-  //   name: "User Admin",
-  // },
+  {
+    name: "License Info",
+    icon: <MdOutlineDescription />,
+    path: "/admin/license",
+  },
   // { name: "videos", icon: <FiVideo />, path: "/admin/videos" },
   // { name: "settings", icon: <FiSettings />, path: "/admin/settings" },
 ];
