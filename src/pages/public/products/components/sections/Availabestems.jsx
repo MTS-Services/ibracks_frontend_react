@@ -100,14 +100,16 @@ const Availabestems = () => {
 
   return (
     <section className="">
-      <div className="mx-auto w-full max-w-7xl py-16">
-        <div className="mb-4 flex items-center gap-3 px-4 sm:mb-9 sm:px-2">
-          <h2 className="gap-12 font-['Poppins'] text-[24px] font-[600] text-white md:text-4xl lg:pr-13 lg:text-3xl">
-            Available stems
-          </h2>
-          <button className="rounded-lg border border-white px-6 py-2 font-['Poppins'] text-white transition-colors hover:bg-white hover:text-[#2d005d] sm:text-[18px]">
-            View All
-          </button>
+      <div className="py- mx-auto w-full max-w-7xl pt-10">
+        <div className="">
+          <div className="flex items-center gap-20 px-3 pb-5">
+            <h2 className="md:text-xxl font-['Poppins'] text-lg font-[600] text-white sm:text-2xl lg:text-2xl">
+              Available stems
+            </h2>
+            <button className="rounded-lg border border-white px-4 py-1 font-['Poppins'] text-sm text-white transition-colors hover:bg-white hover:text-[#2d005d] sm:px-6 sm:py-2 sm:text-base md:text-xl">
+              View All
+            </button>
+          </div>
         </div>
 
         {/* Table Header */}
