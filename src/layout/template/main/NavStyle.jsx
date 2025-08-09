@@ -213,7 +213,7 @@ const NavStyle = () => {
         <div>
           <Link to="/">
             <img
-              className="w-[100px]"
+              className="h-[60px] w-full"
               src="/image/ibracks_logo.png"
               alt="Logo"
             />
