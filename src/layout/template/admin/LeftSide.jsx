@@ -80,7 +80,7 @@ const LeftSide = () => {
       </nav>
 
       {/* User Roles */}
-      <div className="m-4 flex flex-col gap-4 rounded-lg bg-white/10 p-4">
+      {/* <div className="m-4 flex flex-col gap-4 rounded-lg bg-white/10 p-4">
         {userRolesData.map((user) => (
           <div key={user.role} className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ const LeftSide = () => {
             </button>
           </div>
         ))}
-      </div>
+      </div> */}
     </aside>
   );
 };
