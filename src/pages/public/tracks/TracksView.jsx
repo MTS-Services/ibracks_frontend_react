@@ -287,7 +287,10 @@ const TracksView = () => {
             </div>
           </div>
 
-          <div className="mx-auto flex items-center justify-center px-2">
+          <div
+            className="mx-auto flex items-center justify-center px-2"
+            id="search-section"
+          >
             <div className="inline-flex w-full max-w-[880px] items-center justify-between rounded-lg bg-white px-3 py-1 md:px-4 md:py-2">
               <input
                 onChange={(e) => handleFilterChange("search", e.target.value)}

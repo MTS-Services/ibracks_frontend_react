@@ -1,32 +1,50 @@
 import { useContext, useEffect, useRef, useState } from "react";
+
 import { Link, useLocation } from "react-router-dom";
+
 import { FiSearch, FiUser, FiMenu, FiX } from "react-icons/fi";
+
 import { HiOutlineShoppingBag } from "react-icons/hi";
+
 import { FaUserTie, FaShoppingBag } from "react-icons/fa";
+
 import { RiProductHuntLine, RiCustomerService2Fill } from "react-icons/ri";
+
 import { HiMiniArrowLeftStartOnRectangle } from "react-icons/hi2";
+
 import { useSelector } from "react-redux";
+
 import { AuthContext } from "../../../featured/auth/AuthContext";
+
 import toast, { Toaster } from "react-hot-toast";
+
 import CartDropdown from "../../../components/common/CartDropdown";
 
 const NavStyle = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const { totalQuantity } = useSelector((state) => state.cart);
+
   const dropdownRef = useRef(null);
+
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
   };
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
   const profileMenuRef = useRef(null);
+
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
   const location = useLocation();
+
   const { user, logout } = useContext(AuthContext);
+
   const prevUserRef = useRef(user);
 
   useEffect(() => {
@@ -35,12 +53,15 @@ const NavStyle = () => {
         position: "top-center",
       });
     }
+
     prevUserRef.current = user;
   }, [user]);
 
   const handleLogout = () => {
     logout();
+
     setIsProfileMenuOpen(false);
+
     setIsMenuOpen(false);
   };
 
@@ -54,7 +75,9 @@ const NavStyle = () => {
         setIsCartOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -69,7 +92,9 @@ const NavStyle = () => {
         setIsProfileMenuOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -77,11 +102,17 @@ const NavStyle = () => {
 
   const navLinks = [
     { label: "Home", path: "/" },
+
     { label: "About", path: "/about" },
+
     { label: "Tracks", path: "/tracks" },
+
     { label: "Video", path: "/video" },
+
     { label: "Services", path: "/services" },
+
     { label: "Contact", path: "/contact" },
+
     ...(user
       ? user.role === "admin"
         ? [{ label: "Dashboard", path: "/admin" }]
@@ -92,17 +123,21 @@ const NavStyle = () => {
   const profileDropdownLinks = user
     ? [
         { label: "View Account", path: "/account", icon: FaUserTie },
+
         ...(user.role === "admin"
           ? [{ label: "Dashboard", path: "/admin", icon: RiProductHuntLine }]
           : user.role === "user"
             ? [
                 {
                   label: "My Dashboard",
+
                   path: "/dashboard",
+
                   icon: RiProductHuntLine,
                 },
               ]
             : []),
+
         { label: "Services", path: "/services", icon: RiCustomerService2Fill },
       ]
     : [];
@@ -110,6 +145,7 @@ const NavStyle = () => {
   return (
     <nav className="sticky top-0 z-20 bg-black text-white">
       <Toaster position="top-center" />
+
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-1 pb-2 md:px-6 md:py-3 lg:px-0">
         <Link to="/">
           <img
@@ -118,6 +154,7 @@ const NavStyle = () => {
             alt="Logo"
           />
         </Link>
+
         <div className="hidden items-center gap-[40px] md:flex">
           <ul className="flex items-center gap-6 text-base capitalize">
             {navLinks.map(({ label, path }) => (
@@ -135,10 +172,14 @@ const NavStyle = () => {
               </li>
             ))}
           </ul>
+
           <div className="flex items-center gap-5 text-zinc-300">
-            <Link to="/tracks">
+            {/* Desktop search icon link */}
+
+            <Link to="/tracks#search-section">
               <FiSearch className="h-5 w-5 cursor-pointer hover:text-white" />
             </Link>
+
             <button
               onClick={toggleCart}
               className="relative cursor-pointer hover:text-white"
@@ -148,8 +189,10 @@ const NavStyle = () => {
                   {totalQuantity}
                 </span>
               )}
+
               <HiOutlineShoppingBag className="h-5 w-5 text-white" />
             </button>
+
             {user ? (
               <div className="relative" ref={profileMenuRef}>
                 <img
@@ -158,6 +201,7 @@ const NavStyle = () => {
                   className="h-8 w-8 cursor-pointer rounded-full object-cover"
                   onClick={toggleProfileMenu}
                 />
+
                 <div
                   className={`absolute top-10 right-0 z-30 w-52 origin-top-right rounded-lg border border-[rgba(239,166,69,0.2)] bg-[#16021A] p-2 py-1 shadow-xl transition-all duration-300 ease-out ${
                     isProfileMenuOpen
@@ -168,9 +212,11 @@ const NavStyle = () => {
                   <div className="border-b border-[rgba(239,166,69,0.3)] px-4 py-3 text-white">
                     <p className="gap-1 bg-gradient-to-b from-orange-100 to-yellow-300 bg-clip-text text-xl font-semibold text-transparent">
                       <span>Name: </span>
+
                       {user.name}
                     </p>
                   </div>
+
                   {profileDropdownLinks.map(({ label, path, icon: Icon }) => (
                     <Link
                       key={label}
@@ -179,9 +225,11 @@ const NavStyle = () => {
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <Icon className="h-4 w-4 text-[#EFA645]" />
+
                       {label}
                     </Link>
                   ))}
+
                   <button
                     onClick={handleLogout}
                     className="block w-full items-center border-t border-[rgba(239,166,69,0.3)] px-4 py-2 text-left text-sm font-[600] text-red-400 transition-colors duration-200 hover:bg-purple-800"
@@ -198,6 +246,7 @@ const NavStyle = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
+
                 <Link
                   to="/auth/login"
                   className="text-base font-medium text-white transition-colors hover:text-gray-400"
@@ -209,6 +258,7 @@ const NavStyle = () => {
           </div>
         </div>
       </div>
+
       <div className="flex items-center justify-between gap-8 md:hidden">
         <div>
           <Link to="/">
@@ -219,10 +269,14 @@ const NavStyle = () => {
             />
           </Link>
         </div>
+
         <div className="flex items-center gap-4 pl-4 text-zinc-300">
-          <Link to="/tracks">
+          {/* Mobile search icon link */}
+
+          <Link to="/tracks#search-section">
             <FiSearch className="h-6 w-6 cursor-pointer hover:text-white" />
           </Link>
+
           <button
             onClick={toggleCart}
             className="relative cursor-pointer hover:text-white"
@@ -232,12 +286,15 @@ const NavStyle = () => {
                 {totalQuantity}
               </span>
             )}
+
             <HiOutlineShoppingBag className="h-6 w-6 text-white" />
           </button>
+
           {!user && (
             <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
           )}
         </div>
+
         <div className="flex items-center border-2 border-[rgba(239,166,69,0.2)] md:hidden">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -251,6 +308,7 @@ const NavStyle = () => {
           </button>
         </div>
       </div>
+
       {isMenuOpen && (
         <div className="rounded-2xl border-t-0 border-r-2 border-b-2 border-l-2 border-[rgba(239,166,69,0.2)] bg-black/60 md:hidden">
           <ul className="px-4 py-2">
@@ -270,6 +328,7 @@ const NavStyle = () => {
               </li>
             ))}
           </ul>
+
           <div className="flex items-center justify-between border-t-1 border-[rgba(239,166,69,0.2)] px-2 py-2">
             {user ? (
               <div className="relative flex items-center">
@@ -286,6 +345,7 @@ const NavStyle = () => {
                       className="h-8 w-8 cursor-pointer rounded-full object-cover"
                       onClick={toggleProfileMenu}
                     />
+
                     <p className="flex items-center gap-1 text-base font-bold text-[#EFA645] hover:text-white">
                       Logout
                       <span>
@@ -298,6 +358,7 @@ const NavStyle = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <FiUser className="h-5 w-5 cursor-pointer hover:text-white" />
+
                 <Link
                   to="/auth/login"
                   className="text-base font-bold text-[#EFA645] transition-colors hover:text-gray-400"
@@ -309,6 +370,7 @@ const NavStyle = () => {
           </div>
         </div>
       )}
+
       {isCartOpen && (
         <div className="absolute right-80 z-50 w-96" ref={dropdownRef}>
           <CartDropdown onClose={() => setIsCartOpen(false)} />
