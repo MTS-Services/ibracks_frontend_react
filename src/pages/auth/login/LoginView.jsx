@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../featured/auth/AuthContext";
-import ForgotPasswordModal from "../ForgotPasswordModal";
 import toast from "react-hot-toast";
+import PasswordResetModal from "../ForgotPasswordModal/PasswordResetModal";
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
@@ -264,7 +264,7 @@ const LoginView = () => {
         <div className="hidden w-1/2 lg:block"></div>
       </div>
 
-      <ForgotPasswordModal
+      <PasswordResetModal
         isOpen={isForgotPasswordModalOpen}
         onClose={closeForgotPasswordModal}
       />

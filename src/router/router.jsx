@@ -22,6 +22,7 @@ import Account from "../pages/private/Account/Account";
 import UploadPage from "../pages/private/upload/UploadPage";
 import { PrivateRoute, PrivateAdminRoute } from "../featured/auth/PrivateRoute"; // Import both
 import PravateRoutsTest from "../components/PravateRoutsTest";
+import ResetPasswordPage from "../pages/auth/ForgotPasswordModal/ResetPasswordPage";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -31,11 +32,13 @@ const AppRoutes = createBrowserRouter([
       { index: true, element: <HomeView /> },
       { path: "about", element: <AboutView /> },
       { path: "contact", element: <ContactView /> },
+
       { path: "services", element: <ServicesView /> },
       { path: "shoping-cart", element: <CartView /> },
       { path: "test-cart", element: <CartTestView /> },
       { path: "check-out", element: <CheckoutView /> },
       { path: "/products/:id", element: <ProductsView /> },
+      { path: "/reset-password", element: <ResetPasswordPage /> },
 
       {
         path: "account",

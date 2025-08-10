@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "./AuthContext";
-import axios from "../../utils/axiosInstance"; // your axios setup
+import axios from "../../utils/axiosInstance";
 
-// ===============new_code shakil munshi===================
 // Firebase imports
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getAuth } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  getAuth,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import firebaseApp from "../../firebase.config";
 
 export const AuthProvider = ({ children }) => {
-  // ===============code_by_shakil_munshi===================
   // Load user from localStorage, token from cookies
-  // =======================================================
   const [user, setUser] = useState(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -28,9 +29,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // ===============code_by_shakil_munshi===================
   // Sync user to localStorage
-  // =======================================================
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -39,83 +38,61 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // ===============code by shaki munshi===================
   // Determine if the app is running on localhost
-  // This is used to conditionally set the 'secure' flag on cookies
-  // ===================================================
   const isLocalhost =
     window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1";
 
-  // ===============code_by_shakil_munshi===================
   // Sync token to cookies
-  // This useEffect runs whenever the 'token' state changes.
-  // It's responsible for setting or removing the cookie.
-  // =======================================================
   useEffect(() => {
     if (token) {
-      // ===============code_by_shakil_munshi===================
-
-      // =======================================================
       Cookies.set("token", token, {
-        expires: 7, // Cookie expires in 7 days
-        // ===============added_by_shakil==================
-        // Conditionally set 'secure' to false for localhost
-        // For production, this will be true by default
-        // ===================================================
+        expires: 7,
         secure: !isLocalhost,
-        sameSite: "strict", // Strict same-site policy
+        sameSite: "strict",
       });
-      console.log("Cookie set with token:", token); // Added for debugging
+      console.log("Cookie set with token:", token);
     } else {
       Cookies.remove("token");
-      console.log("Cookie removed."); // Added for debugging
+      console.log("Cookie removed.");
     }
   }, [token, isLocalhost]);
 
-  // ===============code_by_shakil_munshi===================
   // Set axios default header if token changes
-  // This ensures that all subsequent authenticated requests automatically include the token.
-  // =======================================================
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      console.log("Axios Authorization header set."); // Added for debugging
+      console.log("Axios Authorization header set.");
     } else {
       delete axios.defaults.headers.common["Authorization"];
-      console.log("Axios Authorization header removed."); // Added for debugging
+      console.log("Axios Authorization header removed.");
     }
   }, [token]);
 
-  // ===============code_by_shakil_munshi===================
+  // Firebase auth initialization
+  const auth = getAuth(firebaseApp);
+  auth.languageCode = "it";
+  const provider = new GoogleAuthProvider();
+
   // -------------- LOGIN --------------------
-  // Handles user login by sending credentials to the backend.
-  // =======================================================
   const login = async (email, password, rememberMe) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     try {
-      // ===============code_by_shakil_munshi===================
-      // Proper axios.post usage: url, data, config
-      // =======================================================
       const response = await axios.post("/users/login", {
         email,
         password,
         rememberMe,
       });
 
-      // ===============code_by_shakil_munshi==================
-      // Assuming response.data = { data: { user, token }, message }
-      // Make sure your backend API sends the token in this structure.
-      // =======================================================
       const data = response.data;
-      console.log("Login response data:", data); // Debugging: check what the server sends
+      console.log("Login response data:", data);
 
       if (data.data && data.data.user && data.data.token) {
         setUser(data.data.user);
-        setToken(data.data.token); // This will trigger the useEffect to set the cookie
+        setToken(data.data.token);
         setSuccess(data.message || "Login successful!");
         return { success: true, message: data.message || "Login successful!" };
       } else {
@@ -125,31 +102,17 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.error("Login error:", err);
-
       const message =
         err.response?.data?.message ||
         "Login failed. Please check your credentials.";
-
       setError(message);
       return { success: false, message };
     } finally {
       setLoading(false);
     }
   };
-  // ===============code_by_shakil_munshi===================
-  // Goole register   and api hid  the data base
-  // =======================================================
-  const provider = new GoogleAuthProvider();
 
-  const auth = getAuth(firebaseApp);
-  auth.languageCode = "it";
-  // To apply the default browser preference instead of explicitly setting it.
-  // auth.useDeviceLanguage();
-  // ===============code_by_shakil_munshi===================
   // -------------- REGISTER --------------------
-  // Handles user registration, including image upload.
-  // =======================================================
-
   const register = async (
     name,
     phoneNumber,
@@ -175,13 +138,21 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
+      // Firebase-e user create kora
+      const firebaseUserCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const user = firebaseUserCredential.user;
+
       const formData = new FormData();
       formData.append("name", name);
       formData.append("phoneNumber", phoneNumber);
       formData.append("email", email);
       formData.append("password", password);
       formData.append("role", "user");
-      formData.append("uid", crypto.randomUUID());
+      formData.append("uid", user.uid); // Firebase UID backend-e pathano
 
       if (profileImage) formData.append("profileImage", profileImage);
 
@@ -190,15 +161,12 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = response.data;
-      console.log("Register response data:", data); // Debugging: check what the server sends
+      console.log("Register response data:", data);
 
-      // ===============code_by_shakil_munshi==================
-      // =======================================================
       if (data.data && data.data.user && data.data.token) {
         setUser(data.data.user);
-        setToken(data.data.token); // This should trigger the useEffect to set the cookie
+        setToken(data.data.token);
         setSuccess(data.message || "User registered and logged in!");
-
         return {
           success: true,
           message: data.message || "User registered and logged in!",
@@ -211,14 +179,14 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Registration error:", err);
       const message =
-        err.response?.data?.message || "Registration failed. Please try again.";
+        err.response?.data?.message ||
+        err.message ||
+        "Registration failed. Please try again.";
 
-      // ===============added_by_shakil===================
-      if (message.includes("User with this email already exists")) {
-        console.log("Email already exists. Attempting to log in...");
+      // Firebase error handling for 'email-already-in-use'
+      if (err.code === "auth/email-already-in-use") {
         const loginResponse = await login(email, password, false);
         if (loginResponse.success) {
-          console.log("Successfully logged in instead of registering.");
           setSuccess(
             "An account already exists with this email. You have been logged in.",
           );
@@ -229,6 +197,7 @@ export const AuthProvider = ({ children }) => {
           };
         }
       }
+
       setError(message);
       return { success: false, message };
     } finally {
@@ -236,10 +205,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ===============new_code_shakil===================
   // -------------- GOOGLE SIGN-IN --------------------
-  // Handles Google Sign-in and sends user data to backend API.
-  // =======================================================
   const googleSignIn = async () => {
     setLoading(true);
     setError(null);
@@ -249,56 +215,49 @@ export const AuthProvider = ({ children }) => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Default password to use for Google accounts
-      const defaultGooglePassword = "GoogleUser@123";
-
-      // Prepare form data to send to backend
       const formData = new FormData();
       formData.append("email", user.email || "");
-      formData.append("uid", user.uid || "");
-      formData.append("password", defaultGooglePassword);
+      formData.append("uid", user.uid);
       formData.append("name", user.displayName || "Google User");
-      formData.append("role", "user"); // default role
+      formData.append("role", "user");
+      formData.append("profileImage", user.photoURL || "");
 
-      // Optional fields (add them anyway even if empty)
-      formData.append("phoneNumber", user.phoneNumber || "");
-      formData.append("photoURL", user.photoURL || "");
+      const response = await axios.post("/users/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      // Try to register first
-      try {
-        const response = await axios.post("/users/register", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+      const data = response.data;
 
-        const data = response.data;
+      if (data.data && data.data.user && data.data.token) {
+        setUser(data.data.user);
+        setToken(data.data.token);
+        setSuccess(data.message || "Google sign-in successful!");
+        return {
+          success: true,
+          message: data.message || "Google sign-in successful!",
+        };
+      } else {
+        const message =
+          "Google sign-in failed: Unexpected response from backend.";
+        setError(message);
+        return { success: false, message };
+      }
+    } catch (err) {
+      console.error("Google Sign-in error:", err);
 
-        if (data.data && data.data.user && data.data.token) {
-          setUser(data.data.user);
-          setToken(data.data.token);
-          setSuccess(data.message || "Google sign-in successful!");
-          return {
-            success: true,
-            message: data.message || "Google sign-in successful!",
-          };
-        } else {
-          const message =
-            "Google sign-in failed: Unexpected response from backend.";
-          setError(message);
-          return { success: false, message };
-        }
-      } catch (regErr) {
-        // If user already exists, fallback to login
-        const msg = regErr.response?.data?.message || "";
+      const msg = err.response?.data?.message || "";
+      if (msg.includes("already exists") || err.response?.status === 400) {
+        console.warn("User exists. Trying to login with Firebase UID...");
 
-        if (msg.includes("already exists") || regErr.response?.status === 400) {
-          console.warn("User exists. Trying to login...");
+        try {
+          const loginResponse = await axios.post("/users/login-with-firebase", {
+            uid: user.uid,
+          });
+          const loginData = loginResponse.data;
 
-          const loginResponse = await login(
-            user.email,
-            defaultGooglePassword,
-            false,
-          );
-          if (loginResponse.success) {
+          if (loginData.data && loginData.data.user && loginData.data.token) {
+            setUser(loginData.data.user);
+            setToken(loginData.data.token);
             setSuccess("Google user logged in successfully.");
             return {
               success: true,
@@ -307,17 +266,16 @@ export const AuthProvider = ({ children }) => {
           } else {
             throw new Error("Fallback login failed.");
           }
+        } catch (loginErr) {
+          console.error("Fallback login error:", loginErr);
+          const message =
+            loginErr.response?.data?.message ||
+            "Failed to log in existing Google user.";
+          setError(message);
+          return { success: false, message };
         }
-
-        // Other registration errors
-        const message =
-          regErr.response?.data?.message ||
-          "Google sign-in failed during registration.";
-        setError(message);
-        return { success: false, message };
       }
-    } catch (err) {
-      console.error("Google Sign-in error:", err);
+
       const message =
         err.code === "auth/popup-closed-by-user"
           ? "Google sign-in cancelled by user."
@@ -330,25 +288,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ===============new_code= shakil==================
-
-  // ===============code_by_shakil_munshi===================
   // -------------- LOGOUT --------------------
-  // Clears user, token, localStorage, and cookies upon logout.
-  // =======================================================
   const logout = () => {
     setUser(null);
     setToken(null);
-    // Explicitly remove from localStorage and cookies immediately
     localStorage.removeItem("user");
     Cookies.remove("token");
-    console.log("Logged out. User and token cleared."); // Added for debugging
+    console.log("Logged out. User and token cleared.");
   };
 
-  // ===============code_by_shakil_munshi===================
   // -------------- FORGOT PASSWORD --------------------
-  // Initiates password reset process.
-  // =======================================================
   const forgotPassword = async (email) => {
     setLoading(true);
     setError(null);
@@ -356,7 +305,6 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await axios.post("/users/forgot-password", { email });
-
       const data = response.data;
       setSuccess(data.message || "Password reset link sent to your email.");
       return {
@@ -374,10 +322,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ===============code_by_shakil_munshi===================
   // -------------- UPDATE PASSWORD --------------------
-  // Allows a logged-in user to update their password.
-  // =======================================================
   const updatePassword = async (userId, newPassword) => {
     setLoading(true);
     setError(null);
@@ -389,13 +334,12 @@ export const AuthProvider = ({ children }) => {
         { password: newPassword },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // already set globally but kept for clarity
+            Authorization: `Bearer ${token}`,
           },
         },
       );
 
       const data = response.data;
-
       setSuccess(data.message || "Password updated successfully.");
       return {
         success: true,
@@ -412,7 +356,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Context value
   const authContextValue = {
     user,
     token,
@@ -425,8 +368,8 @@ export const AuthProvider = ({ children }) => {
     forgotPassword,
     updatePassword,
     googleSignIn,
-    setError, // Allowing direct manipulation of error/success messages
-    setSuccess, // useful for clearing messages on route change etc.
+    setError,
+    setSuccess,
   };
 
   return (
