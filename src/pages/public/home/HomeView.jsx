@@ -14,14 +14,12 @@ import ReleasesSectionTest from "./components/ReleasesSection/ReleasesSectionTes
 // Services
 import { getAllSongs } from "../../../featured/song/trackService";
 import { getAllPlans } from "../../../featured/plans/planService";
-import { getAllOrders } from "../../../featured/orders/OrderHistoryService";
 
 const HomeView = () => {
   const [songs, setSongs] = useState([]);
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [orderHistory, setOrderHistory] = useState([]);
-  console.log("Order History Data:", orderHistory);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,16 +28,13 @@ const HomeView = () => {
         // Use your service functions (better abstraction)
         const songsData = await getAllSongs({ limit: 6, published: true });
         const plansData = await getAllPlans();
-        const orderHistoryData = await getAllOrders();
-        console.log("Order History Data:", orderHistoryData?.orders);
+
         setSongs(songsData?.data || []);
         setPlans(plansData?.data || []);
-        setOrderHistory(orderHistoryData?.data || []);
       } catch (error) {
         console.error("Error fetching home data:", error);
         setSongs([]);
         setPlans([]);
-        setOrderHistory([]);
       } finally {
         setLoading(false);
       }
@@ -61,7 +56,7 @@ const HomeView = () => {
       <HeroSection />
       {/* <ReleasesSection songs={songs} /> */}
       <ReleasesSectionTest />
-      <BrowseSection orderHistory={orderHistory} songs={songs} plans={plans} />
+      <BrowseSection songs={songs} plans={plans} />
       <LicensingSection plans={plans} />
 
       {/* Test Section - Positioned with negative margin */}

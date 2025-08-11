@@ -21,16 +21,16 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
-  // resolve: {
-  //   alias: {
-  //     "@": path.resolve(__dirname, "./src"),
-  //     "@components": path.resolve(__dirname, "./src/components"),
-  //     "@pages": path.resolve(__dirname, "./src/pages"),
-  //     "@utils": path.resolve(__dirname, "./src/utils"),
-  //     "@hooks": path.resolve(__dirname, "./src/hooks"),
-  //     "@assets": path.resolve(__dirname, "./src/assets"),
-  //   },
-  // },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      "@pages": path.resolve(__dirname, "./src/pages"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@hooks": path.resolve(__dirname, "./src/hooks"),
+      "@assets": path.resolve(__dirname, "./src/assets"),
+    },
+  },
 
   build: {
     rollupOptions: {

@@ -8,6 +8,7 @@ import Modal from "../../../../../components/ui/Modal";
 import LicensPlan from "../../../../../components/common/LicensPlan";
 
 const BrowseSection = ({ songs, plans, orderHistory }) => {
+  console.log("Brwoser", songs);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
 
