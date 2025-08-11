@@ -33,22 +33,31 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     return params.get("oobCode");
   };
 
-  // Notify your backend after successful reset
+  // Backend-কে নোটিফাই করার জন্য নতুন ফাংশন
   const notifyBackend = async (userEmail, newPasswordStr) => {
     if (!userEmail || !newPasswordStr) return;
 
     try {
-      const response = await fetch("http://localhost:5174/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: userEmail,
-          newPassword: newPasswordStr,
-        }),
-      });
+      const response = await fetch(
+        "https://backend-ibracks.mtscorporate.com/api/users/update-password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: userEmail,
+            newPassword: newPasswordStr,
+          }),
+        },
+      );
 
       if (!response.ok) {
         console.error(`Backend error. Status: ${response.status}`);
+        const errorData = await response.json();
+        console.error("Backend error details:", errorData);
+      } else {
+        console.log("Backend password updated successfully!");
       }
     } catch (error) {
       console.error("Failed to notify backend:", error);
@@ -119,7 +128,8 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     try {
       await confirmPasswordReset(auth, oobCode, newPassword);
       setMessage(t.passwordResetSuccessfulMsg);
-      await notifyBackend(email, newPassword); // <-- Backend notify
+      // এখানে নতুন API endpoint ব্যবহার করা হচ্ছে
+      await notifyBackend(email, newPassword);
       setNewPassword("");
       setConfirmPassword("");
     } catch (error) {
