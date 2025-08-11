@@ -111,12 +111,6 @@ const NavStyle = () => {
 
     { label: "Services", path: "/services" },
     { label: "Contact", path: "/contact" },
-
-    ...(user
-      ? user.role === "admin"
-        ? [{ label: "Dashboard", path: "/admin" }]
-        : []
-      : []),
   ];
 
   const profileDropdownLinks = user
@@ -130,9 +124,6 @@ const NavStyle = () => {
                 {
                   label: "My Dashboard",
                   path: "/order-history",
-
-                  path: "/dashboard",
-
                   icon: RiProductHuntLine,
                 },
               ]

@@ -88,7 +88,7 @@ const BrowseSection = ({ songs, plans, orderHistory }) => {
 
   return (
     <section className="bg-gradient-to-b from-[#060207] to-[#150618]">
-      <div className="mx-auto w-full max-w-7xl px-4 pt-30 pb-20 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl pt-30 pb-10 sm:pt-30 sm:pb-20">
         {/* Header */}
         <h2 className="mb-8 text-2xl font-semibold text-white capitalize sm:text-3xl md:text-4xl">
           Browse Tracks
@@ -112,19 +112,19 @@ const BrowseSection = ({ songs, plans, orderHistory }) => {
               {songs.map((track) => (
                 <tr key={track.id} className="transition hover:bg-white/5">
                   <td className="py-4" colSpan={2}>
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={
-                          track.coverImage ||
-                          "https://placehold.co/64x64/000000/FFFFFF?text=..."
-                        }
-                        alt="Album"
-                        className="h-16 w-16 rounded border border-gray-600 object-cover"
-                      />
-                      <span className="text-base text-neutral-300">
-                        {track.title}
-                      </span>
-                    </div>
+                    <Link to={`/products/${track.id}`}>
+                      {" "}
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={track.coverImage}
+                          alt="Album"
+                          className="h-16 w-16 rounded border border-gray-600 object-cover"
+                        />
+                        <span className="text-base text-neutral-300">
+                          {track.description}
+                        </span>
+                      </div>
+                    </Link>
                   </td>
                   <td className="px-4 py-4 text-neutral-400">
                     {track.duration}

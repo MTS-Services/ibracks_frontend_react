@@ -37,7 +37,6 @@ const AppRoutes = createBrowserRouter([
       { index: true, element: <HomeView /> },
       { path: "about", element: <AboutView /> },
       { path: "contact", element: <ContactView /> },
-
       { path: "services", element: <ServicesView /> },
       { path: "shoping-cart", element: <CartView /> },
       { path: "test-cart", element: <CartTestView /> },
