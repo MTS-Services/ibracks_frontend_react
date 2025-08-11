@@ -1,4 +1,4 @@
-import { FiPlay, FiPause } from "react-icons/fi";
+import { MdPause, MdPlayArrow } from "react-icons/md";
 
 const SongCard = ({ song, currentPlayingSong, isPlaying, handlePlaySong }) => {
   const isCurrentPlaying = currentPlayingSong?.id === song.id;
@@ -8,39 +8,51 @@ const SongCard = ({ song, currentPlayingSong, isPlaying, handlePlaySong }) => {
       key={song.id || `${song.title}-${song.artist}`}
       className="group relative px-1 pb-3 sm:w-full sm:px-3 sm:py-0"
     >
-      <img
-        src={song.image}
-        alt={song.title}
-        className="h-48 w-full rounded-2xl border border-gray-600 object-cover p-2 shadow-lg sm:w-[1000px]"
-        onError={(e) => {
-          e.target.onerror = null;
-          e.target.src = "/products/cart1.jpg";
-        }}
-      />
-      {song.audioUrl ? (
-        <div
-          className="bg-opacity-50 absolute inset-0 flex cursor-pointer items-center justify-center rounded p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          onClick={() => handlePlaySong(song)}
-        >
-          {isCurrentPlaying && isPlaying ? (
-            <FiPause className="h-12 w-12 p-1 text-white" />
-          ) : (
-            <FiPlay className="h-12 w-12 p-1 text-white" />
-          )}
-        </div>
-      ) : (
-        <div className="bg-opacity-70 absolute inset-0 flex items-center justify-center rounded bg-black text-sm text-white/70">
-          No Audio
-        </div>
-      )}
+      <div className="relative">
+        {" "}
+        {/* Add this relative div */}
+        <img
+          src={song.image}
+          alt={song.title}
+          className="h-48 w-full rounded-2xl border border-gray-600 object-cover p-2 shadow-lg sm:w-[1000px]"
+          onError={(e) => {
+            e.target.onerror = null;
+
+            e.target.src = "/products/cart1.jpg";
+          }}
+        />
+        {song.audioUrl ? (
+          <div
+            className="absolute inset-0 flex cursor-pointer items-center justify-center rounded p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            onClick={() => handlePlaySong(song)}
+          >
+            {isCurrentPlaying && isPlaying ? (
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/70 text-white transition-colors duration-200 hover:bg-black/90">
+                <MdPause size={24} />
+              </div>
+            ) : (
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/70 text-white transition-colors duration-200 hover:bg-black/90">
+                <MdPlayArrow size={24} />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-opacity-70 absolute inset-0 flex items-center justify-center rounded bg-black text-sm text-white/70">
+            No Audio
+          </div>
+        )}
+      </div>{" "}
+      {/* Close the relative div */}
       <div className="flex items-center justify-center">
         <div className="m-fu mx-auto mt-2 justify-center text-center">
           <p className="font-manrope max-w-[120px] truncate text-base leading-tight font-semibold text-neutral-200 sm:max-w-full sm:text-lg sm:leading-relaxed">
             {song.title}
           </p>
+
           <p className="font-manrope max-w-[120px] truncate text-xs leading-none font-normal text-neutral-300 sm:max-w-full sm:text-sm">
             {song.artist}
           </p>
+
           {isCurrentPlaying && isPlaying && (
             <p className="mt-1 animate-pulse text-center text-xs text-green-400">
               Playing...

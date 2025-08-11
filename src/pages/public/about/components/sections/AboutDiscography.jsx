@@ -1,36 +1,30 @@
-import { useRef, useState } from "react";
+import { useRef, useEffect } from "react";
 import { FiPlusCircle } from "react-icons/fi";
-import { MdPlayArrow, MdPause } from "react-icons/md"; // Import both icons
+import { MdPlayArrow, MdPause } from "react-icons/md";
 import { RxBorderDotted } from "react-icons/rx";
 
-// It now accepts 'album' as an object and 'cardColor' as a prop
-const AboutDiscography = ({ album, cardColor }) => {
-  // Destructure the necessary properties from the album object
-  // Assuming 'audioFile' from your JSON data is the URL for the song.
+// The component now accepts 'currentAudioPlaying' and 'onPlayClick'
+const AboutDiscography = ({
+  album,
+  cardColor,
+  currentAudioPlaying,
+  onPlayClick,
+}) => {
   const { title, coverImage, previewColor, audioFile } = album;
 
-  // Use state to track if the song is playing
-  const [isPlaying, setIsPlaying] = useState(false);
+  // Check if this specific card's song is the one currently playing
+  const isPlaying = currentAudioPlaying === audioFile;
 
-  // Use a ref to access the audio element directly
   const audioRef = useRef(null);
 
-  // Function to handle the play/pause toggle
-  const togglePlay = () => {
-    // If the audio element doesn't exist, exit the function
-    if (!audioRef.current) return;
-
+  // Use useEffect to handle play/pause logic whenever the `isPlaying` state changes
+  useEffect(() => {
     if (isPlaying) {
-      // If the song is playing, pause it
-      audioRef.current.pause();
-    } else {
-      // If the song is paused, play it
       audioRef.current.play();
+    } else {
+      audioRef.current.pause();
     }
-
-    // Toggle the isPlaying state
-    setIsPlaying(!isPlaying);
-  };
+  }, [isPlaying]);
 
   return (
     <div
@@ -53,7 +47,7 @@ const AboutDiscography = ({ album, cardColor }) => {
             {title}
           </h1>
           <div className="truncate pr-2 text-sm font-normal text-white">
-            {title}
+            {album.user.name}
           </div>
         </div>
         {/* Preview Button and Icons Container */}
@@ -72,9 +66,11 @@ const AboutDiscography = ({ album, cardColor }) => {
               <RxBorderDotted className="size-6 text-white" />
             </div>
 
-            {/* The button now handles the play/pause toggle */}
-            <button onClick={togglePlay} className="rounded-2xl bg-white">
-              {/* Conditionally render the icon based on the state */}
+            {/* The button now calls the parent's handler with its audio file */}
+            <button
+              onClick={() => onPlayClick(audioFile)}
+              className="rounded-2xl bg-white"
+            >
               {isPlaying ? (
                 <MdPause className="size-6 p-1 text-base text-black sm:text-lg" />
               ) : (

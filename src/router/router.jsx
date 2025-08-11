@@ -27,6 +27,7 @@ import OrderHistory from "../pages/public/checkout/components/OrderHistory";
 import LicenseInfo from "../pages/private/license/LicenseInfo";
 
 import NotFoundView from "../pages/error/NotFoundView";
+import ResetPasswordPage from "../pages/auth/ForgotPasswordModal/ResetPasswordPage";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -36,10 +37,14 @@ const AppRoutes = createBrowserRouter([
       { index: true, element: <HomeView /> },
       { path: "about", element: <AboutView /> },
       { path: "contact", element: <ContactView /> },
+
       { path: "services", element: <ServicesView /> },
       { path: "shoping-cart", element: <CartView /> },
       { path: "test-cart", element: <CartTestView /> },
       { path: "check-out", element: <CheckoutView /> },
+      { path: "/products/:id", element: <ProductsView /> },
+      { path: "/reset-password", element: <ResetPasswordPage /> },
+
       {
         path: "account",
         element: (

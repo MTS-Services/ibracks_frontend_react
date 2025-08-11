@@ -2,23 +2,18 @@ import { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
-// ===============code_by_shakil_munshi===================
 // Import Swiper styles
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { IoPlayCircleOutline } from "react-icons/io5";
 
-// ===============code_by_shakil_munshi===================
 // Import icons
 import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 import { IoMdArrowDroprightCircle } from "react-icons/io";
-
-// ===============code_by_shakil_munshi===================
-// Assuming this is your custom axios instance
-
 import { FaPlay } from "react-icons/fa";
+import { MdPause } from "react-icons/md";
+
+// Assuming this is your custom axios instance
 import axios from "../../utils/axiosInstance";
 
 const DEFAULT_COVER_IMAGE = "/treacks/cart2.png";
@@ -28,10 +23,7 @@ const TracksPageHeroSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ===============code_by_shakil_munshi===================
   // Audio state
-  // ==================================
-
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const audioRef = useRef(new Audio());
 
@@ -45,14 +37,11 @@ const TracksPageHeroSection = () => {
           throw new Error("Invalid data format received from API.");
         }
 
-        // Filter out any invalid items (null, undefined, or missing key properties)
         const validReleases = data.data.filter(
           (item) => item && item.id && item.title,
         );
 
         const formattedReleases = validReleases.map((item) => {
-          // Your existing logic for setting the cover image is good,
-          // but let's make it even more robust.
           let imageUrl = item.coverImage;
           if (
             !imageUrl ||
@@ -71,7 +60,6 @@ const TracksPageHeroSection = () => {
           };
         });
 
-        // Take the first 20 valid and formatted releases
         setNewReleases(formattedReleases.slice(0, 20));
       } catch (err) {
         setError(err);
@@ -82,29 +70,19 @@ const TracksPageHeroSection = () => {
     fetchNewReleases();
   }, []);
 
-  // ===============code_by_shakil_munshi===================
   // Function to handle playing a song
-  // ==================================
-
   const handlePlaySong = (release) => {
-    // ===============code_by_shakil_munshi===================
-    // Stop the current song if one is playing
-    // ==================================
-
-    if (currentlyPlaying) {
+    // Stop the current song if one is playing and it's not the same song
+    if (currentlyPlaying && currentlyPlaying.id !== release.id) {
       audioRef.current.pause();
     }
-    // ===============code_by_shakil_munshi===================
-    // Check if the clicked song is the same as the current one
-    // ==================================
 
+    // Check if the clicked song is the same as the current one
     if (currentlyPlaying && currentlyPlaying.id === release.id) {
+      audioRef.current.pause();
       setCurrentlyPlaying(null);
     } else {
-      // ===============code_by_shakil_munshi===================
       // If a new song is clicked, set the new source and play
-      // ==================================
-
       audioRef.current.src = release.audioUrl;
       audioRef.current.play();
       setCurrentlyPlaying(release);
@@ -201,12 +179,17 @@ const TracksPageHeroSection = () => {
                       e.target.src = DEFAULT_COVER_IMAGE;
                     }}
                   />
-                  {/* Optional: Add a play icon overlay */}
-                  {currentlyPlaying && currentlyPlaying.id === release.id && (
-                    <div className="bg-opacity-50 absolute inset-0 flex items-center justify-center bg-black/60">
-                      <IoPlayCircleOutline className="h-12 w-12 text-white" />
-                    </div>
-                  )}
+                  {/* The opacity-0 class has been removed to make the overlay always visible. */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 transition-colors duration-200 hover:bg-black/80">
+                    <button className="flex h-12 w-12 items-center justify-center rounded-full bg-black/70 text-white transition-colors duration-200 hover:bg-black/90">
+                      {currentlyPlaying &&
+                      currentlyPlaying.id === release.id ? (
+                        <MdPause size={24} />
+                      ) : (
+                        <FaPlay size={24} />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <div className="flex w-full flex-col items-start justify-start gap-0.5 py-1">
                   <div className="self-stretch truncate text-sm font-semibold text-neutral-200 sm:text-base">

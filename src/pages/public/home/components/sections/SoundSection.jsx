@@ -1,5 +1,3 @@
-import React from "react";
-
 const SoundSection = () => {
   const kits = [
     {
@@ -28,7 +26,7 @@ const SoundSection = () => {
         <h2 className="mb-4 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
           Sound Kits
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-base text-white/80 sm:text-lg">
+        <p className="mx-auto mb-12 max-w-3xl text-base text-white/80 sm:text-base">
           Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting
           Industry. Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever
           Since The 1500s, When An Unknown Printer Took A Galley Of Type And
@@ -53,8 +51,8 @@ const SoundSection = () => {
                 </span>
               </div>
 
-              {/* Content Section */}
-              <div className="flex flex-col gap-3 p-5 sm:p-6">
+              {/* Content Section - Modified for left alignment */}
+              <div className="flex flex-col gap-3 p-5 text-left sm:p-6">
                 <h3 className="text-lg font-semibold text-white uppercase sm:text-xl">
                   {kit.title}
                 </h3>
@@ -62,7 +60,7 @@ const SoundSection = () => {
                   {kit.description}
                 </p>
 
-                <button className="mt-4 w-full self-center rounded bg-gradient-to-b from-orange-200 to-yellow-500 px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 sm:w-40 sm:self-start">
+                <button className="mt-4 w-full self-start rounded bg-gradient-to-b from-orange-200 to-yellow-500 px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 sm:w-40">
                   See Details
                 </button>
               </div>

@@ -1,9 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../featured/auth/AuthContext";
-import ForgotPasswordModal from "../ForgotPasswordModal";
+// import ForgotPasswordModal from "../ForgotPasswordModal";
 import { fetchOwnedSongs } from "../../public/checkout/components/authSlice";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
+import PasswordResetModal from "../ForgotPasswordModal/PasswordResetModal";
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
@@ -14,9 +16,7 @@ const LoginView = () => {
 
   const {
     login,
-    // ===============new_code===================
-    googleSignIn, // AuthContext থেকে googleSignIn ফাংশন ইম্পোর্ট করা হয়েছে
-    // ===============new_code===================
+    googleSignIn,
     loading: authLoading,
     error: authError,
     success: authSuccess,
@@ -27,22 +27,38 @@ const LoginView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch(); // <-- 3. Dispatch function'ti initialize korun
 
+  // This useEffect is now modified to only handle errors from AuthContext.
+  // Success toasts will be handled manually in the handleSubmit function.
+  useEffect(() => {
+    if (authError) {
+      toast.error(authError, {
+        position: "top-center",
+      });
+      setAuthError(null);
+    }
+  }, [authError, setAuthError]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setAuthError(null);
     setAuthSuccess(null);
 
     if (!email || !password) {
-      setAuthError("Please enter your email and password.");
+      toast.error("Please enter your email and password.", {
+        position: "top-center",
+      });
       return;
     }
+
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setAuthError("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.", {
+        position: "top-center",
+      });
       return;
     }
 
     try {
+      // The login function in AuthContext should only return success/error, not show a toast.
       const result = await login(email, password, rememberMe);
 
       if (result.success) {
@@ -52,33 +68,31 @@ const LoginView = () => {
         setEmail("");
         setPassword("");
         setRememberMe(false);
-
         navigate("/");
-      } else {
-        // Error already set by AuthContext
       }
     } catch (err) {
       console.error("Login error in LoginView:", err);
     }
   };
 
-  // ===============new_code===================
-  // Google Sign-in হ্যান্ডলার
   const handleGoogleSignIn = async () => {
     setAuthError(null);
     setAuthSuccess(null);
+
     try {
       const result = await googleSignIn();
       if (result.success) {
-        navigate("/"); // সফল হলে হোম পেজে রিডাইরেক্ট করা হবে
-      } else {
-        // ত্রুটি AuthContext দ্বারা সেট করা হয়েছে
+        // Handle the success toast here
+        toast.success("Google sign-in successful!", {
+          position: "top-center",
+        });
+        navigate("/");
       }
     } catch (err) {
       console.error("Google Sign-in error in LoginView:", err);
+      toast.error("An unexpected error occurred during Google Sign-in.");
     }
   };
-  // ===============new_code===================
 
   const openForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(true);
@@ -153,6 +167,7 @@ const LoginView = () => {
                 />
               </div>
             </div>
+
             {/* Password */}
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
@@ -221,6 +236,7 @@ const LoginView = () => {
               Sign Up now
             </Link>
           </h6>
+
           {/* Separator */}
           <div className="my-2 flex w-full items-center gap-2 md:my-4 md:gap-4">
             <div className="h-px flex-1 bg-neutral-200"></div>
@@ -232,12 +248,11 @@ const LoginView = () => {
 
           {/* Social Login Buttons */}
           <div className="flex w-full flex-col gap-3 md:gap-4">
-            {/* ===============new_code=================== */}
             {/* Google Sign-in Button */}
             <button
-              onClick={handleGoogleSignIn} // Google Sign-in ফাংশন কল করা হয়েছে
+              onClick={handleGoogleSignIn}
               className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3"
-              disabled={authLoading} // লোডিং অবস্থায় বাটন ডিজেবল করা হয়েছে
+              disabled={authLoading}
             >
               <img
                 src="/New folder/google.svg"
@@ -248,7 +263,6 @@ const LoginView = () => {
                 Sign in With Google
               </span>
             </button>
-            {/* ===============new_code=================== */}
             <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               <img
                 src="/New folder/apple.svg"
@@ -264,7 +278,8 @@ const LoginView = () => {
         {/* Right Part */}
         <div className="hidden w-1/2 lg:block"></div>
       </div>
-      <ForgotPasswordModal
+
+      <PasswordResetModal
         isOpen={isForgotPasswordModalOpen}
         onClose={closeForgotPasswordModal}
       />
