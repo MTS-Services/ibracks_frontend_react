@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaShareAlt } from "react-icons/fa";
 import { HiOutlineShoppingBag } from "react-icons/hi";
+import { useNavigate } from "react-router-dom"; // useNavigate import করতে হবে
 
 // Dummy Modal Component (for demonstration purposes)
 const Modal = ({ isOpen, onClose, title, children, size }) => {
@@ -9,7 +10,9 @@ const Modal = ({ isOpen, onClose, title, children, size }) => {
   return (
     <div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black">
       <div
-        className={`relative rounded-lg bg-zinc-900 p-6 shadow-lg ${size === "lg" ? "w-full max-w-2xl" : "w-full max-w-md"}`}
+        className={`relative rounded-lg bg-zinc-900 p-6 shadow-lg ${
+          size === "lg" ? "w-full max-w-2xl" : "w-full max-w-md"
+        }`}
       >
         <div className="mb-4 flex items-center justify-between border-b border-gray-700 pb-3">
           <h3 className="text-xl font-semibold text-white">{title}</h3>
@@ -53,20 +56,19 @@ const LicensPlan = ({ selectedSong, plans }) => {
 
 const HeroSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [allTracks, setAllTracks] = useState([]); // Stores all tracks fetched from "API"
-  const [filteredTracks, setFilteredTracks] = useState([]); // Tracks currently displayed
+  const navigate = useNavigate(); // useNavigate hook ব্যবহার করুন
+
+  // ... (অন্যান্য state এবং functions যেমন আছে তেমন থাকবে)
+  const [allTracks, setAllTracks] = useState([]);
+  const [filteredTracks, setFilteredTracks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
-
-  // Dummy data for licensing plans
   const plans = [
     { name: "Standard License", price: 29.99 },
     { name: "Premium License", price: 59.99 },
     { name: "Exclusive License", price: 199.99 },
   ];
-
-  // Dummy cart state (not persistent, just for demo)
   const [cartSongs, setCartSongs] = useState([]);
 
   const isSongInCart = (songId) => {
@@ -81,7 +83,6 @@ const HeroSection = () => {
     }
   };
 
-  // Function to fetch tracks from the API
   const fetchTracks = async (searchQuery = "") => {
     setIsLoading(true);
     try {
@@ -104,27 +105,24 @@ const HeroSection = () => {
       }
 
       const data = await response.json();
-      // Assuming the API returns an array of tracks directly or within a 'data' property
-      // Adjust this line based on your actual API response structure
-      const tracksData = data.data || data; // Assuming 'data' property holds the array of tracks
+      const tracksData = data.data || data;
 
-      // Map API data to match component's expected structure if necessary
       const formattedTracks = tracksData.map((track) => ({
-        id: track._id, // Assuming _id from MongoDB
+        id: track._id,
         title: track.title,
         coverImage:
           track.coverImage ||
-          "https://placehold.co/100x100/CCCCCC/000000?text=No+Image", // Use a placeholder if no image
-        duration: track.duration || "N/A", // Assuming duration is a string like "3:45"
+          "https://placehold.co/100x100/CCCCCC/000000?text=No+Image",
+        duration: track.duration || "N/A",
         bpm: track.bpm || "N/A",
         tags: Array.isArray(track.musicTag)
           ? track.musicTag.join(", ")
-          : track.musicTag || "No Tags", // Assuming musicTag is an array or string
-        pricing: track.pricing || 0.0, // Assuming pricing is a number
+          : track.musicTag || "No Tags",
+        pricing: track.pricing || 0.0,
       }));
 
       setAllTracks(formattedTracks);
-      setFilteredTracks(formattedTracks); // Display all tracks initially or search results
+      setFilteredTracks(formattedTracks);
     } catch (error) {
       console.error("Error fetching tracks:", error);
       setAllTracks([]);
@@ -134,14 +132,18 @@ const HeroSection = () => {
     }
   };
 
-  // Fetch tracks on component mount
   useEffect(() => {
     fetchTracks();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
-  const handleSearch = async (e) => {
+  // এই ফাংশনটি পরিবর্তন করা হয়েছে
+  const handleSearch = (e) => {
     e.preventDefault();
-    await fetchTracks(searchTerm); // Call fetchTracks with the current search term
+    if (searchTerm) {
+      navigate(`/tracks?search=${encodeURIComponent(searchTerm)}`); // নতুন রুটে নেভিগেট করুন
+    } else {
+      navigate(`/tracks`);
+    }
   };
 
   const openModal = (song) => {
@@ -152,22 +154,19 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-[700px] bg-[url('/image/home/hero-bg.jpg')] bg-cover bg-center px-4 py-10 md:py-20">
       <div className="absolute inset-0 bg-black opacity-50" />
-
       <div className="mx-auto max-w-7xl">
+        {/* ... (বাকি কোড যেমন আছে তেমনই থাকবে) */}
         <main className="flex flex-col justify-between md:flex-row">
-          {/* Left side - Text content */}
           <article className="relative mb-4 space-y-4 md:w-1/2 md:space-y-10">
             <h1 className="bg-gradient-to-t from-yellow-400 via-yellow-400 to-yellow-100 bg-clip-text text-center text-4xl font-bold text-transparent md:text-left md:text-6xl">
               Feel the Sound. Own the Vibe.
             </h1>
-
             <p className="text-center text-lg font-normal text-white capitalize md:text-left md:text-2xl">
               Discover the magic of music with us. Our platform is your gateway
               to a world of melodies and emotions. Whether you're a passionate
               listener, a budding artist, or an industry professional, we have
               something special for you.
             </p>
-
             <form onSubmit={handleSearch} className="relative w-full">
               <input
                 type="text"
@@ -187,8 +186,6 @@ const HeroSection = () => {
               </button>
             </form>
           </article>
-
-          {/* Right side - Music player image */}
           <article className="relative flex flex-col items-center justify-center space-y-6 text-center md:w-1/2">
             <div>
               <p className="text-lg font-extrabold text-white uppercase">
@@ -198,152 +195,15 @@ const HeroSection = () => {
                 The Weeknd, JENNIE & Lily Rose Depp
               </p>
             </div>
-
             <img
               src="/image/layer-music.png"
               alt="Music player"
-              className="w-115" // Restored original class name. Note: 'w-115' is not a standard Tailwind class and may require custom CSS.
+              className="w-115"
             />
           </article>
         </main>
       </div>
-
-      {/* --- */}
-      {/* Table Part for Search Results */}
-      {isLoading ? (
-        <div className="mt-10 text-center text-xl text-white">
-          Loading tracks...
-        </div>
-      ) : filteredTracks.length > 0 ? (
-        <main className="mt-10 sm:p-6 lg:py-14">
-          <div className="mx-auto w-full max-w-7xl">
-            <div className="overflow-x-auto rounded-lg border-b border-gray-500">
-              <table className="min-w-full text-left text-xs text-white sm:text-sm md:text-base">
-                <thead className="text-sm text-orange-300 sm:text-base md:text-xl">
-                  <tr>
-                    <th
-                      className="px-2 py-3 text-center font-medium sm:px-4 sm:py-4"
-                      colSpan={2}
-                    >
-                      Title
-                    </th>
-                    <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">
-                      Time
-                    </th>
-                    <th className="px-2 py-3 font-medium sm:px-4 sm:py-4">
-                      BPM
-                    </th>
-                    <th className="py-3 font-medium md:px-4">Tags</th>
-                    <th className="py-3 text-right font-medium md:px-4">
-                      Actions
-                    </th>{" "}
-                    {/* Added Actions column header */}
-                  </tr>
-                </thead>
-
-                <tbody className="divide-y divide-gray-500">
-                  {filteredTracks.map((track) => (
-                    <tr key={track.id} className="transition hover:bg-white/5">
-                      {/* Thumbnail + Title */}
-                      <td className="py-2 sm:py-4" colSpan={2}>
-                        <div className="flex items-center gap-2 sm:gap-4">
-                          <img
-                            src={track.coverImage}
-                            alt={`${track.title} cover`}
-                            className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
-                          />
-                          <span className="pr-3 text-[10px] text-neutral-300 sm:text-sm md:text-base">
-                            {track.title}
-                          </span>
-                        </div>
-                      </td>
-                      {/* Time */}
-                      <td className="px-4 py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-2">
-                        {track.duration}
-                      </td>
-                      {/* BPM */}
-                      <td className="py-2 text-xs font-[600] text-[#949494] sm:py-4 sm:text-sm md:px-4">
-                        {track.bpm}
-                      </td>
-                      {/* Tags */}
-                      <td className="py-2 sm:px-4 sm:py-4">
-                        <div className="flex flex-wrap gap-1 font-[400] sm:gap-2">
-                          {/* Ensure tags are rendered correctly, assuming it's a comma-separated string */}
-                          {track.tags.split(", ").map((tag, i) => (
-                            <span
-                              key={`${track.id}-${i}`}
-                              className="inline-block rounded-full bg-black/20 px-2 py-0.5 text-xs text-gray-400 capitalize sm:px-3 sm:py-1"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-
-                      {/* Actions */}
-                      <td className="py-2 sm:py-4">
-                        <div className="flex justify-end gap-1 md:gap-2">
-                          <Modal
-                            isOpen={isOpen && selectedSong?.id === track.id}
-                            onClose={() => setIsOpen(false)}
-                            title="Choose Your License"
-                            size="lg"
-                          >
-                            <LicensPlan
-                              selectedSong={selectedSong}
-                              plans={plans}
-                            />
-                          </Modal>
-                          {/* Share button */}
-                          <button
-                            className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
-                            aria-label={`Share ${track.title}`}
-                          >
-                            <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
-                          </button>
-                          {/* Cart button */}
-                          <button
-                            onClick={() => handleToggle(track)}
-                            disabled={isSongInCart(track.id)}
-                            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
-                              isSongInCart(track.id)
-                                ? "cursor-not-allowed bg-gray-300 text-gray-500"
-                                : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
-                            }`}
-                            aria-label={
-                              isSongInCart(track.id)
-                                ? `${track.title} already in cart`
-                                : `Add ${track.title} to cart for $${track.pricing.toFixed(2)}`
-                            }
-                          >
-                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
-                            <span>
-                              {isSongInCart(track.id)
-                                ? "Added"
-                                : `$${track.pricing.toFixed(2)}`}
-                            </span>
-                          </button>
-                          {/* Buy/License button - Added for demonstration */}
-                          <button
-                            onClick={() => openModal(track)}
-                            className="flex items-center gap-1 rounded-md bg-blue-500 px-2 py-1 text-xs font-semibold text-white transition hover:bg-blue-600 md:px-3 md:py-2"
-                          >
-                            <span>License</span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </main>
-      ) : (
-        !isLoading && (
-          <div className="mt-10 text-center text-xl text-neutral-400"></div>
-        )
-      )}
+      {/* ... (বাকি কোড যেমন আছে তেমনই থাকবে) */}
     </section>
   );
 };

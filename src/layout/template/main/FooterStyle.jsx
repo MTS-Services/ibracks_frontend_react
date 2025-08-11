@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   FaInstagram,
   FaLinkedinIn,
@@ -7,9 +8,27 @@ import {
 } from "react-icons/fa6";
 
 const FooterStyle = () => {
+  const companyLinks = [
+    { name: "Home", path: "/" },
+    { name: "Tracks", path: "/tracks" },
+    { name: "Video", path: "/video" },
+    { name: "Services", path: "/services" },
+    { name: "About", path: "/about" },
+    { name: "Futures", path: "/futures" }, // Ensure you create this route
+    { name: "Contact", path: "/contact" },
+  ];
+
+  const legalLinks = [
+    { name: "Licensing info", path: "/legal/licensing" },
+    { name: "Terms & use", path: "/legal/terms" },
+    { name: "Privacy policy", path: "/legal/privacy" },
+    { name: "YouTube terms of service", path: "/legal/youtube-terms" },
+  ];
+
   return (
     <footer className="flex w-full flex-col border-t border-neutral-500 bg-[#3B0045]">
       <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-start justify-between gap-8 px-8 py-8 md:px-16 lg:px-28">
+        {/* Logo & Social */}
         <div className="flex w-full flex-col gap-8 md:w-60">
           <div className="flex flex-col gap-6">
             <img className="w-40" src="/footer/footerlogo.png" alt="Logo" />
@@ -32,54 +51,48 @@ const FooterStyle = () => {
             </div>
           </div>
         </div>
+
+        {/* Company Links */}
         <div className="flex w-full flex-col gap-3 md:w-64">
           <h3 className="pb-4 text-base font-medium text-white capitalize">
             Company
           </h3>
           <div className="flex flex-col gap-2">
-            {[
-              "Home",
-              "Tracks",
-              "Video",
-              "Services",
-              "About",
-              "Futures",
-              "Contact",
-            ].map((item) => (
-              <p
-                key={item}
+            {companyLinks.map(({ name, path }) => (
+              <Link
+                key={name}
+                to={path}
                 className="cursor-pointer p-2 text-sm leading-tight font-normal text-white hover:underline"
               >
-                {item}
-              </p>
+                {name}
+              </Link>
             ))}
           </div>
         </div>
+
+        {/* Legal Links */}
         <div className="flex w-full flex-col gap-3 md:w-64">
           <h3 className="pb-4 text-base font-medium text-white capitalize">
             Legal
           </h3>
           <div className="flex flex-col gap-2">
-            {[
-              "Licensing info",
-              "Terms & use",
-              "Privacy policy",
-              "YouTube terms of service",
-            ].map((item) => (
-              <p
-                key={item}
-                className="cursor-pointer p-2 text-sm leading-tight font-normal text-white hover:underline"
+            {legalLinks.map(({ name, path }) => (
+              <Link
+                key={name}
+                to={path}
+                className="mb-4 cursor-pointer text-sm leading-tight font-normal text-white hover:underline"
               >
-                {item}
-              </p>
+                {name}
+              </Link>
             ))}
           </div>
         </div>
       </div>
 
+      {/* Footer Bottom */}
       <div className="mx-auto flex w-full justify-center border-t border-zinc-500 px-8 py-4 md:px-16 lg:px-28">
         <p className="text-center text-base font-normal text-neutral-200">
-          © 2025 BeatzInGeez. All rights reserved. Made with for travelers
+          © 2025 BeatzInGeez. All rights reserved. Made with ❤️ for travelers
           worldwide.
         </p>
       </div>

@@ -1,30 +1,30 @@
+import { useRef, useState } from "react";
+import { MdPause, MdPlayArrow } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-const musicCards = [
-  {
-    id: 1,
-    title: "Red (Taylor's Version)",
-    artist: "Taylor Swift",
-    image: "/aboutpage/cart4.png",
-    alt: "Red (Taylor's Version)",
-  },
-  {
-    id: 2,
-    title: "Need to Know",
-    artist: "Doja Cat",
-    image: "/aboutpage/cart6.png",
-    alt: "Need to Know",
-  },
-  {
-    id: 3,
-    title: "Save Your Tear",
-    artist: "The Weeknd",
-    image: "/aboutpage/cart1.png",
-    alt: "Save Your Tear",
-  },
-];
+const HeroSection = ({ songs }) => {
+  const audioRef = useRef(null); // For managing audio playback
+  const [playingSongId, setPlayingSongId] = useState(null); // Track currently playing song
 
-const HeroSection = () => {
+  // Get only the first three songs
+  const firstThreeSongs = songs.slice(0, 3);
+
+  // Function to toggle play/pause for a specific song
+  const togglePlay = (songUrl, songId) => {
+    if (!audioRef.current) return;
+
+    // If the same song is playing, pause it
+    if (playingSongId === songId) {
+      audioRef.current.pause();
+      setPlayingSongId(null);
+    } else {
+      // If a different song is clicked, play the new one
+      audioRef.current.src = songUrl;
+      audioRef.current.play();
+      setPlayingSongId(songId);
+    }
+  };
+
   return (
     <section
       className="mx-auto flex w-full items-center justify-center px-4 py-2 lg:px-0 lg:py-10"
@@ -73,19 +73,33 @@ const HeroSection = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-            {musicCards.map((item) => (
+            {/* Map over the first three songs instead of the whole array */}
+            {firstThreeSongs.map((item) => (
               <div key={item.id}>
                 <div className="inline-flex flex-col items-start justify-start gap-2.5">
-                  <img
-                    className="h-44 w-44 rounded"
-                    src="/aboutpage/cart4.png"
-                    alt="Red (Taylor's Version)"
-                  />
+                  <div className="relative h-44 w-44">
+                    <img
+                      className="h-full w-full rounded object-cover"
+                      src={item.coverImage}
+                      alt="cover"
+                    />
+                    {/* The play/pause button is now a button overlay */}
+                    <button
+                      onClick={() => togglePlay(item.audioFile, item.id)}
+                      className="absolute inset-0 m-auto flex h-12 w-12 items-center justify-center rounded-full bg-black/70 text-white transition-colors duration-200 hover:bg-black/90"
+                    >
+                      {playingSongId === item.id ? (
+                        <MdPause size={24} />
+                      ) : (
+                        <MdPlayArrow size={24} />
+                      )}
+                    </button>
+                  </div>
                   <h4 className="text-sm leading-none font-normal text-white">
-                    Red (Taylor's Version)
+                    {item.title}
                   </h4>
                   <p className="text-xs leading-none font-normal text-white">
-                    Taylor Swift
+                    {item.user.name}
                   </p>
                 </div>
               </div>
@@ -102,6 +116,8 @@ const HeroSection = () => {
           />
         </div>
       </div>
+      {/* Audio element is now outside the loop so we only have one */}
+      <audio ref={audioRef} />
     </section>
   );
 };

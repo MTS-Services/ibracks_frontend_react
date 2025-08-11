@@ -24,7 +24,7 @@ const AboutView = () => {
 
   return (
     <>
-      <HeroSection />
+      <HeroSection songs={songs} />
       <ApartSection />
       <DiscographySection songs={songs} />
     </>

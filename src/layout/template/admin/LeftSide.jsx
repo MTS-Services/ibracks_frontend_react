@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FiEdit, FiHome, FiMusic, FiSettings, FiVideo } from "react-icons/fi";
 import { GrLineChart } from "react-icons/gr";
 import toast from "react-hot-toast";
+import { MdOutlineDescription } from "react-icons/md";
 
 const userRolesData = [
   {
@@ -25,9 +26,11 @@ const navLinksData = [
   // { name: "dashboard", icon: <FiHome />, path: "/admin" },
   { name: "Total Songs Uploaded", icon: <FiMusic />, path: "/admin/songs" },
   { name: "Total Sales (Amount)", icon: <GrLineChart />, path: "/admin/salse" },
-  // {
-  //   name: "User Admin",
-  // },
+  {
+    name: "License Info",
+    icon: <MdOutlineDescription />,
+    path: "/admin/license",
+  },
   // { name: "videos", icon: <FiVideo />, path: "/admin/videos" },
   // { name: "settings", icon: <FiSettings />, path: "/admin/settings" },
 ];
@@ -77,7 +80,7 @@ const LeftSide = () => {
       </nav>
 
       {/* User Roles */}
-      <div className="m-4 flex flex-col gap-4 rounded-lg bg-white/10 p-4">
+      {/* <div className="m-4 flex flex-col gap-4 rounded-lg bg-white/10 p-4">
         {userRolesData.map((user) => (
           <div key={user.role} className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -101,7 +104,7 @@ const LeftSide = () => {
             </button>
           </div>
         ))}
-      </div>
+      </div> */}
     </aside>
   );
 };
