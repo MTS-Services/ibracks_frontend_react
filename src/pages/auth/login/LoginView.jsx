@@ -20,11 +20,14 @@ const LoginView = () => {
     setError: setAuthError,
     setSuccess: setAuthSuccess,
   } = useContext(AuthContext);
+  console.log(authSuccess);
 
   const navigate = useNavigate();
 
+  // =============================code by shakil  munshi=======================
   // This useEffect is now modified to only handle errors from AuthContext.
   // Success toasts will be handled manually in the handleSubmit function.
+  // =============================code by shakil  munshi=======================
   useEffect(() => {
     if (authError) {
       toast.error(authError, {
@@ -54,11 +57,12 @@ const LoginView = () => {
     }
 
     try {
+      // =============================code by shakil  munshi=======================
       // The login function in AuthContext should only return success/error, not show a toast.
+      // =============================code by shakil  munshi=======================
       const result = await login(email, password, rememberMe);
 
       if (result.success) {
-        // Handle the success toast here
         toast.success("Login successful!", { position: "top-center" });
         setEmail("");
         setPassword("");
@@ -78,7 +82,9 @@ const LoginView = () => {
     try {
       const result = await googleSignIn();
       if (result.success) {
+        // =============================code by shakil  munshi=======================
         // Handle the success toast here
+        // =============================code by shakil  munshi=======================
         toast.success("Google sign-in successful!", {
           position: "top-center",
         });
@@ -247,7 +253,7 @@ const LoginView = () => {
                 Sign in With Google
               </span>
             </button>
-            <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
+            {/* <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
               <img
                 src="/New folder/apple.svg"
                 className="h-5 w-5 w-6 md:h-6"
@@ -256,7 +262,7 @@ const LoginView = () => {
               <span className="font-poppins text-sm text-neutral-700 md:text-base">
                 Sign in With Apple
               </span>
-            </button>
+            </button> */}
           </div>
         </div>
 

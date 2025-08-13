@@ -3,7 +3,9 @@ import Cookies from "js-cookie";
 import { AuthContext } from "./AuthContext";
 import axios from "../../utils/axiosInstance";
 
+// =============================code by shakil  munshi=======================
 // Firebase imports
+// =============================code by shakil  munshi=======================
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -13,7 +15,9 @@ import {
 import firebaseApp from "../../firebase.config";
 
 export const AuthProvider = ({ children }) => {
+  // =============================code by shakil  munshi=======================
   // Load user from localStorage, token from cookies
+  // =============================code by shakil  munshi=======================
   const [user, setUser] = useState(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -29,7 +33,9 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  // =============================code by shakil  munshi=======================
   // Sync user to localStorage
+  // =============================code by shakil  munshi=======================
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -38,12 +44,16 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
+  // =============================code by shakil  munshi=======================
   // Determine if the app is running on localhost
+  // =============================code by shakil  munshi=======================
   const isLocalhost =
     window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1";
 
+  // =============================code by shakil  munshi=======================
   // Sync token to cookies
+  // =============================code by shakil  munshi=======================
   useEffect(() => {
     if (token) {
       Cookies.set("token", token, {
@@ -58,7 +68,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, isLocalhost]);
 
+  // =============================code by shakil  munshi=======================
   // Set axios default header if token changes
+  // =============================code by shakil  munshi=======================
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -69,7 +81,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
+  // =============================code by shakil  munshi=======================
   // Firebase auth initialization
+  // =============================code by shakil  munshi=======================
   const auth = getAuth(firebaseApp);
   auth.languageCode = "it";
   const provider = new GoogleAuthProvider();
@@ -138,7 +152,9 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
+      // =============================code by shakil  munshi=======================
       // Firebase-e user create kora
+      // =============================code by shakil  munshi=======================
       const firebaseUserCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -152,7 +168,11 @@ export const AuthProvider = ({ children }) => {
       formData.append("email", email);
       formData.append("password", password);
       formData.append("role", "user");
-      formData.append("uid", user.uid); // Firebase UID backend-e pathano
+      formData.append("uid", user.uid);
+
+      // =============================code by shakil  munshi=======================
+      // Firebase UID backend-e pathano
+      // =============================code by shakil  munshi=======================
 
       if (profileImage) formData.append("profileImage", profileImage);
 
@@ -183,7 +203,9 @@ export const AuthProvider = ({ children }) => {
         err.message ||
         "Registration failed. Please try again.";
 
+      // =============================code by shakil  munshi=======================
       // Firebase error handling for 'email-already-in-use'
+      // =============================code by shakil  munshi=======================
       if (err.code === "auth/email-already-in-use") {
         const loginResponse = await login(email, password, false);
         if (loginResponse.success) {

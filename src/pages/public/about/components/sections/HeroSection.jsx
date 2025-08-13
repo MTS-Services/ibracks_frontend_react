@@ -3,22 +3,30 @@ import { MdPause, MdPlayArrow } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const HeroSection = ({ songs }) => {
-  const audioRef = useRef(null); // For managing audio playback
-  const [playingSongId, setPlayingSongId] = useState(null); // Track currently playing song
+  const audioRef = useRef(null);
+  const [playingSongId, setPlayingSongId] = useState(null);
 
-  // Get only the first three songs
   const firstThreeSongs = songs.slice(0, 3);
 
+  // =============================code by shakil  munshi=======================
+  // For managing audio playback
+  // Track currently playing song
+  // Get only the first three songs
   // Function to toggle play/pause for a specific song
+  // =============================code by shakil  munshi=======================
   const togglePlay = (songUrl, songId) => {
     if (!audioRef.current) return;
 
+    // =============================code by shakil  munshi=======================
     // If the same song is playing, pause it
+    // =============================code by shakil  munshi=======================
     if (playingSongId === songId) {
       audioRef.current.pause();
       setPlayingSongId(null);
     } else {
+      // =============================code by shakil  munshi=======================
       // If a different song is clicked, play the new one
+      // =============================code by shakil  munshi=======================
       audioRef.current.src = songUrl;
       audioRef.current.play();
       setPlayingSongId(songId);
