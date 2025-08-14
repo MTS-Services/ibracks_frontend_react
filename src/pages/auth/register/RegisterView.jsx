@@ -84,6 +84,7 @@ const RegisterView = () => {
       toast.error(response.message || "Google sign-in failed.");
     }
   };
+  console.log(handleGoogleSignIn);
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">

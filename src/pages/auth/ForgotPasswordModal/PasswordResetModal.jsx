@@ -1,5 +1,3 @@
-// src/components/auth/PasswordResetModal.js
-
 import React, { useEffect, useState } from "react";
 import {
   getAuth,
@@ -15,7 +13,10 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState("send-link"); // or 'reset-password'
+  const [mode, setMode] = useState("send-link");
+  // =============================code by shakil  munshi=======================
+  // or 'reset-password'
+  // =============code by shakil  munshi=======================
   const [oobCode, setOobCode] = useState("");
 
   const t = {
@@ -23,6 +24,7 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     passwordsDoNotMatch: "Passwords do not match.",
     passwordMinLength: "Password must be at least 6 characters long.",
     invalidResetCode: "Invalid or missing reset code.",
+
     errorResettingPassword: "Error resetting password: ",
     passwordResetSuccessfulMsg: "Your password has been successfully reset.",
     resetLinkSent: "Password reset link sent to your email.",
@@ -33,7 +35,9 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     return params.get("oobCode");
   };
 
-  // Backend-কে নোটিফাই করার জন্য নতুন ফাংশন
+  // =============================code by shakil  munshi=======================
+  // backend  notification new function
+  // =============================code by shakil  munshi=======================
   const notifyBackend = async (userEmail, newPasswordStr) => {
     if (!userEmail || !newPasswordStr) return;
 
@@ -64,7 +68,9 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // =============================code by shakil  munshi=======================
   // On modal open, check for oobCode
+  // =============================code by shakil  munshi=======================
   useEffect(() => {
     if (isOpen) {
       const code = getResetCodeFromURL();
@@ -85,7 +91,9 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  // =============================code by shakil  munshi=======================
   // Send reset link to email
+  // =============================code by shakil  munshi=======================
   const handleSendLink = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -101,7 +109,9 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // =============================code by shakil  munshi=======================
   // Confirm password reset and notify backend
+  // =============================code by shakil  munshi=======================
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -128,7 +138,11 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
     try {
       await confirmPasswordReset(auth, oobCode, newPassword);
       setMessage(t.passwordResetSuccessfulMsg);
-      // এখানে নতুন API endpoint ব্যবহার করা হচ্ছে
+
+      // =============================code by shakil  munshi=======================
+      // use  api ind this  code
+      // =============================code by shakil  munshi=======================
+
       await notifyBackend(email, newPassword);
       setNewPassword("");
       setConfirmPassword("");
