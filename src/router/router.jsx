@@ -13,7 +13,6 @@ import AuthLayout from "../layout/template/auth/AuthLayout";
 import RegisterView from "../pages/auth/register/RegisterView";
 import LoginView from "../pages/auth/login/LoginView";
 import DashboardLayout from "../layout/template/admin/DashboardLayout";
-import Dashboard from "../pages/private/dashboard/Dashboard";
 import TotalSongs from "../pages/private/songs/TotalSongs";
 import SalseAnalysis from "../pages/private/salse/SalseAnalysis";
 import CartTestView from "../pages/public/cart/CartTestView";
@@ -25,6 +24,7 @@ import OrderHistory from "../pages/public/checkout/components/OrderHistory";
 import LicenseInfo from "../pages/private/license/LicenseInfo";
 import NotFoundView from "../pages/error/NotFoundView";
 import ResetPasswordPage from "../pages/auth/ForgotPasswordModal/ResetPasswordPage";
+import EditSongPage from "../pages/editsong/EditSongPage";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -83,7 +83,6 @@ const AppRoutes = createBrowserRouter([
     path: "/admin",
     element: (
       <PrivateAdminRoute>
-        {" "}
         {/* Admin-only route */}
         <DashboardLayout />
       </PrivateAdminRoute>
@@ -94,6 +93,7 @@ const AppRoutes = createBrowserRouter([
       { path: "salse", element: <SalseAnalysis /> },
       { path: "upload", element: <UploadPage /> },
       { path: "license", element: <LicenseInfo /> },
+      { path: "edit-song/:songId", element: <EditSongPage /> },
     ],
   },
   {
