@@ -538,7 +538,7 @@ const EditSongPage = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-6 pt-8">
+      <div className="flex items-start justify-center gap-6 pt-4 pr-18">
         <button
           onClick={handleCancel}
           disabled={isSubmitting}
