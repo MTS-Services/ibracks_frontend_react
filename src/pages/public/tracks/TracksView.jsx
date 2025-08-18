@@ -42,7 +42,7 @@ const TracksView = () => {
 
   const [copiedTrackId, setCopiedTrackId] = useState(null);
 
-  const cartItems = useSelector((state) => state.cart.items);
+  const cartItems = useSelector((state) => state.cart.items || []);
 
   useEffect(() => {
     const fetchDynamicOptions = async () => {
@@ -180,6 +180,12 @@ const TracksView = () => {
       setTimeout(() => setCopiedTrackId(null), 2000);
     }
   };
+
+  // uniform button classes (share + buy)
+  const SHARE_BTN_CLASS =
+    "inline-flex h-9 w-9 items-center justify-center rounded-md bg-zinc-800 transition hover:bg-zinc-700";
+  const ACTION_BTN_BASE =
+    "inline-flex h-9 min-w-[108px] items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold leading-none whitespace-nowrap";
 
   return (
     <section
@@ -351,93 +357,102 @@ const TracksView = () => {
                     </td>
                   </tr>
                 ) : songs.length > 0 ? (
-                  songs.map((track) => (
-                    <tr key={track.id} className="transition hover:bg-white/5">
-                      <td className="py-2 pl-4 sm:py-4 md:pl-0" colSpan={2}>
-                        <Link to={`/products/${track.id}`}>
-                          <div className="flex items-center gap-2 sm:gap-4">
-                            <img
-                              src={track.coverImage}
-                              alt={`${track.title} cover`}
-                              className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
-                            />
-                            <span className="pr-3 text-[16px] text-neutral-300 sm:text-lg md:text-base">
-                              {track.title}
-                            </span>
-                          </div>
-                        </Link>
-                      </td>
-                      <td className="hidden px-4 py-2 text-xs font-[600] text-[#949494] sm:table-cell sm:py-4 sm:text-sm md:px-2">
-                        {track.duration}
-                      </td>
-                      <td className="hidden py-2 text-xs font-[600] text-[#949494] sm:table-cell sm:py-4 sm:text-sm md:px-4">
-                        {track.bpm}
-                      </td>
-                      <td className="hidden py-2 sm:table-cell sm:px-4 sm:py-4">
-                        <div className="flex flex-wrap gap-2 font-[400] sm:gap-2">
-                          {track.musicTag ? (
-                            <span className="rounded-full bg-gray-700 px-2 py-1 text-xs text-gray-200">
-                              {track.musicTag}
-                            </span>
-                          ) : (
-                            <span className="text-gray-500">
-                              No tag available
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-2 pr-4 text-right sm:py-4 md:pr-0">
-                        <div className="flex justify-end gap-1 md:gap-2">
-                          <Modal
-                            isOpen={isOpen && selectedSong?.id === track.id}
-                            onClose={() => setIsOpen(false)}
-                            title="Choose Your License"
-                            size="lg"
-                          >
-                            <LicensPlan
-                              selectedSong={selectedSong}
-                              plans={plans}
-                            />
-                          </Modal>
-                          <div className="relative hidden items-center sm:flex">
-                            {copiedTrackId === track.id && (
-                              <span className="absolute right-full mr-2 rounded-md bg-green-600 px-2 py-1 text-xs text-white shadow-lg transition-all duration-300">
-                                Copied!
+                  songs.map((track) => {
+                    const inCart = isSongInCart(track.id);
+                    return (
+                      <tr
+                        key={track.id}
+                        className="transition hover:bg-white/5"
+                      >
+                        <td className="py-2 pl-4 sm:py-4 md:pl-0" colSpan={2}>
+                          <Link to={`/products/${track.id}`}>
+                            <div className="flex items-center gap-2 sm:gap-4">
+                              <img
+                                src={track.coverImage}
+                                alt={`${track.title} cover`}
+                                className="h-8 w-8 rounded-sm object-cover sm:h-14 sm:w-14 md:h-20 md:w-20"
+                              />
+                              <span className="pr-3 text-[16px] text-neutral-300 sm:text-lg md:text-base">
+                                {track.title}
+                              </span>
+                            </div>
+                          </Link>
+                        </td>
+                        <td className="hidden px-4 py-2 text-xs font-[600] text-[#949494] sm:table-cell sm:py-4 sm:text-sm md:px-2">
+                          {track.duration}
+                        </td>
+                        <td className="hidden py-2 text-xs font-[600] text-[#949494] sm:table-cell sm:py-4 sm:text-sm md:px-4">
+                          {track.bpm}
+                        </td>
+                        <td className="hidden py-2 sm:table-cell sm:px-4 sm:py-4">
+                          <div className="flex flex-wrap gap-2 font-[400] sm:gap-2">
+                            {track.musicTag ? (
+                              <span className="rounded-full bg-gray-700 px-2 py-1 text-xs text-gray-200">
+                                {track.musicTag}
+                              </span>
+                            ) : (
+                              <span className="text-gray-500">
+                                No tag available
                               </span>
                             )}
-                            <button
-                              onClick={() => handleShareClick(track.id)}
-                              className="rounded-md bg-zinc-800 p-1 transition hover:bg-zinc-700 sm:p-2"
-                              aria-label={`Share ${track.title}`}
-                            >
-                              <FaShareAlt className="text-xs text-white sm:text-sm md:text-base" />
-                            </button>
                           </div>
-                          <button
-                            onClick={() => handleToggle(track)}
-                            disabled={isSongInCart(track.id)}
-                            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold md:px-3 md:py-2 ${
-                              isSongInCart(track.id)
-                                ? "cursor-not-allowed bg-gray-300 text-gray-500"
-                                : "bg-gradient-to-b from-orange-200 to-yellow-500 text-black"
-                            }`}
-                            aria-label={
-                              isSongInCart(track.id)
-                                ? `${track.title} already in cart`
-                                : `Add ${track.title} to cart for $${track.pricing.toFixed(2)}`
-                            }
-                          >
-                            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
-                            <span>
-                              {isSongInCart(track.id)
-                                ? "Added"
-                                : `$${track.pricing.toFixed(2)}`}
-                            </span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                        </td>
+                        <td className="py-2 pr-4 text-right sm:py-4 md:pr-0">
+                          <div className="flex justify-end gap-2">
+                            {/* Share */}
+                            <div className="relative hidden items-center sm:flex">
+                              {copiedTrackId === track.id && (
+                                <span className="absolute right-full mr-2 rounded-md bg-green-600 px-2 py-1 text-xs text-white shadow-lg transition-all duration-300">
+                                  Copied!
+                                </span>
+                              )}
+                              <button
+                                onClick={() => handleShareClick(track.id)}
+                                className={SHARE_BTN_CLASS}
+                                aria-label={`Share ${track.title}`}
+                                type="button"
+                              >
+                                <FaShareAlt className="text-base text-white" />
+                              </button>
+                            </div>
+
+                            {/* Buy / Added */}
+                            <button
+                              onClick={() => !inCart && handleToggle(track)}
+                              disabled={inCart}
+                              className={
+                                inCart
+                                  ? `${ACTION_BTN_BASE} cursor-not-allowed border border-zinc-600 bg-zinc-800 text-zinc-300`
+                                  : `${ACTION_BTN_BASE} bg-gradient-to-b from-orange-200 to-yellow-500 text-black hover:brightness-[1.02] active:scale-[0.99]`
+                              }
+                              aria-label={
+                                inCart
+                                  ? `${track.title} already in cart`
+                                  : `Buy ${track.title} now`
+                              }
+                              type="button"
+                            >
+                              <HiOutlineShoppingBag className="text-sm" />
+                              <span>{inCart ? "Added" : "Buy Now"}</span>
+                            </button>
+
+                            {/* License modal (opens when Buy Now) */}
+                            <Modal
+                              isOpen={isOpen && selectedSong?.id === track.id}
+                              onClose={() => setIsOpen(false)}
+                              title="Choose Your License"
+                              size="lg"
+                            >
+                              <LicensPlan
+                                selectedSong={selectedSong}
+                                plans={plans}
+                              />
+                            </Modal>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td
