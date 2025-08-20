@@ -14,15 +14,20 @@ const FooterStyle = () => {
     { name: "Video", path: "/video" },
     { name: "Services", path: "/services" },
     { name: "About", path: "/about" },
-    { name: "Futures", path: "/futures" }, // Ensure you create this route
+    { name: "Futures", path: "/" }, // Ensure you create this route
     { name: "Contact", path: "/contact" },
   ];
 
   const legalLinks = [
-    { name: "Licensing info", path: "/legal/licensing" },
-    { name: "Terms & use", path: "/legal/terms" },
-    { name: "Privacy policy", path: "/legal/privacy" },
-    { name: "YouTube terms of service", path: "/legal/youtube-terms" },
+    { name: "Licensing info", path: "/" },
+    { name: "Terms & use", path: "/" },
+    { name: "Privacy policy", path: "/" },
+    {
+      name: "YouTube terms of service",
+      path: "https://www.youtube.com/@BeatzInGeez",
+      target: "_blank",
+      external: true,
+    },
   ];
 
   return (
