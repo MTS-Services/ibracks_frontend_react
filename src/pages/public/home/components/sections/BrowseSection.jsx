@@ -7,30 +7,23 @@ import { MdOutlineArrowOutward, MdEdit } from "react-icons/md";
 import Modal from "../../../../../components/ui/Modal";
 import LicensPlan from "../../../../../components/common/LicensPlan";
 
-const BrowseSection = ({ songs, plans, orderHistory }) => {
-  console.log("Brwoser", songs);
+const BrowseSection = ({ songs = [], plans = [], orderHistory = [] }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
 
-  // Get all the necessary data from Redux
-  const cartItems = useSelector((state) => state.cart.items);
+  // Redux state
+  const cartItems = useSelector((state) => state.cart.items || []);
   const ownedSongIds = useSelector((state) => state.auth.ownedSongIds || []);
   const uploadedSongIds = useSelector(
     (state) => state.auth.uploadedSongIds || [],
   );
 
-  // This function now checks all possible states for a song
+  // Status resolver
   const getSongStatus = (songId) => {
-    if (uploadedSongIds.includes(songId)) {
-      return "uploaded"; // The user owns this song because they uploaded it
-    }
-    if (ownedSongIds.includes(songId)) {
-      return "purchased"; // The user has bought this song in a past order
-    }
-    if (cartItems.some((item) => item.songId === songId)) {
-      return "inCart"; // The song is currently in the shopping cart
-    }
-    return "available"; // The song can be purchased
+    if (uploadedSongIds.includes(songId)) return "uploaded";
+    if (ownedSongIds.includes(songId)) return "purchased";
+    if (cartItems.some((item) => item.songId === songId)) return "inCart";
+    return "available";
   };
 
   const handleToggle = (track) => {
@@ -38,49 +31,54 @@ const BrowseSection = ({ songs, plans, orderHistory }) => {
     setIsOpen(true);
   };
 
-  // A helper function to render the correct button based on the song's status
+  // Buttons — uniform sizing/alignment
   const renderPurchaseButton = (track) => {
     const status = getSongStatus(track.id);
+    const base =
+      "inline-flex h-9 min-w-[108px] items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold leading-none whitespace-nowrap";
 
     switch (status) {
       case "uploaded":
         return (
           <button
             disabled
-            className="flex cursor-not-allowed items-center gap-1 rounded-md bg-blue-500 px-2 py-1 text-xs font-semibold text-white md:px-3 md:py-2"
+            className={`${base} cursor-not-allowed bg-blue-500 text-white`}
           >
-            <MdEdit className="text-xs sm:text-sm" />
+            <MdEdit className="text-sm" />
             <span>Your Track</span>
           </button>
         );
+
       case "purchased":
         return (
           <button
             disabled
-            className="flex cursor-not-allowed items-center gap-1 rounded-md bg-green-600 px-2 py-1 text-xs font-semibold text-white md:px-3 md:py-2"
+            className={`${base} cursor-not-allowed bg-green-600 text-white`}
           >
-            <FaCheckCircle className="text-xs sm:text-sm" />
+            <FaCheckCircle className="text-sm" />
             <span>Purchased</span>
           </button>
         );
+
       case "inCart":
         return (
           <button
             disabled
-            className="flex cursor-not-allowed items-center gap-1 rounded-md bg-gray-300 px-2 py-1 text-xs font-semibold text-gray-500 md:px-3 md:py-2"
+            className={`${base} cursor-not-allowed border border-zinc-600 bg-zinc-800 text-zinc-300`}
           >
-            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
+            <HiOutlineShoppingBag className="text-sm" />
             <span>Added</span>
           </button>
         );
-      default: // 'available'
+
+      default: // available -> Buy Now (no price)
         return (
           <button
             onClick={() => handleToggle(track)}
-            className="flex items-center gap-1 rounded-md bg-gradient-to-b from-orange-200 to-yellow-500 px-2 py-1 text-xs font-semibold text-black md:px-3 md:py-2"
+            className={`${base} bg-gradient-to-b from-orange-200 to-yellow-500 text-black hover:brightness-[1.02] active:scale-[0.99]`}
           >
-            <HiOutlineShoppingBag className="text-xs sm:text-sm" />
-            <span>{`$${track.pricing.toFixed(2)}`}</span>
+            <HiOutlineShoppingBag className="text-sm" />
+            <span>Buy Now</span>
           </button>
         );
     }
@@ -113,15 +111,17 @@ const BrowseSection = ({ songs, plans, orderHistory }) => {
                 <tr key={track.id} className="transition hover:bg-white/5">
                   <td className="py-4" colSpan={2}>
                     <Link to={`/products/${track.id}`}>
-                      {" "}
                       <div className="flex items-center gap-4">
                         <img
-                          src={track.coverImage}
+                          src={
+                            track.coverImage ||
+                            "https://placehold.co/160x160/000000/FFFFFF?text=..."
+                          }
                           alt="Album"
                           className="h-16 w-16 rounded border border-gray-600 object-cover"
                         />
                         <span className="text-base text-neutral-300">
-                          {track.description}
+                          {track.description || track.title}
                         </span>
                       </div>
                     </Link>
@@ -131,11 +131,30 @@ const BrowseSection = ({ songs, plans, orderHistory }) => {
                   </td>
                   <td className="px-4 py-4 text-neutral-400">{track.bpm}</td>
                   <td className="px-4 py-4">
-                    <div className="flex flex-wrap gap-2">{track.musicTag}</div>
+                    <div className="flex flex-wrap gap-2">
+                      {Array.isArray(track.musicTag) ? (
+                        track.musicTag.map((t) => (
+                          <span
+                            key={t}
+                            className="rounded bg-white/10 px-2 py-0.5 text-xs text-neutral-300"
+                          >
+                            {t}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-neutral-300">
+                          {track.musicTag}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex justify-end gap-2">
-                      <button className="rounded-md bg-zinc-800 p-2 transition hover:bg-zinc-700">
+                      <button
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-zinc-800 transition hover:bg-zinc-700"
+                        aria-label="Share"
+                        type="button"
+                      >
                         <FaShareAlt className="text-base text-white" />
                       </button>
                       {renderPurchaseButton(track)}
@@ -172,7 +191,11 @@ const BrowseSection = ({ songs, plans, orderHistory }) => {
                     <span>BPM {track.bpm}</span>
                   </div>
                   <div className="mt-4 flex justify-start gap-2">
-                    <button className="rounded-md bg-zinc-800 p-2 transition hover:bg-zinc-700">
+                    <button
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-zinc-800 transition hover:bg-zinc-700"
+                      aria-label="Share"
+                      type="button"
+                    >
                       <FaShareAlt className="text-base text-white" />
                     </button>
                     {renderPurchaseButton(track)}
@@ -195,7 +218,7 @@ const BrowseSection = ({ songs, plans, orderHistory }) => {
         </div>
       </div>
 
-      {/* Modal for License Selection */}
+      {/* License Modal */}
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

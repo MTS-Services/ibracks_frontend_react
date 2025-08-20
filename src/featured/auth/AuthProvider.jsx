@@ -3,9 +3,6 @@ import Cookies from "js-cookie";
 import { AuthContext } from "./AuthContext";
 import axios from "../../utils/axiosInstance";
 
-// =============================code by shakil  munshi=======================
-// Firebase imports
-// =============================code by shakil  munshi=======================
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -14,119 +11,145 @@ import {
 } from "firebase/auth";
 import firebaseApp from "../../firebase.config";
 
+/* ------------ helpers ------------ */
+const get = (o, p, d = undefined) => {
+  try {
+    return (
+      p.reduce((a, k) => (a && a[k] !== undefined ? a[k] : undefined), o) ?? d
+    );
+  } catch {
+    return d;
+  }
+};
+const parseAuth = (raw) => {
+  const userCandidates = [
+    ["data", "data", "user"],
+    ["data", "user"],
+    ["user"],
+    ["data"],
+  ];
+  const tokenCandidates = [
+    ["data", "data", "token"],
+    ["data", "data", "accessToken"],
+    ["data", "token"],
+    ["data", "accessToken"],
+    ["token"],
+    ["accessToken"],
+    ["access_token"],
+  ];
+  let user, token;
+  for (const p of userCandidates) {
+    const u = get(raw, p);
+    if (u && typeof u === "object" && (u.email || u.id || u.uid || u.name)) {
+      user = u;
+      break;
+    }
+  }
+  if (!user) {
+    const maybe = get(raw, ["data"]);
+    if (
+      maybe &&
+      typeof maybe === "object" &&
+      (maybe.email || maybe.id || maybe.uid || maybe.name)
+    )
+      user = maybe;
+  }
+  for (const p of tokenCandidates) {
+    const t = get(raw, p);
+    if (typeof t === "string" && t.length > 10) {
+      token = t;
+      break;
+    }
+  }
+  return { user, token };
+};
+
+/* ------------ provider ------------ */
 export const AuthProvider = ({ children }) => {
-  // =============================code by shakil  munshi=======================
-  // Load user from localStorage, token from cookies
-  // =============================code by shakil  munshi=======================
   const [user, setUser] = useState(() => {
     try {
-      const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
-      console.error("Failed to parse user from localStorage", error);
+      return JSON.parse(localStorage.getItem("user")) || null;
+    } catch {
       return null;
     }
   });
-
   const [token, setToken] = useState(() => Cookies.get("token") || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // =============================code by shakil  munshi=======================
-  // Sync user to localStorage
-  // =============================code by shakil  munshi=======================
+  const isLocalhost = ["localhost", "127.0.0.1"].includes(
+    window.location.hostname,
+  );
+
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+    else localStorage.removeItem("user");
   }, [user]);
 
-  // =============================code by shakil  munshi=======================
-  // Determine if the app is running on localhost
-  // =============================code by shakil  munshi=======================
-  const isLocalhost =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1";
-
-  // =============================code by shakil  munshi=======================
-  // Sync token to cookies
-  // =============================code by shakil  munshi=======================
   useEffect(() => {
     if (token) {
       Cookies.set("token", token, {
         expires: 7,
         secure: !isLocalhost,
         sameSite: "strict",
+        path: "/",
       });
-      console.log("Cookie set with token:", token);
     } else {
+      Cookies.remove("token", { path: "/" });
       Cookies.remove("token");
-      console.log("Cookie removed.");
     }
   }, [token, isLocalhost]);
 
-  // =============================code by shakil  munshi=======================
-  // Set axios default header if token changes
-  // =============================code by shakil  munshi=======================
   useEffect(() => {
-    if (token) {
+    if (token)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      console.log("Axios Authorization header set.");
-    } else {
-      delete axios.defaults.headers.common["Authorization"];
-      console.log("Axios Authorization header removed.");
-    }
+    else delete axios.defaults.headers.common["Authorization"];
   }, [token]);
 
-  // =============================code by shakil  munshi=======================
-  // Firebase auth initialization
-  // =============================code by shakil  munshi=======================
   const auth = getAuth(firebaseApp);
-  auth.languageCode = "it";
+  auth.languageCode = "en";
   const provider = new GoogleAuthProvider();
 
-  // -------------- LOGIN --------------------
-  const login = async (email, password, rememberMe) => {
+  const finalize = ({ user: u, token: t }) => {
+    if (u) setUser(u);
+    if (t) setToken(t);
+    return !!(u && t);
+  };
+
+  /* ------------ login ------------ */
+  const login = async (email, password, rememberMe = false) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
-
     try {
-      const response = await axios.post("/users/login", {
+      const resp = await axios.post("/users/login", {
         email,
         password,
         rememberMe,
       });
-
-      const data = response.data;
-      console.log("Login response data:", data);
-
-      if (data.data && data.data.user && data.data.token) {
-        setUser(data.data.user);
-        setToken(data.data.token);
-        setSuccess(data.message || "Login successful!");
-        return { success: true, message: data.message || "Login successful!" };
-      } else {
-        const message = "Login failed: Unexpected response format.";
-        setError(message);
-        return { success: false, message };
+      const parsed = parseAuth(resp.data);
+      if (parsed.user && parsed.token) {
+        finalize(parsed);
+        return { success: true, message: "Login successful." };
       }
-    } catch (err) {
-      console.error("Login error:", err);
-      const message =
-        err.response?.data?.message ||
-        "Login failed. Please check your credentials.";
-      setError(message);
-      return { success: false, message };
+      return {
+        success: false,
+        message: "Login failed: Unexpected response format.",
+      };
+    } catch (e) {
+      return {
+        success: false,
+        message:
+          e?.response?.data?.message || "Login failed. Check credentials.",
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  // -------------- REGISTER --------------------
+  /* ------------ register (no auto-login) ------------ */
+  // নতুন: শেষ প্যারাম 'autoLogin' (default=false)
   const register = async (
     name,
     phoneNumber,
@@ -134,251 +157,177 @@ export const AuthProvider = ({ children }) => {
     password,
     confirmPassword,
     profileImage,
+    autoLogin = false,
   ) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
       setLoading(false);
       return { success: false, message: "Passwords do not match." };
     }
-
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("Please enter a valid email address.");
       setLoading(false);
-      return { success: false, message: "Please enter a valid email address." };
+      return { success: false, message: "Please enter a valid email." };
     }
 
+    let fbUser, idToken;
     try {
-      // =============================code by shakil  munshi=======================
-      // Firebase-e user create kora
-      // =============================code by shakil  munshi=======================
-      const firebaseUserCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const user = firebaseUserCredential.user;
+      // 1) Firebase signUp
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      fbUser = cred.user;
+      idToken = await fbUser.getIdToken(true);
 
+      // 2) Backend register
       const formData = new FormData();
       formData.append("name", name);
       formData.append("phoneNumber", phoneNumber);
       formData.append("email", email);
       formData.append("password", password);
       formData.append("role", "user");
-      formData.append("uid", user.uid);
-
-      // =============================code by shakil  munshi=======================
-      // Firebase UID backend-e pathano
-      // =============================code by shakil  munshi=======================
-
+      formData.append("uid", fbUser.uid);
+      formData.append("idToken", idToken);
       if (profileImage) formData.append("profileImage", profileImage);
 
-      const response = await axios.post("/users/register", formData, {
+      const resp = await axios.post("/users/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      const parsed = parseAuth(resp.data);
 
-      const data = response.data;
-      console.log("Register response data:", data);
+      // ✅ এখন থেকে ডিফল্টে অটো-লগইন নয়
+      if (autoLogin && parsed.user && parsed.token) {
+        finalize(parsed);
+        return { success: true, message: "Registered & logged in." };
+      }
 
-      if (data.data && data.data.user && data.data.token) {
-        setUser(data.data.user);
-        setToken(data.data.token);
-        setSuccess(data.message || "User registered and logged in!");
+      // কোনো অবস্থাতেই এখানে অটো-লগইন করবো না
+      return {
+        success: true,
+        message: "Registration successful. Please login.",
+        next: "go-login",
+      };
+    } catch (e) {
+      if (e?.code === "auth/email-already-in-use") {
+        // যেহেতু এখন register-এর পর login করাতে চাই না, direct login করবো না
         return {
-          success: true,
-          message: data.message || "User registered and logged in!",
+          success: false,
+          message: "Email already in use. Please login.",
+          next: "go-login",
         };
-      } else {
-        const message = "Registration failed: Unexpected response format.";
-        setError(message);
-        return { success: false, message };
       }
-    } catch (err) {
-      console.error("Registration error:", err);
-      const message =
-        err.response?.data?.message ||
-        err.message ||
-        "Registration failed. Please try again.";
-
-      // =============================code by shakil  munshi=======================
-      // Firebase error handling for 'email-already-in-use'
-      // =============================code by shakil  munshi=======================
-      if (err.code === "auth/email-already-in-use") {
-        const loginResponse = await login(email, password, false);
-        if (loginResponse.success) {
-          setSuccess(
-            "An account already exists with this email. You have been logged in.",
-          );
-          return {
-            success: true,
-            message:
-              "An account already exists with this email. You have been logged in.",
-          };
-        }
-      }
-
-      setError(message);
-      return { success: false, message };
+      return {
+        success: false,
+        message:
+          e?.response?.data?.message ||
+          (e?.code ? `Firebase error: ${e.code}` : "Registration failed."),
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  // -------------- GOOGLE SIGN-IN --------------------
+  /* ------------ Google Sign-In (এটা সাইন-ইন, তাই এখানে login থাকবে) ------------ */
   const googleSignIn = async () => {
     setLoading(true);
     setError(null);
     setSuccess(null);
-
     try {
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+      const fbUser = result.user;
+      const idToken = await fbUser.getIdToken(true);
 
       const formData = new FormData();
-      formData.append("email", user.email || "");
-      formData.append("uid", user.uid);
-      formData.append("name", user.displayName || "Google User");
+      formData.append("email", fbUser.email || "");
+      formData.append("uid", fbUser.uid);
+      formData.append("idToken", idToken);
+      formData.append("name", fbUser.displayName || "Google User");
       formData.append("role", "user");
-      formData.append("profileImage", user.photoURL || "");
+      formData.append("profileImage", fbUser.photoURL || "");
 
-      const response = await axios.post("/users/register", formData, {
+      const resp = await axios.post("/users/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      const data = response.data;
-
-      if (data.data && data.data.user && data.data.token) {
-        setUser(data.data.user);
-        setToken(data.data.token);
-        setSuccess(data.message || "Google sign-in successful!");
-        return {
-          success: true,
-          message: data.message || "Google sign-in successful!",
-        };
-      } else {
-        const message =
-          "Google sign-in failed: Unexpected response from backend.";
-        setError(message);
-        return { success: false, message };
-      }
-    } catch (err) {
-      console.error("Google Sign-in error:", err);
-
-      const msg = err.response?.data?.message || "";
-      if (msg.includes("already exists") || err.response?.status === 400) {
-        console.warn("User exists. Trying to login with Firebase UID...");
-
-        try {
-          const loginResponse = await axios.post("/users/login-with-firebase", {
-            uid: user.uid,
-          });
-          const loginData = loginResponse.data;
-
-          if (loginData.data && loginData.data.user && loginData.data.token) {
-            setUser(loginData.data.user);
-            setToken(loginData.data.token);
-            setSuccess("Google user logged in successfully.");
-            return {
-              success: true,
-              message: "Google user logged in successfully.",
-            };
-          } else {
-            throw new Error("Fallback login failed.");
-          }
-        } catch (loginErr) {
-          console.error("Fallback login error:", loginErr);
-          const message =
-            loginErr.response?.data?.message ||
-            "Failed to log in existing Google user.";
-          setError(message);
-          return { success: false, message };
-        }
+      const parsed = parseAuth(resp.data);
+      if (parsed.user && parsed.token) {
+        finalize(parsed);
+        return { success: true, message: "Google sign-in successful!" };
       }
 
-      const message =
-        err.code === "auth/popup-closed-by-user"
-          ? "Google sign-in cancelled by user."
-          : err.response?.data?.message ||
-            "Google sign-in failed. Please try again.";
-      setError(message);
-      return { success: false, message };
+      return {
+        success: false,
+        message: "Google sign-in: unexpected response without token.",
+      };
+    } catch (e) {
+      if (e?.code === "auth/popup-closed-by-user")
+        return { success: false, message: "Google sign-in cancelled by user." };
+      return {
+        success: false,
+        message:
+          e?.response?.data?.message ||
+          "Google sign-in failed. Please try again.",
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  // -------------- LOGOUT --------------------
+  /* ------------ logout ------------ */
   const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem("user");
-    Cookies.remove("token");
-    console.log("Logged out. User and token cleared.");
+    try {
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem("user");
+      Cookies.remove("token", { path: "/" });
+      Cookies.remove("token");
+      delete axios.defaults.headers.common["Authorization"];
+    } catch {}
   };
 
-  // -------------- FORGOT PASSWORD --------------------
+  /* ------------ misc ------------ */
   const forgotPassword = async (email) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
-
     try {
-      const response = await axios.post("/users/forgot-password", { email });
-      const data = response.data;
-      setSuccess(data.message || "Password reset link sent to your email.");
+      const resp = await axios.post("/users/forgot-password", { email });
       return {
         success: true,
-        message: data.message || "Password reset link sent.",
+        message: resp?.data?.message || "Password reset link sent.",
       };
-    } catch (err) {
-      console.error("Forgot password error:", err);
-      const message =
-        err.response?.data?.message || "Failed to send password reset link.";
-      setError(message);
-      return { success: false, message };
+    } catch (e) {
+      return {
+        success: false,
+        message: e?.response?.data?.message || "Failed to send reset link.",
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  // -------------- UPDATE PASSWORD --------------------
   const updatePassword = async (userId, newPassword) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
-
     try {
-      const response = await axios.put(
-        `/users/${userId}`,
-        { password: newPassword },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const data = response.data;
-      setSuccess(data.message || "Password updated successfully.");
+      const resp = await axios.put(`/users/${userId}`, {
+        password: newPassword,
+      });
       return {
         success: true,
-        message: data.message || "Password updated successfully.",
+        message: resp?.data?.message || "Password updated successfully.",
       };
-    } catch (err) {
-      console.error("Update password error:", err);
-      const message =
-        err.response?.data?.message || "Failed to update password.";
-      setError(message);
-      return { success: false, message };
+    } catch (e) {
+      return {
+        success: false,
+        message: e?.response?.data?.message || "Failed to update password.",
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  const authContextValue = {
+  const ctx = {
     user,
     token,
     loading,
@@ -386,19 +335,15 @@ export const AuthProvider = ({ children }) => {
     success,
     login,
     register,
+    googleSignIn,
     logout,
     forgotPassword,
     updatePassword,
-    googleSignIn,
     setError,
     setSuccess,
   };
 
-  return (
-    <AuthContext.Provider value={authContextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

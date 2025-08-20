@@ -1,3 +1,4 @@
+// src/pages/auth/RegisterView.jsx
 import { useState } from "react";
 import { useAuth } from "../../../featured/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -16,16 +17,11 @@ const RegisterView = () => {
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setProfileImage(e.target.files[0]);
-    } else {
-      setProfileImage(null);
-    }
+    setProfileImage(e.target.files?.[0] || null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError(null);
     setSuccess(null);
     toast.dismiss();
@@ -46,7 +42,7 @@ const RegisterView = () => {
       return;
     }
 
-    const registrationSuccessful = await register(
+    const res = await register(
       name,
       phoneNumber,
       email,
@@ -55,36 +51,30 @@ const RegisterView = () => {
       profileImage,
     );
 
-    if (registrationSuccessful) {
-      toast.success("Registration successful! Redirecting to login...");
+    if (res?.success) {
+      toast.success(res.message || "Registration successful! Redirecting...");
       setName("");
       setPhoneNumber("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
       setProfileImage(null);
-      setTimeout(() => {
-        navigate("/auth/login");
-      }, 2000);
-    } else if (error) {
-      toast.error(error);
+      setTimeout(() => navigate("/auth/login"), 1500);
+    } else {
+      toast.error(res?.message || error || "Registration failed.");
     }
   };
 
   const handleGoogleSignIn = async () => {
     toast.dismiss();
     const response = await googleSignIn();
-
-    if (response.success) {
+    if (response?.success) {
       toast.success(response.message || "Google sign-in successful!");
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000);
+      setTimeout(() => navigate("/home"), 1200);
     } else {
-      toast.error(response.message || "Google sign-in failed.");
+      toast.error(response?.message || "Google sign-in failed.");
     }
   };
-  console.log(handleGoogleSignIn);
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
@@ -104,44 +94,41 @@ const RegisterView = () => {
           />
         </div>
       </div>
+
       <div className="relative z-10 m-0 flex h-screen w-full items-center justify-center overflow-hidden p-0">
         <div
-          className="bg z-30 m-0 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-auto p-0 px-8 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
-          style={{
-            backgroundColor: "rgba(243, 243, 243, 0.10)",
-          }}
+          className="z-30 m-0 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-auto px-8 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
+          style={{ backgroundColor: "rgba(243, 243, 243, 0.10)" }}
         >
           <div className="mx-auto flex justify-center pt-12 sm:pt-0">
-            <div className="">
+            <div>
               <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
                 Get Started -{" "}
                 <span className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
                   It’s Free{" "}
                 </span>
               </h2>
-              <p className="font-poppins justify-start self-stretch pt-2 text-center text-xs font-normal text-neutral-200 sm:pt-12 md:pt-4 md:text-sm lg:pt-5">
+              <p className="font-poppins pt-2 text-center text-xs text-neutral-200 md:pt-4 md:text-sm lg:pt-5">
                 Sign up in seconds and enjoy full access with zero commitment.
               </p>
             </div>
           </div>
 
           <form
-            className="flex flex-col items-start justify-start gap-4 self-stretch pb-6 sm:py-0 md:gap-5 lg:gap-6"
+            className="flex flex-col gap-4 self-stretch pb-6 md:gap-5 lg:gap-6"
             onSubmit={handleSubmit}
           >
-            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
+            <div className="flex flex-col gap-1">
               <label
-                htmlFor="Name"
-                className="font-poppins text-sm font-[400] font-normal text-white capitalize md:text-base"
+                htmlFor="name"
+                className="font-poppins text-sm text-white md:text-base"
               >
                 Name
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
-                {" "}
-                {/* Smaller height and padding for mobile/tablet */}
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
+                  id="name"
                   type="text"
-                  name="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your Name here..."
@@ -149,19 +136,18 @@ const RegisterView = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
+
+            <div className="flex flex-col gap-1">
               <label
-                htmlFor="tel"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                htmlFor="phone"
+                className="font-poppins text-sm text-white md:text-base"
               >
                 Phone Number
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
-                {" "}
-                {/* Smaller height and padding for mobile/tablet */}
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
-                  type="tel"
                   id="phone"
+                  type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Enter your number here..."
@@ -169,19 +155,18 @@ const RegisterView = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
+
+            <div className="flex flex-col gap-1">
               <label
                 htmlFor="email"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                className="font-poppins text-sm text-white md:text-base"
               >
                 Email
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
-                {" "}
-                {/* Smaller height and padding for mobile/tablet */}
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
-                  type="email"
                   id="email"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your Email here..."
@@ -189,19 +174,18 @@ const RegisterView = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
+
+            <div className="flex flex-col gap-1">
               <label
                 htmlFor="password"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                className="font-poppins text-sm text-white md:text-base"
               >
                 Password
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
-                {" "}
-                {/* Smaller height and padding for mobile/tablet */}
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
-                  type="password"
                   id="password"
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password here..."
@@ -209,19 +193,18 @@ const RegisterView = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
+
+            <div className="flex flex-col gap-1">
               <label
-                htmlFor="conframpassword"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                htmlFor="confirmPassword"
+                className="font-poppins text-sm text-white md:text-base"
               >
                 Confirm Password
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
-                {" "}
-                {/* Smaller height and padding for mobile/tablet */}
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
+                  id="confirmPassword"
                   type="password"
-                  id="Confirm Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Enter your Confirm Password here..."
@@ -229,32 +212,42 @@ const RegisterView = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
+
+            <div className="flex flex-col gap-1">
               <label
                 htmlFor="profileImage"
-                className="font-poppins text-sm font-normal text-white capitalize md:text-base"
+                className="font-poppins text-sm text-white md:text-base"
               >
                 Profile Image (Optional)
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
-                  type="file"
                   id="profileImage"
+                  type="file"
                   accept="image/*"
                   onChange={handleFileChange}
                   className="w-full bg-transparent text-sm text-neutral-700 focus:outline-none md:text-base"
                 />
               </div>
             </div>
+
             <button
-              className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
+              className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black hover:opacity-90 md:h-12 md:text-base"
               disabled={loading}
             >
               {loading ? "Registering..." : "Sign Up"}
             </button>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              className="font-poppins h-10 w-full rounded-lg bg-white text-sm font-medium text-neutral-800 hover:opacity-90 md:h-12 md:text-base"
+            >
+              Continue with Google
+            </button>
           </form>
         </div>
-        <div className="hidden w-1/2 lg:block"></div>
+        <div className="hidden w-1/2 lg:block" />
       </div>
     </div>
   );

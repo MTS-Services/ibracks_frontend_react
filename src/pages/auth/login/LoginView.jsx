@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../../featured/auth/AuthContext";
-// import ForgotPasswordModal from "../ForgotPasswordModal";
-import { fetchOwnedSongs } from "../../public/checkout/components/authSlice";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import PasswordResetModal from "../ForgotPasswordModal/PasswordResetModal";
@@ -22,21 +20,23 @@ const LoginView = () => {
     success: authSuccess,
     setError: setAuthError,
     setSuccess: setAuthSuccess,
+    user,
   } = useContext(AuthContext);
-  console.log(authSuccess);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // <-- 3. Dispatch function'ti initialize korun
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-  // =============================code by shakil  munshi=======================
-  // This useEffect is now modified to only handle errors from AuthContext.
-  // Success toasts will be handled manually in the handleSubmit function.
-  // =============================code by shakil  munshi=======================
+  // যদি already logged-in থাকে, login পেজে এলে role অনুযায়ী পাঠিয়ে দাও
+  useEffect(() => {
+    if (user?.role === "admin") navigate("/admin", { replace: true });
+    else if (user) navigate("/", { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   useEffect(() => {
     if (authError) {
-      toast.error(authError, {
-        position: "top-center",
-      });
+      toast.error(authError, { position: "top-center" });
       setAuthError(null);
     }
   }, [authError, setAuthError]);
@@ -52,7 +52,6 @@ const LoginView = () => {
       });
       return;
     }
-
     if (!/\S+@\S+\.\S+/.test(email)) {
       toast.error("Please enter a valid email address.", {
         position: "top-center",
@@ -61,17 +60,21 @@ const LoginView = () => {
     }
 
     try {
-      // =============================code by shakil  munshi=======================
-      // The login function in AuthContext should only return success/error, not show a toast.
-      // =============================code by shakil  munshi=======================
       const result = await login(email, password, rememberMe);
-
       if (result.success) {
         toast.success("Login successful!", { position: "top-center" });
         setEmail("");
         setPassword("");
         setRememberMe(false);
-        navigate("/");
+
+        // রিডাইরেক্ট লজিক (priority: role → then 'from' → fallback)
+        if (result.user?.role === "admin") {
+          navigate("/admin", { replace: true });
+        } else {
+          // যদি প্রাইভেট রুট থেকে রিডাইরেক্ট হয়ে আসে, সেই 'from' এ পাঠাও
+          const from = location.state?.from?.pathname || "/";
+          navigate(from, { replace: true });
+        }
       }
     } catch (err) {
       console.error("Login error in LoginView:", err);
@@ -81,17 +84,16 @@ const LoginView = () => {
   const handleGoogleSignIn = async () => {
     setAuthError(null);
     setAuthSuccess(null);
-
     try {
       const result = await googleSignIn();
       if (result.success) {
-        // =============================code by shakil  munshi=======================
-        // Handle the success toast here
-        // =============================code by shakil  munshi=======================
-        toast.success("Google sign-in successful!", {
-          position: "top-center",
-        });
-        navigate("/");
+        // Google sign-in successful হলে role অনুযায়ী
+        if (result.user?.role === "admin") {
+          navigate("/admin", { replace: true });
+        } else {
+          const from = location.state?.from?.pathname || "/";
+          navigate(from, { replace: true });
+        }
       }
     } catch (err) {
       console.error("Google Sign-in error in LoginView:", err);
@@ -99,13 +101,8 @@ const LoginView = () => {
     }
   };
 
-  const openForgotPasswordModal = () => {
-    setIsForgotPasswordModalOpen(true);
-  };
-
-  const closeForgotPasswordModal = () => {
-    setIsForgotPasswordModalOpen(false);
-  };
+  const openForgotPasswordModal = () => setIsForgotPasswordModalOpen(true);
+  const closeForgotPasswordModal = () => setIsForgotPasswordModalOpen(false);
 
   return (
     <div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-b from-black to-fuchsia-900">
@@ -130,22 +127,19 @@ const LoginView = () => {
       <div className="relative z-10 flex h-screen w-full items-center justify-center overflow-auto">
         <div
           className="bg z-30 mx-auto flex h-full w-full flex-col items-start justify-center gap-4 overflow-y-auto px-8 py-6 backdrop-blur-xl md:w-full md:px-10 md:py-12 lg:w-1/2 lg:gap-6 lg:px-28 lg:py-16"
-          style={{
-            backgroundColor: "rgba(243, 243, 243, 0.10)",
-          }}
+          style={{ backgroundColor: "rgba(243, 243, 243, 0.10)" }}
         >
           <Link to="/" className="flex cursor-pointer items-center text-white">
             {"< "} Back{" "}
           </Link>
+
           <div className="mx-auto flex justify-center">
-            <div className="">
-              <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
-                Get Started -{" "}
-                <span className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
-                  It’s Free
-                </span>
-              </h2>
-            </div>
+            <h2 className="bg-gradient-to-b from-[#F5DEB3] to-[#DAA520] bg-clip-text text-center text-3xl font-[700] text-transparent md:text-4xl lg:text-5xl">
+              Get Started -{" "}
+              <span className="pt-2 text-center text-3xl font-[700] text-[#DAA520] md:pt-3 md:text-4xl lg:text-5xl">
+                It’s Free
+              </span>
+            </h2>
           </div>
 
           {/* Form */}
@@ -157,11 +151,11 @@ const LoginView = () => {
             <div className="flex flex-col items-start justify-start gap-1 self-stretch md:gap-2">
               <label
                 htmlFor="email"
-                className="font-poppins text-sm font-[400] font-normal text-white capitalize md:text-base"
+                className="font-poppins text-sm font-[400] text-white capitalize md:text-base"
               >
                 Email
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
                   type="email"
                   id="email"
@@ -181,7 +175,7 @@ const LoginView = () => {
               >
                 Password
               </label>
-              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 outline-1 outline-offset-[-1px] md:h-12 md:px-4 md:py-3">
+              <div className="flex h-10 w-full items-center rounded-lg bg-white px-3 py-2 md:h-12 md:px-4 md:py-3">
                 <input
                   type="password"
                   id="password"
@@ -209,13 +203,13 @@ const LoginView = () => {
               <button
                 type="button"
                 onClick={openForgotPasswordModal}
-                className="font-poppins justify-start text-sm font-normal text-white capitalize hover:underline focus:outline-none md:text-base"
+                className="font-poppins text-sm font-normal text-white capitalize hover:underline focus:outline-none md:text-base"
               >
                 Forget Password?
               </button>
             </div>
 
-            {/* Error and Success messages */}
+            {/* Error / Success */}
             {authError && (
               <p className="font-poppins self-stretch text-center text-sm text-red-500">
                 {authError}
@@ -226,6 +220,7 @@ const LoginView = () => {
                 {authSuccess}
               </p>
             )}
+
             <button
               type="submit"
               className="font-poppins h-10 w-full rounded-lg bg-gradient-to-b from-orange-200 to-yellow-500 text-sm font-medium text-black capitalize hover:opacity-90 md:h-12 md:text-base"
@@ -251,9 +246,8 @@ const LoginView = () => {
             <div className="h-px flex-1 bg-neutral-200"></div>
           </div>
 
-          {/* Social Login Buttons */}
+          {/* Social Login */}
           <div className="flex w-full flex-col gap-3 md:gap-4">
-            {/* Google Sign-in Button */}
             <button
               onClick={handleGoogleSignIn}
               className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3"
@@ -268,18 +262,9 @@ const LoginView = () => {
                 Sign in With Google
               </span>
             </button>
-            {/* <button className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 hover:bg-gray-50 md:h-12 md:px-4 md:py-3">
-              <img
-                src="/New folder/apple.svg"
-                className="h-5 w-6 md:h-6"
-                alt="Apple"
-              />
-              <span className="font-poppins text-sm text-neutral-700 md:text-base">
-                Sign in With Apple
-              </span>
-            </button> */}
           </div>
         </div>
+
         {/* Right Part */}
         <div className="hidden w-1/2 lg:block"></div>
       </div>
