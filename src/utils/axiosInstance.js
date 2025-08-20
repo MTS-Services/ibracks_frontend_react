@@ -25,7 +25,7 @@
 axios.js;
 import axios from "axios";
 const instance = axios.create({
-  baseURL: "https://backend-ibracks.mtscorporate.com/api",
+  baseURL: "https://backend.beatzingeez.com/api",
 });
 
 // Request Interceptor: Attach language and token
