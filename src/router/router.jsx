@@ -3,7 +3,7 @@ import MainLayout from "../layout/template/main/MainLayout";
 import { PrivateRoute, PrivateAdminRoute } from "../featured/auth/PrivateRoute"; // Import both
 import HomeView from "../pages/public/home/HomeView";
 import AboutView from "../pages/public/about/AboutView";
-import ServicesView from "../pages/public/services/ServicesView";
+
 import CartView from "../pages/public/cart/CartView";
 import TracksView from "../pages/public/tracks/TracksView";
 import ProductsView from "../pages/public/products/ProductsView";
@@ -25,6 +25,7 @@ import LicenseInfo from "../pages/private/license/LicenseInfo";
 import NotFoundView from "../pages/error/NotFoundView";
 import ResetPasswordPage from "../pages/auth/ForgotPasswordModal/ResetPasswordPage";
 import EditSongPage from "../pages/editsong/EditSongPage";
+import ServicesView from "@/pages/public/Services/ServicesView";
 
 const AppRoutes = createBrowserRouter([
   {
